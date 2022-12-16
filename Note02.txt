@@ -1,0 +1,7 @@
+1. Tạo database: cptwater
+2. Tạo user waterwatch
+3. Add các quyển cho user waterwatch
+4. Add database cptwater sử dụng cho waterwatch
+ dùng câu lệnh:  grant all PRIVILEGES on database cptwater to waterwatch
+5. create EXTENSION postgis;
+6. create EXTENSION postgis_topology;;

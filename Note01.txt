@@ -1,0 +1,6 @@
+https://drive.google.com/drive/folders/1Pj4sfwNWS4oTi4qSCVKcrBCzMX5hAaFJ
+
+1. Thông tin cài posges sql:
+pass: 123456	
+retype pass:  123456
+port: 5432
