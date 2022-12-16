@@ -1,0 +1,14 @@
+1.
+set OSGEO4W_ROOT=C:\OSGeo4W64 
+2.
+set GDAL_DATA=%OSGEO4W_ROOT%\share\gdal
+3.
+set PROJ_LIB=%OSGEO4W_ROOT%\share\proj
+4.
+set PATH=%PATH%;%OSGEO4W_ROOT%\bin
+5.
+reg ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Enviroment" /v Path /t REG_EXPAND_SZ /f /d "%PATH%"
+6.
+reg ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Enviroment" /v GDAL_DATA /T REG_EXPAND_SZ /f /d "%GDAL_DATA%"
+7.
+reg ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Enviroment" /v PROJ_LIB /t REG_EXPAND_SZ /f /d "%PROJ_LIB%"
