@@ -1,0 +1,4 @@
+Cài đặt visualstudio code
+https://code.visualstudio.com/
+
+Cài extentison: c#, c# extentison
