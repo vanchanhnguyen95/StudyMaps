@@ -1,0 +1,2 @@
+Cài đặt postgresql bản 13.9
+mật khẩu: 123456
