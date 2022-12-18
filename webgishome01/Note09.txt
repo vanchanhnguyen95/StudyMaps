@@ -9,3 +9,9 @@
  - Nhớ cài package: 
     dotnet add package Microsoft.EntityFrameworkCore.Design 
  dotnet ef migrations add InitialMigration
+ dotnet ef database update
+ 
+5. Creating the Repository Interface
+
+6. Creating the Repository Implementation Class
+ 
