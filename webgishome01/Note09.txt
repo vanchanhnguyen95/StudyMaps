@@ -1,5 +1,11 @@
-Creating the Data Context Interface
+1.Creating the Data Context Interface
 
-Creating the DataContext Class
+2.Creating the DataContext Class
 
-Adding the Connection String
+3.Adding the Connection String
+
+4.Database Migrations
+ - Cài lại tool dotnet mới đc: dotnet tool install --global dotnet-ef --version 6.* 
+ - Nhớ cài package: 
+    dotnet add package Microsoft.EntityFrameworkCore.Design 
+ dotnet ef migrations add InitialMigration
