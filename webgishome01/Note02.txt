@@ -1,0 +1,12 @@
+1.Tạo database 
+Name: cptwater
+
+2. Tạo Login/ Group Role
+Name: waterwatch
+
+3. Gán waterwatch sử dụng database cptwater
+grant all PRIVILEGES on database cptwater to waterwatch;
+
+4. Create extension
+create extension postgis;
+create extension postgis_topology;
