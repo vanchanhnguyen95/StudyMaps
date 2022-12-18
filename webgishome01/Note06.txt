@@ -1,0 +1,10 @@
+Creating an ASP .Nẻ MVC 6 Starter Project
+
+1. Lệnh tạo project
+dotnet new mvc -o WaterWatch
+2. Lệnh xóa hiển thị gõ lệnh
+cls
+3.
+code -r WaterWatch
+4.
+dotnet run
