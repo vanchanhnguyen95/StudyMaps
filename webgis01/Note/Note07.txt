@@ -1,0 +1,5 @@
+Building the Front-End View with Bootstrap and Leaflet.js
+
+1. Adding the Front-End Static Files
+
+2. Creating the Layout Page
