@@ -13,3 +13,5 @@ Building the Front-End View with Bootstrap and Leaflet.js
 6. Displaying Data on the Map
 
 7. Styling the Map Part 1
+
+8. Styling the Map Part 2 Interactivity

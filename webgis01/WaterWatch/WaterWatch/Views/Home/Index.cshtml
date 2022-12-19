@@ -175,6 +175,25 @@
                 color: 'white',
                 filOpacity: 0.8
             });
+            poly.bindPopup(
+                "<h4><b>Suburb Group:</b> [" + item.suburb_group.toString() + "]</h4>" + 
+                "<h4><b>Neighbourhood: " + item.neighbourhood.toString() + "</h4>" +
+                "<h4><b>Water Consumption: " + item.averageMonthlyKL.toString() + " KL </h4>" 
+            );
+            poly.on('mouseover', function(e) {
+                this.setStyle({
+                    color: 'yellow',
+                    weight: 5
+                });
+                this.openPopup();
+            });
+            poly.on('mouseout', function(e) {
+                this.setStyle({
+                    color: 'white',
+                    weight: 2
+                })
+                this.closePopup();
+            });
             poly.addTo(map);
         });
    });
