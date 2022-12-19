@@ -153,11 +153,29 @@
     // Add the layers control
     L.control.layers(baseLayers).addTo(map);
 
-   $.getJSON(dataUrl, function(data) {
+    // Get colours from: https://colorbrewer2.org/#type=sequential&scheme=YlGn&n=8
+    function getColor(d) {
+        var pallete = ['#ffffe5','#f7fcb9','#d9f0a3','#addd8e','#78c679','#41ab5d','#238443','#005a32'];
+        return d > 40 ? pallete[7] :
+            d > 35  ? pallete[6] :
+            d > 30  ? pallete[5] :
+            d > 25  ? pallete[4] :
+            d > 20   ? pallete[3] :
+            d > 15   ? pallete[2] :
+            d > 10   ? pallete[1] :
+                        pallete[0];
+    }
+
+    $.getJSON(dataUrl, function(data) {
         $.each(data, function(i, item) {
             // Convert the coordinates value to a javascript array
             var conv_poly = JSON.parse(item.coordinates);
-            var poly = L.polygon(conv_poly).addTo(map);
+            var poly = L.polygon(conv_poly, {
+                fillColor: getColor(item.averageMonthlyKL),
+                color: 'white',
+                filOpacity: 0.8
+            });
+            poly.addTo(map);
         });
    });
 
