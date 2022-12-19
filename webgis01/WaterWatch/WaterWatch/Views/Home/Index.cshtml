@@ -198,6 +198,27 @@
         });
    });
 
+   // Create Legend
+    createLegend();
+    function createLegend() {
+        var legend = L.control({position: 'bottomright'});
+        legend.onAdd = function(map) {
+            var legendContainer = L.DomUtil.create('div', 'legend');
+            $(legendContainer).append("<h5 id='legendTitle'>WATER CONSUMPTION IN (KL)</h5>");
+            var grades = [0, 10, 15, 20, 25, 30, 35, 40];
+
+            // Generate a label with a coloured square
+            for (var i = 0; i < grades.length; i++) {
+                legendContainer.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            }
+
+            return legendContainer;
+        };
+
+        legend.addTo(map);
+    }
 
 </script>
 
