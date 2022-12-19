@@ -4,3 +4,8 @@ dotnet sdk dowloadnload
 2. Installing the visual studio code IDE
 - Cài đặt extension
   C#, C# extension
+  
+3. Creating an ASP.NET MVC 6 Starter Project
+dotnet new mvc -o WaterWatch
+code -r WaterWatch
+dotnet run
