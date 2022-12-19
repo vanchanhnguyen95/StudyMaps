@@ -1,0 +1,37 @@
+Writing the Back-End Code
+
+1. Creating the Model Class
+
+2. Creating the Data Context Interface
+
+3. Creating the Data Context Class
+
+4. Adding the Connection String
+// Add services to the container.
+builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(
+    builder.Configuration.GetConnectionString("DefaultConnection")
+));
+
+builder.Services.AddScoped<IDataContext>(provider => provider.GetService<DataContext>());
+
+5. Database Migrations
+5.1 dotnet ef migrations add InitialMigration
+==> bị lỗi ko nhận dotnet ef
+ thì cài lại như sau, theo lệnh sau
+  dotnet new tool-manifest
+  dotnet tool install --local dotnet-ef --version 6.0.0
+5.2 dotnet ef database update
+
+6. Creating the Repository Interface
+
+cài thêm: dotnet add package Newtonsoft.Json
+
+7. Creating the	Repository Implementation Class
+
+
+
+dotnet tool uninstall -g tool-manifest
+
+dotnet uninstall tool-manifest
+
+Remove: dotnet ef migrations remove
