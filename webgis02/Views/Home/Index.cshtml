@@ -118,7 +118,7 @@
 <script>
     // Url Endpoints
     // var dataUrl = "https://localhost:7190/waterconsumption/getall";
-    var dataUrl = "https://localhost:7185/haLongRoad/getall";
+    var dataUrl = "https://localhost:7185/haLongRoad/topten";
 
      // Basemap urls
     var osm_humanitarian = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -140,8 +140,7 @@
     // Initialize the map
     var map = L.map('map', {
         layers: [osm_humanitarian] // Default basemap
-    }).setView([107.09043979,20.95313220], 11);
-
+    }).setView([20.953362133323264,107.02660218506102], 11);
     // Initialize basemaps
     var baseLayers = {
         "Open Street Map": osm_map,
@@ -150,162 +149,8 @@
         "World Street Map": world_street_map,
         "World Imagery": world_imagery
     }
-
     // Add the layers control
     L.control.layers(baseLayers).addTo(map);
-
-    // Get colours from: https://colorbrewer2.org/#type=sequential&scheme=YlGn&n=8
-    function getColor(d) {
-        var pallete = ['#ffffe5','#f7fcb9','#d9f0a3','#addd8e','#78c679','#41ab5d','#238443','#005a32'];
-        return d > 40 ? pallete[7] :
-            d > 35  ? pallete[6] :
-            d > 30  ? pallete[5] :
-            d > 25  ? pallete[4] :
-            d > 20   ? pallete[3] :
-            d > 15   ? pallete[2] :
-            d > 10   ? pallete[1] :
-                        pallete[0];
-    }
-
-    $.getJSON(dataUrl, function(data) {
-        $.each(data, function(i, item) {
-            // Convert the coordinates value to a javascript array
-            var conv_poly = JSON.parse(item.Coordinates);
-            var poly = L.polygon(conv_poly, {
-                @* fillColor: getColor(item.averageMonthlyKL),
-                color: 'white',
-                filOpacity: 0.8 *@
-            });
-            @* poly.bindPopup(
-                "<h4><b>Suburb Group:</b> [" + item.suburb_group.toString() + "]</h4>" + 
-                "<h4><b>Neighbourhood: " + item.neighbourhood.toString() + "</h4>" +
-                "<h4><b>Water Consumption: " + item.averageMonthlyKL.toString() + " KL </h4>" 
-            ); *@
-            poly.on('mouseover', function(e) {
-                this.setStyle({
-                    color: 'yellow',
-                    weight: 5
-                });
-                this.openPopup();
-            });
-            poly.on('mouseout', function(e) {
-                this.setStyle({
-                    color: 'white',
-                    weight: 2
-                })
-                this.closePopup();
-            });
-            poly.addTo(map);
-        });
-   });
-
-   // Create Legend
-    @* createLegend();
-    function createLegend() {
-        var legend = L.control({position: 'bottomright'});
-        legend.onAdd = function(map) {
-            var legendContainer = L.DomUtil.create('div', 'legend');
-            $(legendContainer).append("<h5 id='legendTitle'>WATER CONSUMPTION IN (KL)</h5>");
-            var grades = [0, 10, 15, 20, 25, 30, 35, 40];
-
-            // Generate a label with a coloured square
-            for (var i = 0; i < grades.length; i++) {
-                legendContainer.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-            }
-
-            return legendContainer;
-        }; *@
-
-        legend.addTo(map);
-    }
-
-    @* barChartLegend();
-    function barChartLegend() {
-        var info = L.control({postition: 'topright'});
-        info.onAdd = function(map) {
-            var div = L.DomUtil.create('div', 'info');
-            div.innerHTML += '<h5>Top 10 Consumers (KL)</h5>';
-            div.innerHTML += '<canvas id="horBarChart"></canvas>';
-
-            return div;
-        };
-        info.addTo(map);
-        
-    } *@
-
-    @* displayhorBarChart();
-    function displayhorBarChart() {
-        var x_labels = [];
-        var y_data = [];
-
-        $.ajax({
-            url: "/waterconsumption/topten",
-            cache:"false",
-            dataType: "text",
-            type: "GET",
-
-            success: function(data) {
-                var obj = JSON.parse(data);
-
-                //console.log(obj);
-
-                obj.forEach(o => {
-                    x_labels.push(o.neighbourhood);
-                });
-
-                var label_array = Object.values(x_labels);
-                var bar_colors = [];
-
-                obj.forEach(o => {
-                    y_data.push(o.averageMonthlyKL);
-                    bar_colors.push(getColor(o.averageMonthlyKL));
-                });
-
-                var data_array = Object.values(y_data);
-                
-                var ctx = document.getElementById("horBarChart").getContext("2d");
-                var canvas = document.getElementById("horBarChart");
-                var parent = document.getElementById("info");
-
-                var horBarChart = new Chart(ctx, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: label_array,
-                        datasets: [{
-                            label: 'water',
-                            backgroundColor: bar_colors, //"rgba(35,132,67, 0.6)",
-                            borderColor: "rgba(0,90,50, 1)",
-                            data: data_array
-                        }]
-                    },
-
-                    options: {
-                        scaleShowValues: true,
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }],
-                            xAxes: [{
-                                ticks: {
-                                    autoSkip: false,
-                                    beginAtZero: true
-                                }
-                            }]
-                        }
-                    }
-                });
-            },
-
-            error: function(data) {
-                alert('error; '+ eval(error));
-            }
-        }); *@
-
-    }
 
 </script>
 
