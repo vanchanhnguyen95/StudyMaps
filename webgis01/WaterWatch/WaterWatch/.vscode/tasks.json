@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/WaterWatch/WaterWatch.csproj",
+                "${workspaceFolder}/WaterWatch.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/WaterWatch/WaterWatch.csproj",
+                "${workspaceFolder}/WaterWatch.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/WaterWatch/WaterWatch.csproj"
+                "${workspaceFolder}/WaterWatch.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
