@@ -220,6 +220,20 @@
         legend.addTo(map);
     }
 
+    barChartLegend();
+    function barChartLegend() {
+        var info = L.control({postition: 'topright'});
+        info.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'info');
+            div.innerHTML += '<h5>Top 10 Consumers (KL)</h5>';
+            div.innerHTML += '<canvas id="horBarChart"></canvas>';
+
+            return div;
+        };
+        info.addTo(map);
+        
+    }
+
 </script>
 
 @* <div class="text-center">

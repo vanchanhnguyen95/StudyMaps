@@ -17,3 +17,5 @@ Building the Front-End View with Bootstrap and Leaflet.js
 8. Styling the Map Part 2 Interactivity
 
 9. Creating the Legend
+
+10. Creating the Bar Chart Legend
