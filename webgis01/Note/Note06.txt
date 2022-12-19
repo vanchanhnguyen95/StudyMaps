@@ -1,3 +1,6 @@
 Building the REST API Service
 
 1. Downloading the Sample Dataset
+
+2. Extract Transform and Load Data into our Spatial
+dotnet add package Newtonsoft.Json
