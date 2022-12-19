@@ -19,3 +19,5 @@ Building the Front-End View with Bootstrap and Leaflet.js
 9. Creating the Legend
 
 10. Creating the Bar Chart Legend
+
+11. Creating the Bar Chart
