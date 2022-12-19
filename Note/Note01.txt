@@ -15,3 +15,8 @@ dotnet new mvc -o webgis02
 cls
 code -r webgis02
 dotnet run
+
+III. Installing Entity Framework Core Package
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+dotnet tool install --global dotnet-ef
+dotnet add package Microsoft.EntityFrameworkCore.Design
