@@ -11,3 +11,5 @@ Building the Front-End View with Bootstrap and Leaflet.js
 5. Creating Multiple Basemaps
 
 6. Displaying Data on the Map
+
+7. Styling the Map Part 1
