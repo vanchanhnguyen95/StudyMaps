@@ -15,4 +15,6 @@ Writing the Back-End Code
   dotnet new tool-manifest
   dotnet tool install --local dotnet-ef --version 6.0.0
 5.2 dotnet ef database update
-  
+
+6. Creating the Repository Interface
+
