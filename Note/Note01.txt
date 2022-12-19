@@ -1,0 +1,17 @@
+I. Tạo 1 database để thực hành
+	Creating a Spatial Database: webgis02
+	user: webgis02
+	1. Tạo database: webgis02
+	2. Tạo user webgis02
+	3. Add các quyển cho user webgis02
+	4. Add database webgis02 sử dụng cho webgis02
+	 dùng câu lệnh:  grant all PRIVILEGES on database cptwater to webgis02
+	5. create EXTENSION postgis;
+	6. create EXTENSION postgis_topology;
+
+
+II. Creating an ASP.NET MVC 6 Starter Project
+dotnet new mvc -o webgis02
+cls
+code -r webgis02
+dotnet run
