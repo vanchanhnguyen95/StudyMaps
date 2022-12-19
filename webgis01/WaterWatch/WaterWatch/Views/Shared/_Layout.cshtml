@@ -4,46 +4,78 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WaterWatch</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WaterWatch.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WaterWatch</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - WaterWatch - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <link rel="stylesheet" href="~/app/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/app/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/app/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/app/admin/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="~/app/admin/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="~/app/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+</head>
+<body class="hold-transition skin-green sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a class="logo" href="#" style="background: #1e282c;">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>W</b>W</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b style="color:green">WATER</b>WATCH</span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            
+        </header>
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+            
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="header">MAPS NAVIGATION</li>
+                    <li class="treeview active">
+                    <a href="#">
+                        <i class="fa fa-globe"></i> <span>Maps</span>
+                        <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-map"></i> Water Consumption (2017)</a></li>
+                    </ul>
+                    </li>
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+
+            <!-- Main content -->
+            <section class="content-fluid">
+                @RenderBody()
+            </section>
+            <!-- /.content -->
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    </div>
+    <!-- END OF WRAPPER -->
+    
+    <!-- Scripts -->
+    <script src="~/app/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+    $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <script th:src="~/app/bootstrap/dist/js/bootstrap.min.js}"></script>
+    <script th:src="~/app/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js}"></script>
+    <script th:src="~/app/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+    <script th:src="~/app/fastclick/lib/fastclick.js}"></script>
+    <script th:src="~/app/dist/js/adminlte.min.js}"></script>
+    <script th:src="~/app/dist/js/demo.js}"></script> 
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
