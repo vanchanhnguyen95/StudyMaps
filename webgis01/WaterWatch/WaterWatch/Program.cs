@@ -1,6 +1,11 @@
+using WaterWatch.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IDataContext>(provider => provider.GetService<DataContext>());
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
