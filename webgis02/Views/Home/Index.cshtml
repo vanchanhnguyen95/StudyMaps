@@ -1,8 +1,315 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<!-- Import Leaflet CSS -->
+<link rel="stylesheet" href="~/app/leaflet/leaflet.css" />
+<style>
+    #map {
+        height: calc(100vh - 0px) !important;
+    }
+    .leaflet-container {  /* all maps */
+        width:  100%;
+        /* height: calc(100vh - 60px);  */
+        height: 100vh;
+    }
+    
+    .legend, .temporal-legend {
+        padding: 6px 10px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: rgba(0,0,0,0.85);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        color:whitesmoke;
+    }
+    
+    #legendTitle {
+        text-align: center;
+        margin-bottom: 15px;
+        color: whitesmoke;
+        /* font-variant: small-caps; */
+        font-weight: bold;
+    }
+    
+    .symbolsContainer {
+        float: left;
+        margin-left: 50px;
+    }
+    
+    .legendCircle {
+        border-radius:50%;
+        border: 1px solid #537898;
+        background: rgba(0,128,128,0.5);
+        display: inline-block;
+    }
+    
+    .legendValue {
+        position: absolute;
+        right: 12px;
+        color:whitesmoke;
+        font-size:10pt;
+        text-align:center;
+        font-weight: bold;
+    }
+    
+    .info {
+        width:30vw;
+        height:48vh;
+        /* width:20vw; */
+        /* height:300px; */
+        padding: 6px 10px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: rgba(0,0,0,0.85);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        color:whitesmoke;
+        /* max-width:100%;
+        max-height:100%; */
+    }
+    
+    .info h5 {
+        margin: 0 0 5px;
+        color: #777;
+        text-align: center;
+        /* margin-bottom: 15px; */
+        color: whitesmoke;
+        /* font-variant: small-caps; */
+        font-weight: bold;
+    }
+    
+    .info #horBarChart {
+        width: 100% !important;
+        max-width: 800px;
+        /* height:inherit; */
+    }
+    
+    .leaflet-control-layers {
+        float:right;
+        top:500px;
+        right:0;
+        /* margin-left:-200px; */
+        position:absolute;
+        background: rgba(0,0,0,0.85);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        color:whitesmoke;
+    }
+   
+    .legend {
+        line-height: 20px;
+        color: white;
+    }
+    .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+        
+    }
+</style>
 
-<div class="text-center">
+<!-- Import Leaflet JS -->
+<script src="~/app/jquery/dist/jquery.min.js"></script>
+<script src="~/app/leaflet/leaflet.js"></script>
+<script src="~/app/extscripts/js/Chart.js"></script>
+
+<div id="map"></div>
+
+<script>
+    // Url Endpoints
+    // var dataUrl = "https://localhost:7190/waterconsumption/getall";
+    var dataUrl = "https://localhost:7185/haLongRoad/getall";
+
+     // Basemap urls
+    var osm_humanitarian = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+     var osm_map = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    var esri_dark_gray_base = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; <a href="http://services.arcgisonline.com/arcgis/rest/services">ESRI</a> arcgisonline'
+    });
+    var world_street_map = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+    });
+    var world_imagery = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    });
+
+    // Initialize the map
+    var map = L.map('map', {
+        layers: [osm_humanitarian] // Default basemap
+    }).setView([107.09043979,20.95313220], 11);
+
+    // Initialize basemaps
+    var baseLayers = {
+        "Open Street Map": osm_map,
+        "OSM Humanitarian": osm_humanitarian,
+        "Dark Gray Base": esri_dark_gray_base,
+        "World Street Map": world_street_map,
+        "World Imagery": world_imagery
+    }
+
+    // Add the layers control
+    L.control.layers(baseLayers).addTo(map);
+
+    // Get colours from: https://colorbrewer2.org/#type=sequential&scheme=YlGn&n=8
+    function getColor(d) {
+        var pallete = ['#ffffe5','#f7fcb9','#d9f0a3','#addd8e','#78c679','#41ab5d','#238443','#005a32'];
+        return d > 40 ? pallete[7] :
+            d > 35  ? pallete[6] :
+            d > 30  ? pallete[5] :
+            d > 25  ? pallete[4] :
+            d > 20   ? pallete[3] :
+            d > 15   ? pallete[2] :
+            d > 10   ? pallete[1] :
+                        pallete[0];
+    }
+
+    $.getJSON(dataUrl, function(data) {
+        $.each(data, function(i, item) {
+            // Convert the coordinates value to a javascript array
+            var conv_poly = JSON.parse(item.Coordinates);
+            var poly = L.polygon(conv_poly, {
+                @* fillColor: getColor(item.averageMonthlyKL),
+                color: 'white',
+                filOpacity: 0.8 *@
+            });
+            @* poly.bindPopup(
+                "<h4><b>Suburb Group:</b> [" + item.suburb_group.toString() + "]</h4>" + 
+                "<h4><b>Neighbourhood: " + item.neighbourhood.toString() + "</h4>" +
+                "<h4><b>Water Consumption: " + item.averageMonthlyKL.toString() + " KL </h4>" 
+            ); *@
+            poly.on('mouseover', function(e) {
+                this.setStyle({
+                    color: 'yellow',
+                    weight: 5
+                });
+                this.openPopup();
+            });
+            poly.on('mouseout', function(e) {
+                this.setStyle({
+                    color: 'white',
+                    weight: 2
+                })
+                this.closePopup();
+            });
+            poly.addTo(map);
+        });
+   });
+
+   // Create Legend
+    @* createLegend();
+    function createLegend() {
+        var legend = L.control({position: 'bottomright'});
+        legend.onAdd = function(map) {
+            var legendContainer = L.DomUtil.create('div', 'legend');
+            $(legendContainer).append("<h5 id='legendTitle'>WATER CONSUMPTION IN (KL)</h5>");
+            var grades = [0, 10, 15, 20, 25, 30, 35, 40];
+
+            // Generate a label with a coloured square
+            for (var i = 0; i < grades.length; i++) {
+                legendContainer.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            }
+
+            return legendContainer;
+        }; *@
+
+        legend.addTo(map);
+    }
+
+    @* barChartLegend();
+    function barChartLegend() {
+        var info = L.control({postition: 'topright'});
+        info.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'info');
+            div.innerHTML += '<h5>Top 10 Consumers (KL)</h5>';
+            div.innerHTML += '<canvas id="horBarChart"></canvas>';
+
+            return div;
+        };
+        info.addTo(map);
+        
+    } *@
+
+    @* displayhorBarChart();
+    function displayhorBarChart() {
+        var x_labels = [];
+        var y_data = [];
+
+        $.ajax({
+            url: "/waterconsumption/topten",
+            cache:"false",
+            dataType: "text",
+            type: "GET",
+
+            success: function(data) {
+                var obj = JSON.parse(data);
+
+                //console.log(obj);
+
+                obj.forEach(o => {
+                    x_labels.push(o.neighbourhood);
+                });
+
+                var label_array = Object.values(x_labels);
+                var bar_colors = [];
+
+                obj.forEach(o => {
+                    y_data.push(o.averageMonthlyKL);
+                    bar_colors.push(getColor(o.averageMonthlyKL));
+                });
+
+                var data_array = Object.values(y_data);
+                
+                var ctx = document.getElementById("horBarChart").getContext("2d");
+                var canvas = document.getElementById("horBarChart");
+                var parent = document.getElementById("info");
+
+                var horBarChart = new Chart(ctx, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: label_array,
+                        datasets: [{
+                            label: 'water',
+                            backgroundColor: bar_colors, //"rgba(35,132,67, 0.6)",
+                            borderColor: "rgba(0,90,50, 1)",
+                            data: data_array
+                        }]
+                    },
+
+                    options: {
+                        scaleShowValues: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }],
+                            xAxes: [{
+                                ticks: {
+                                    autoSkip: false,
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            },
+
+            error: function(data) {
+                alert('error; '+ eval(error));
+            }
+        }); *@
+
+    }
+
+</script>
+
+@* <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+</div> *@
