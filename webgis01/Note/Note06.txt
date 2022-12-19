@@ -4,3 +4,5 @@ Building the REST API Service
 
 2. Extract Transform and Load Data into our Spatial
 dotnet add package Newtonsoft.Json
+
+3. Creating the REST Controller Class
