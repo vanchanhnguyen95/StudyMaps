@@ -1,0 +1,6 @@
+1. Install dotnet SDK
+dotnet sdk dowloadnload
+
+2. Installing the visual studio code IDE
+- Cài đặt extension
+  C#, C# extension
