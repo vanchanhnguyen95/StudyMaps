@@ -7,3 +7,7 @@ Building the Front-End View with Bootstrap and Leaflet.js
 3. Creating the Index Page
 
 4. Creating our First Leaflet Map
+
+5. Creating Multiple Basemaps
+
+6. Displaying Data on the Map

@@ -116,15 +116,52 @@
 <div id="map"></div>
 
 <script>
+    // Url Endpoints
+    var dataUrl = "https://localhost:7190/waterconsumption/getall";
+
      // Basemap urls
     var osm_humanitarian = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+     var osm_map = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    var esri_dark_gray_base = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; <a href="http://services.arcgisonline.com/arcgis/rest/services">ESRI</a> arcgisonline'
+    });
+    var world_street_map = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+    });
+    var world_imagery = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     });
 
     // Initialize the map
     var map = L.map('map', {
         layers: [osm_humanitarian] // Default basemap
     }).setView([-33.925, 18.625], 11);
+
+    // Initialize basemaps
+    var baseLayers = {
+        "Open Street Map": osm_map,
+        "OSM Humanitarian": osm_humanitarian,
+        "Dark Gray Base": esri_dark_gray_base,
+        "World Street Map": world_street_map,
+        "World Imagery": world_imagery
+    }
+
+    // Add the layers control
+    L.control.layers(baseLayers).addTo(map);
+
+   $.getJSON(dataUrl, function(data) {
+        $.each(data, function(i, item) {
+            // Convert the coordinates value to a javascript array
+            var conv_poly = JSON.parse(item.coordinates);
+            var poly = L.polygon(conv_poly).addTo(map);
+        });
+   });
+
+
 </script>
 
 @* <div class="text-center">
