@@ -9,3 +9,8 @@ dotnet sdk dowloadnload
 dotnet new mvc -o WaterWatch
 code -r WaterWatch
 dotnet run
+
+4. Installing Entity Framework Core Package
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+dotnet tool install --global dotnet-ef
+dotnet add package Npgsql.EntityFrameworkCore.Design
