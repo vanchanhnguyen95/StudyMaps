@@ -1,0 +1,29 @@
+1. dotnet new webapi -o MongoExample
+2. cd .\MongoExample\
+3. dotnet add package MongoDB.Driver
+
+4. Vào project
+
+5. Thêm thư mục Models
+- Trong Models: thêm class MongoDBSettings
+
+5. Trong file appsettings.json
+- Thêm thẻ MongoDB
+
+6. Thêm thư mục Services
+- Thêm service.
+
+7. Trong thư mục Models- Thêm model Playlist.cs
+
+8. Sửa lại Services
+
+9. Trong thư mục Program.cs
+builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.AddSingleton<MongoDBService>();
+
+10. Trong thư mục Controller
+- Thêm PlaylistController
+
+11. Sửa Services
+
+12. dotnet run
