@@ -15,6 +15,11 @@ builder.Services.Configure<StudentsDbSettings>(
 
 builder.Services.AddSingleton<StudentsService>();
 
+builder.Services.Configure<RestaurantsDbSetting>(
+    builder.Configuration.GetSection("RestaurantsDbSettings"));
+
+builder.Services.AddSingleton<RestaurantsServices>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

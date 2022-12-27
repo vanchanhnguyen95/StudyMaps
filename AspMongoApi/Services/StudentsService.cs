@@ -11,7 +11,7 @@ namespace AspMongoApi.Services
 {
     public class StudentsService
     {
-         private readonly IMongoCollection<Student> _studentsCollection;
+        private readonly IMongoCollection<Student> _studentsCollection;
 
         public StudentsService(IOptions<StudentsDbSettings> studentsDatabaseSettings) {
             var mongoClient = new MongoClient(
