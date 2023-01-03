@@ -30,19 +30,16 @@ namespace WebApiGeocoding.Controllers.v1
 
         [HttpGet]
         [Route("Geocode")]
-        public async Task<IActionResult> Geocode(double latitude, double longitude)
+        public async Task<GeocodeHaNoiPointSearch> Geocode(double latitude, double longitude)
         {
-            var p = await _haNoiPointReporitory.SearchByLatLong(latitude, longitude);
-
-            return new JsonResult(p);
+            return await _haNoiPointReporitory.SearchByLatLong(latitude, longitude);
         }
 
         [HttpGet]
         [Route("Search")]
-        public async Task<IActionResult> Search(string name)
+        public async Task<GeocodeHaNoiPointSearch> Search(string name)
         {
-            var p = await _haNoiPointReporitory.SearchByName(name);
-            return new JsonResult(p);
+            return await _haNoiPointReporitory.SearchByName(name);
         }
 
         [HttpGet]

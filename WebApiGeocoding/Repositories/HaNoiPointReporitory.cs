@@ -17,8 +17,8 @@ namespace WebApiGeocoding.Repositories
 
         // Read
         Task<IEnumerable<HaNoiPointSearch>> AutoSuggestSearch(string keyword);
-        Task<HaNoiPointSearch> SearchByLatLong(double latitude, double longitude);
-        Task<HaNoiPointSearch> SearchByName(string name);
+        Task<GeocodeHaNoiPointSearch> SearchByLatLong(double latitude, double longitude);
+        Task<GeocodeHaNoiPointSearch> SearchByName(string name);
         Task<SpeedHaNoiPointSearch> SearchSpeed(double latitude, double longitude);
 
         Task<HaNoiPoint> Get(ObjectId objectId);
@@ -57,27 +57,27 @@ namespace WebApiGeocoding.Repositories
             return (IEnumerable<HaNoiPointSearch>)result;
         }
 
-        public async Task<HaNoiPointSearch> SearchByLatLong(double latitude, double longitude)
+        public async Task<GeocodeHaNoiPointSearch> SearchByLatLong(double latitude, double longitude)
         {
             var location = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(
                 new GeoJson2DGeographicCoordinates(longitude, latitude));
             var filter = Builders<HaNoiPoint>.Filter.Eq(c => c.Location, location);
             HaNoiPoint p = await _haNoiPoints.Find(filter).FirstOrDefaultAsync();
-            if (p == null) return new HaNoiPointSearch();
+            if (p == null) return new GeocodeHaNoiPointSearch();
 
-            HaNoiPointSearch result = new HaNoiPointSearch() { Latitude = p.Latitude, Longitude = p.Longitude, Name = p.Name };
+            GeocodeHaNoiPointSearch result = new GeocodeHaNoiPointSearch() { Name = p.Name, Street = p.Street, Ward = p.Ward, District = p.District, Province = p.Province };
 
             return result;
         }
 
-        public async Task<HaNoiPointSearch> SearchByName(string name)
+        public async Task<GeocodeHaNoiPointSearch> SearchByName(string name)
         {
             var filter = Builders<HaNoiPoint>.Filter.Eq(c => c.Name, name);
             HaNoiPoint p = await _haNoiPoints.Find(filter).FirstOrDefaultAsync();
 
-            if (p == null) return new HaNoiPointSearch();
+            if (p == null) return new GeocodeHaNoiPointSearch();
 
-            HaNoiPointSearch result = new HaNoiPointSearch() { Latitude = p.Latitude, Longitude = p.Longitude, Name = p.Name };
+            GeocodeHaNoiPointSearch result = new GeocodeHaNoiPointSearch() { Name = p.Name, Street = p.Street, Ward = p.Ward, District = p.District, Province = p.Province };
             return result;
         }
 
