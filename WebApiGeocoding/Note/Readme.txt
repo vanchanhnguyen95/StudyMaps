@@ -1,0 +1,1 @@
+https://medium.com/@esty_c/versioning-asp-net-core-apis-with-swagger-3c44825b1baf
