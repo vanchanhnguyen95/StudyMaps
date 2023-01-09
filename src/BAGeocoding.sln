@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAGeocoding.Dal", "BAGeocod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAGeocoding.Bll", "BAGeocoding.Bll\BAGeocoding.Bll.csproj", "{46B3F92A-C438-4CC2-8B7A-BA485BCEF1DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAGeocoding.Api", "..\BAGeocoding.Api\BAGeocoding.Api.csproj", "{A6748306-B67A-4B0B-8270-B41A44A8FB31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAGeocoding.Api", "BAGeocoding.Api\BAGeocoding.Api.csproj", "{A6748306-B67A-4B0B-8270-B41A44A8FB31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
