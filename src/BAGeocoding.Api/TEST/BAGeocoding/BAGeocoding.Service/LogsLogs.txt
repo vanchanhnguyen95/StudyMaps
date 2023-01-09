@@ -1,3 +1,5 @@
 1/9/2023 5:02:36 PM: Application init start !!!
 1/9/2023 5:03:45 PM: Application init start !!!
 1/9/2023 5:05:09 PM: Application init success !!!
+1/9/2023 5:08:57 PM: Application init start !!!
+1/9/2023 5:09:22 PM: Application init success !!!
