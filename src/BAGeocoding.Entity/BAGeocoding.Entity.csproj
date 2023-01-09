@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C4B57507-129B-4CA7-96DA-ECA495A8EAAF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BAGeocoding.Entity</RootNamespace>
+    <AssemblyName>BAGeocoding.Entity</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="KDTree">
+      <HintPath>..\ReferenceLibrary\KDTree.dll</HintPath>
+    </Reference>
+    <Reference Include="RTree">
+      <HintPath>..\ReferenceLibrary\RTree.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CacheCatalogData.cs" />
+    <Compile Include="CacheParamsData.cs" />
+    <Compile Include="CheckData\CDTSegment.cs" />
+    <Compile Include="ContextMenuSelectData.cs" />
+    <Compile Include="ConvertData\CVRUtility.cs" />
+    <Compile Include="ConvertData\CVRPolyline.cs" />
+    <Compile Include="ConvertData\CVRPoint.cs" />
+    <Compile Include="ConvertData\JSNPoint01.cs" />
+    <Compile Include="DataService\DTSRConfig.cs" />
+    <Compile Include="DataService\DTSRouter.cs" />
+    <Compile Include="DataService\DTSPlace.cs" />
+    <Compile Include="DataService\DTSTile.cs" />
+    <Compile Include="DataService\DTSPoint.cs" />
+    <Compile Include="DataService\DTSSegment.cs" />
+    <Compile Include="DataService\DTSCommune.cs" />
+    <Compile Include="DataService\DTSDistrict.cs" />
+    <Compile Include="DataService\DTSProvince.cs" />
+    <Compile Include="DataService\DTSTraffic.cs" />
+    <Compile Include="Enum\ActionData\EnumWPLImportData.cs" />
+    <Compile Include="Enum\CheckData\EnumCDTErrorKind.cs" />
+    <Compile Include="Enum\EnumElasticSearchPriority.cs" />
+    <Compile Include="Enum\EnumMapObjectShape.cs" />
+    <Compile Include="Enum\EnumMapObjectType.cs" />
+    <Compile Include="Enum\EnumProcessState.cs" />
+    <Compile Include="Enum\EnumBAGPlaceType.cs" />
+    <Compile Include="Enum\EnumDBFieldType.cs" />
+    <Compile Include="Enum\EnumDBDataType.cs" />
+    <Compile Include="Enum\EnumRestfulApiErrorCode.cs" />
+    <Compile Include="Enum\EnumRestfulApiMethod.cs" />
+    <Compile Include="Enum\MapObject\EnumMOBSegmentDataExt.cs" />
+    <Compile Include="Enum\MapObject\EnumMOBObjectTable.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLLoginError.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLExportDataState.cs" />
+    <Compile Include="Enum\MapTool\EnumMCLObjectTableDataExt.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLApvDataState.cs" />
+    <Compile Include="Enum\MapTool\EnumMCLIPadDataExt.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLAppType.cs" />
+    <Compile Include="Enum\MapTool\EnumMCLUserDataExt.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLTrackType.cs" />
+    <Compile Include="Enum\MapTool\EnumMCLTableStructureDataExt.cs" />
+    <Compile Include="Enum\RolePermission\EnumContextMenuItem.cs" />
+    <Compile Include="Enum\RolePermission\EnumContextMenuObject.cs" />
+    <Compile Include="Enum\RolePermission\EnumPermissionGroup.cs" />
+    <Compile Include="Enum\RolePermission\EnumPermissionPage.cs" />
+    <Compile Include="Enum\RolePermission\EnumPermissionItem.cs" />
+    <Compile Include="Enum\RolePermission\EnumPermissionAction.cs" />
+    <Compile Include="Enum\Route\EnumBARErrorCode.cs" />
+    <Compile Include="Enum\Route\EnumBARType.cs" />
+    <Compile Include="Enum\Route\EnumBARMethod.cs" />
+    <Compile Include="Enum\Route\EnumBARNodeState.cs" />
+    <Compile Include="Enum\UIControl\EnumControlType.cs" />
+    <Compile Include="Enum\EnumFormKind.cs" />
+    <Compile Include="Enum\EnumLengthUnit.cs" />
+    <Compile Include="Enum\EnumBAGMapImgType.cs" />
+    <Compile Include="Enum\EnumBAGObjectType.cs" />
+    <Compile Include="Enum\EnumBAGRegionDataExt.cs" />
+    <Compile Include="Enum\EnumCVRText2MifKind.cs" />
+    <Compile Include="Enum\EnumBAGDataKind.cs" />
+    <Compile Include="Enum\EnumBAGFileType.cs" />
+    <Compile Include="Enum\EnumBAGRegionType.cs" />
+    <Compile Include="Enum\EnumBAGLanguage.cs" />
+    <Compile Include="Enum\MapObject\EnumMOBProvinceDataExt.cs" />
+    <Compile Include="Enum\MapObject\EnumMOBDistrictDataExt.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLErrorCodeApp.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLPlanGridState.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLGridSyncState.cs" />
+    <Compile Include="Enum\MapTool\EnumMCLPKindDataExt.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLPlanUserDataExt.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLRoadDirection.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLRoadKind.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLRoadLevel.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLRoadClassFunc.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLStateOption.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLRoadOption.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLPlanBehavior.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLApprovedState.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLObjectAction.cs" />
+    <Compile Include="Enum\MapTool\EnumMTLUserGridDataExt.cs" />
+    <Compile Include="Enum\UIControl\EnumImageTooltip.cs" />
+    <Compile Include="MapHelper.cs" />
+    <Compile Include="MapImg\BAGRequestURL.cs" />
+    <Compile Include="MapObj\BAGDistance.cs" />
+    <Compile Include="MapObj\BAGPoint.cs" />
+    <Compile Include="Enum\EnumBAGAnchor.cs" />
+    <Compile Include="MapObj\BAGRoadName.cs" />
+    <Compile Include="MapObj\BAGSegment.cs" />
+    <Compile Include="MapObj\BAGProvince.cs" />
+    <Compile Include="MapObj\BAGDistrict.cs" />
+    <Compile Include="MapObj\BAGCommune.cs" />
+    <Compile Include="MapObj\BAGPoi.cs" />
+    <Compile Include="MapObj\BAGSearchKey.cs" />
+    <Compile Include="MapObj\BAGKeyRate.cs" />
+    <Compile Include="MapObj\BAGGridView.cs" />
+    <Compile Include="MapObj\BAGPolyline.cs" />
+    <Compile Include="MapObj\BAGTile.cs" />
+    <Compile Include="MapObj\BAGRoadSpecial.cs" />
+    <Compile Include="MapObj\BAGRect.cs" />
+    <Compile Include="MapObj\BAGPlace.cs" />
+    <Compile Include="MapObj\BAGPointOfInterest.cs" />
+    <Compile Include="MapObj\CTLObjectTableName.cs" />
+    <Compile Include="MapTool\Base\CatalogBase.cs" />
+    <Compile Include="MapTool\Base\ConfigBase.cs" />
+    <Compile Include="MapTool\Base\ConditionBase.cs" />
+    <Compile Include="MapTool\Base\GpsTrackBase.cs" />
+    <Compile Include="MapTool\Config\CFGIPadAssign.cs" />
+    <Compile Include="MapTool\Data\DTSUserMark.cs" />
+    <Compile Include="MapTool\MCLObjectTable.cs" />
+    <Compile Include="MapTool\MCLTableStructure.cs" />
+    <Compile Include="MapTool\Data\DTSDeviceAppInfo.cs" />
+    <Compile Include="MapTool\USRSession.cs" />
+    <Compile Include="MapTool\MCLIPad.cs" />
+    <Compile Include="MapTool\Plan\WRKPlanOption.cs" />
+    <Compile Include="MapTool\PRMVersionApp.cs" />
+    <Compile Include="MapTool\Logs\WRKPlanGridState.cs" />
+    <Compile Include="MapTool\MTLSelectData.cs" />
+    <Compile Include="MapTool\Data\DTSGridUser.cs" />
+    <Compile Include="MapTool\MCLPGroup.cs" />
+    <Compile Include="MapTool\MCLPKind.cs" />
+    <Compile Include="MapTool\Plan\WRKFolder.cs" />
+    <Compile Include="MapTool\Plan\WRKTrackFile.cs" />
+    <Compile Include="MapTool\Plan\WRKTrackMove.cs" />
+    <Compile Include="MapTool\WRKPlanObjBase.cs" />
+    <Compile Include="MapTool\WRKPlanBehavior.cs" />
+    <Compile Include="MapTool\WRKPlanPoint.cs" />
+    <Compile Include="MapTool\WRKPlanSegment.cs" />
+    <Compile Include="MapTool\WRKUserGrid.cs" />
+    <Compile Include="MapTool\WRKPlanUser.cs" />
+    <Compile Include="MapTool\WRKPlanGrid.cs" />
+    <Compile Include="MapTool\USRUser.cs" />
+    <Compile Include="MapTool\WRKPlan.cs" />
+    <Compile Include="MapTool\MCLGrid.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Public\PBLRegionResult.cs" />
+    <Compile Include="Public\PBLAddressResult.cs" />
+    <Compile Include="RestfulApi\ElasticSearch\BAGElasticPointBase.cs" />
+    <Compile Include="RestfulApi\ElasticSearch\BAGElasticRequestBase.cs" />
+    <Compile Include="RestfulApi\ElasticSearch\BAGElasticRequestCreate.cs" />
+    <Compile Include="RestfulApi\ElasticSearch\BAGElasticRequestDelete.cs" />
+    <Compile Include="RestfulApi\ElasticSearch\BAGElasticResponseBase.cs" />
+    <Compile Include="RestfulApi\ElasticSearch\BAGRestfulApiInfo.cs" />
+    <Compile Include="RestfulApi\MapData\BARFALatLng.cs" />
+    <Compile Include="RestfulApi\MapData\BARFAObject.cs" />
+    <Compile Include="RolePermission\RoleContextMenuData.cs" />
+    <Compile Include="RolePermission\RolePermissionData.cs" />
+    <Compile Include="Router\BARDetech.cs" />
+    <Compile Include="Router\BARInput.cs" />
+    <Compile Include="Router\BARNode.cs" />
+    <Compile Include="Router\BAROutput.cs" />
+    <Compile Include="Router\BARPoint.cs" />
+    <Compile Include="Router\BARCheckPoint.cs" />
+    <Compile Include="Router\BARSegment.cs" />
+    <Compile Include="Router\BARDirection.cs" />
+    <Compile Include="Router\BAREpsilon.cs" />
+    <Compile Include="Router\BARResult.cs" />
+    <Compile Include="Router\BARParam.cs" />
+    <Compile Include="Router\BARRegister.cs" />
+    <Compile Include="Router\BARRouteLogs.cs" />
+    <Compile Include="Router\GGRResult.cs" />
+    <Compile Include="SearchData\BAGRegionKey.cs" />
+    <Compile Include="SearchData\BAGSegmentKey.cs" />
+    <Compile Include="Utility\UTLAuthen.cs" />
+    <Compile Include="Utility\UTLConditionImport.cs" />
+    <Compile Include="Utility\UTLConditionBase.cs" />
+    <Compile Include="Utility\UTLDataEnum.cs" />
+    <Compile Include="Utility\UTLAuthHeader.cs" />
+    <Compile Include="Utility\UTLSearchKey.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BAGeocoding.Utility\BAGeocoding.Utility.csproj">
+      <Project>{CBC9202C-7A7B-4F6B-BDBC-65B78241E30C}</Project>
+      <Name>BAGeocoding.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
