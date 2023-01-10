@@ -1,0 +1,24 @@
+Note vấn đề khi nghiên cứu
+
+Hiện tại em đang ngâm cứu source code thì đang gặp những vấn đề sau ạ:
+
+1. Khi mở source code
+Em đanng thấy chưa có source code của các project BAGeocoding: Manager, Route, Tool, WebApi, WebRT, WebUI
+
+2. Source code project BAGeocoding.Dal
+ source code này hiện tại đang thiếu thông tin kết nối đến SQL server
+
+3. Ngâm cứu api Tìm kiếm địa chỉ theo tọa độ
+- Đang hiểu cách tìm kiếm dựa trên dữ liệu của BinhAnh, sử dụng thư viện: KDTree, RTree, gdal
+- Đang thực hiện tìm kiếm theo trường hợp dữ liệu của BinhAnh (trên tập dữ liệu các file .ba)
+- Thực hiện Tìm kiếm theo dữ liệu của Google (google map api của google) ko được.
+
+4. Thực hiện convert api Tìm kiếm địa chỉ theo tọa độ lên .Net 7
+- Các thư viện ở source code cũ đang dùng ở .net framework, khi chuyển .Net 7 không hỗ trợ:
+ KDTree, RTree, gdal, các thư viện ở source code của project Dal
+ 
+5. Tìm kiếm tọa độ theo địa chỉ thì tìm kiếm theo tên đường đang cho ra kết quả
+
+Tình hình chung là như vậy ạ, em đang ngẫm cách lưu trữ dữ liệu của BinhAnh, cách dùng các thư viện để thực hiện phép tìm kiếm ạ.
+Em đang nhờ phòng IT cấp server để dựng Api Tìm kiếm địa chỉ theo tọa độ demo rồi ạ
+Anh Hòa, anh Tuấn xem tư vấn giúp em ạ

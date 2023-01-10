@@ -1,0 +1,43 @@
+Những file đang lỗi:
+USRUser.cs : D:\Project\GeoDemo\GeoDemo\GeoDemo.Entity\MapTool\USRUser.cs
+D:\Project\GeoDemo\GeoDemo\GeoDemo.Entity\Utility
+
+Bll
+I. Tiến trình ngầm khởi tạo dữ liệu - InitData_DoWork
+	1.Tải dữ liệu vùng
+		RegionManager.LoadData()
+	2. Tải dữ liệu khu đô thị
+		PlaceManager.LoadData()
+	3. Tải dữ liệu từ khóa tìm kiếm
+		KeySearchManager.LoadData()
+	4. Tải dữ liệu địa điểm
+		PointManager.LoadData()
+	5. Tải dữ liệu đường
+		SegmentManager.LoadData()
+		
+II. Tìm kiếm địa chỉ theo tọa độ
+	1. Khởi tạo DISTANCE_INTERSECT_ROAD
+		public static double DISTANCE_INTERSECT_ROAD = 0.0002f;
+	2. Khởi tạo RTRectangle
+		RTRectangle rec = new RTRectangle(pts.Lng - its, pts.Lat - its, pts.Lng + its, pts.Lat + its, 0.0f, 0.0f);
+	3. Lấy vùng theo tọa độ
+		3.1 Xác định vùng tìm kiếm
+		
+			// 1. Xác định xã phường
+		 
+			// 2. Xác định quận huyện
+			
+			// 3. Xác định tỉnh/thành
+			
+			// Trả về kết quả
+	4. Tìm kiếm theo dữ liệu của Bình Anh
+		4.1 // Ưu tiên tìm khu đô thị (Lấy khu đô thị theo tọa độ)
+			// Tiến hành tìm kiếm
+			// 1. Xác định ô đất
+			// 2. Xác định lô đất
+			// 3. Xác định khu đô thị
+			// Trả về kết quả
+		4.2 // Nếu không tìm theo đường (Tìm đường theo tọa độ)
+			// Xác định lại khung tìm kiếm
+			
+			// Tiến hành tìm kiếm
