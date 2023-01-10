@@ -1,0 +1,7 @@
+Tạo version
+https://blog.christian-schou.dk/how-to-use-api-versioning-in-net-core-web-api/
+
+Mục 1: thì em bỏ qua phần Manager, Route (Route ở project riêng, anh Tú Anh chuyển sau).
+ Phần Tool chuyển sau. WebAPI, WebRT, WebUI thì trước đây định convert nhưng sau lại ko làm.
+Mục 2: em bỏ nó đi, mình sẽ không dùng SQL từ đầu luôn, nhưng đoạn liên quan SQL xóa hết.
+3. KDTree, RTree là mấy thư viện thuật toán cũ, chạy trên nền 32bit, cũ nhèm và hiện tại đang để lại lỗi. Em tìm thư viện dạng 64bit của nó.
