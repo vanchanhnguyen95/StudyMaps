@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BAGeocoding.Utility\BAGeocoding.Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KDTree">
+      <HintPath>..\..\Dll\KDTree.dll</HintPath>
+    </Reference>
+    <Reference Include="RTree">
+      <HintPath>..\..\Dll\RTree.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
