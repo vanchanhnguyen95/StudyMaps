@@ -1,8 +1,45 @@
 Báo cáo
 1. Convert source bỏ những phần liên quan đến SQL server
+- Ko sử dụng project .Dal
+- Sử dụng thư viện MaxRev.Gdal.Core thay cho thư viện Gdal cũ
+- Đang hiểu là Api tìm tọa độ - địa chỉ thì đang sử dụng thuật toán Ktree, KDtree tìm các tập điểm lân cận trong tập dữ liệu sẵn có, 
+là dữ liệu số, có quy tắc, tập dữ liệu của BinhAnh đủ lớn nên đưa ra kết quả được.
+Còn api địa chỉ - tọa độ: người dùng sẽ nhập ko cố định, nhiều trường hợp khác nhau, chó kiểm soát,
+có lẽ đề xuất người dùng nên nhập theo quy tắc nào đó, nếu nhập ko ra kết quả, mình sẽ gợi ý cách nhập cho chuẩn xác,
+tạo các quy tắc có thể nhập
+
+
+Những file đang bị thay đổi:
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Utility\AppEnv.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Utility\ObjextExtender.cs
+
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Entity\Utility\UTLAuthHeader.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Entity\Utility\UTLConditionBase.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Entity\Utility\UTLDataEnum.cs
+
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Entity\MapTool\USRUser.cs
+
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\BAGRouting.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\CheckData\CheckDataManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapTool\CTLGridManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\ImportData\ImportDataManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\ImportData\ImportDataPlaceManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\ImportData\ImportDataRouteManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MainProcessing.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\OrgAPI.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapObj\PointOfInterestManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapImg\RequestURLManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\RestfulApi\RFAStopwatchManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapObj\RoadNameManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapObj\RouterManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\RunningParams.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\WriteData\WriteDataManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapTool\WRKPlanApprovedManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapTool\WRKPlanDataManager.cs
 
 
 2. Thư viện RTree
+- Convert thư viện RTree sang .Net 7
 
 3. Thư viện KDTree
 

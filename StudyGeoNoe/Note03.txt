@@ -64,3 +64,5 @@ GDAL 3.0.12
 https://github.com/ataoge/GdalCore/tree/master/src/Ataoge.Gdal/gdal
 GDAL .net core
 https://github.com/MaxRev-Dev/gdal.netcore
+
+https://github.com/bertt/GdalOnNet6Sample
