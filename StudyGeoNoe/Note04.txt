@@ -1,0 +1,24 @@
+Báo cáo
+1. Convert source bỏ những phần liên quan đến SQL server
+
+
+2. Thư viện RTree
+
+3. Thư viện KDTree
+
+4. Thư viện GDAL
+
+
+5. Convert source lên .Net 7
+
+
+
+ source code này hiện tại đang thiếu thông tin kết nối đến SQL server
+
+
+
+1.Xây dựng từ khóa tìm kiếm
+
+
+2.Tìm đường đang sai
+145 Phố Bà Triệu, Hai Bà Trưng, Hà Nội, Việt Nam

@@ -5,3 +5,62 @@ Mục 1: thì em bỏ qua phần Manager, Route (Route ở project riêng, anh T
  Phần Tool chuyển sau. WebAPI, WebRT, WebUI thì trước đây định convert nhưng sau lại ko làm.
 Mục 2: em bỏ nó đi, mình sẽ không dùng SQL từ đầu luôn, nhưng đoạn liên quan SQL xóa hết.
 3. KDTree, RTree là mấy thư viện thuật toán cũ, chạy trên nền 32bit, cũ nhèm và hiện tại đang để lại lỗi. Em tìm thư viện dạng 64bit của nó.
+
+1.Link Anh Tuấn
+http://10.0.10.177:4200/
+
+VM146
+IP: 10.0.10.146
+Cổng Remote: 13389
+Tài khoản: Administrator
+Mật khẩu: c;kQEszWgZWnVmU(BQB~BTe(
+
+10.0.10.146:13389
+
+Link thư viện
+2. RTree
+- Hỗ trợ truy cập, tìm kiếm dữ liệu
+- C# Spatial Index (RTree) Library
+
+https://csharp-spatial-index-rtree-library.soft112.com/modal-download.html
+
+https://github.com/yeroo/RTree
+
+https://github.com/yeroo/RTree/tree/master
+https://github.com/sbagnall/RTree/blob/master/RTree.cs
+
+https://github.com/Novorizon/RTree/blob/main/RTree/RTree.cs
+
+https://github.com/GeorgGrebenyuk/DynamoRTree
+https://github.com/Novorizon/RTree/tree/main/RTree
+https://github.com/mcintyre321/RTreeDotNet
+
+https://github.com/search?l=C%23&p=3&q=RTree&type=Repositories
+
+Có liên quan cần nghiên cứu
+https://github.com/eldonnadie/rtreeexample
+
+RTreeKeywordSearch
+https://github.com/tolnes/RTreeKeywordSearch
+
+https://github.com/JimHuertas/RTree_implementation/blob/main/SpatialIndexStructures/RTree/RTree.cs
+
+https://github.com/tousekjan/fit-ctu-vwm-rtree/blob/main/server/Vwm.RTree/Tree.cs
+
+https://github.com/dsergio/rtree-net/tree/master/RTree/src/RTree.Api/Controllers
+
+https://github.com/jadesoftwarenz/JADE-geospatial-demo
+
+3.KDTree
+Nearest neighbour search
+Kd-trees dùng để tìm kiếm các dữ liệu gần, liên quan nhất (neighbouring data points) trong miền không gian 2 chiều, hoặc nhiều chiều.
+Kd-trees thuộc họ Nearest neighbor (NN) search.
+
+https://github.com/arendvw/closestpointtests
+
+4. Thư viện GDAL
+https://github.com/search?l=C%23&p=2&q=GDAL&type=Repositories
+GDAL 3.0.12
+https://github.com/ataoge/GdalCore/tree/master/src/Ataoge.Gdal/gdal
+GDAL .net core
+https://github.com/MaxRev-Dev/gdal.netcore
