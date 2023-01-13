@@ -1,4 +1,5 @@
-﻿using BAGeocoding.Bll;
+﻿using BAGeocoding.Api.Services;
+using BAGeocoding.Bll;
 using BAGeocoding.Utility;
 
 namespace BAGeocoding.Api
@@ -7,21 +8,32 @@ namespace BAGeocoding.Api
     {
         private ILogger<BackgroundWorkerService> _logger;
         private readonly IConfiguration _config;
-        public BackgroundWorkerService(ILogger<BackgroundWorkerService> logger, IConfiguration config)
+        private RegionManagerService _region;
+        public BackgroundWorkerService(ILogger<BackgroundWorkerService> logger, IConfiguration config, RegionManagerService region)
         {
             _logger = logger;
             _config = config;
+            LoadConfig();
+            _region = region;
         }
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var result = false;
-            while (!result)
+            //var result = false;
+            //while (!result)
+            //{
+            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            //    result = await InitDataAsync();
+            //    _logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
+            //}
+            var addBADistrict = false;
+            while (!addBADistrict)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                result = await InitDataAsync();
+                await _region.AddBAGDistrict();
                 _logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
-            } 
+            }
+
         }
 
         private void LoadConfig()

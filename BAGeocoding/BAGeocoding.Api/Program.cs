@@ -1,12 +1,21 @@
 using BAGeocoding.Api;
+using BAGeocoding.Api.Models;
 using BAGeocoding.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
+var conn = builder.Configuration.GetSection("GeoDatabaseSettings");
 
 // Add services to the container.
+builder.Services.Configure<GeoDatabaseSettings>(
+    builder.Configuration.GetSection("GeoDatabaseSettings"));
 
+builder.Services.AddTransient<IGeoService, GeoService>();
+
+builder.Services.AddHostedService<BackgroundWorkerService>();
+
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -29,9 +38,6 @@ builder.Services.AddVersionedApiExplorer(setup =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddHostedService<BackgroundWorkerService>();
-builder.Services.AddTransient<IGeoService, GeoService>();
 
 var app = builder.Build();
 
