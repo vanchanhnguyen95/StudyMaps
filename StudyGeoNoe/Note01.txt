@@ -6,6 +6,18 @@ Bll
 I. Tiến trình ngầm khởi tạo dữ liệu - InitData_DoWork
 	1.Tải dữ liệu vùng
 		RegionManager.LoadData()
+		1. Đọc dữ liệu tỉnh/thành
+			RunningParams.ProvinceData.Objs.Add(province.ProvinceID, province);
+		2. Đọc dữ liệu quận/huyện
+			RunningParams.DistrictData.Objs.Add
+		3. Đọc dữ liệu xã/phường
+			RunningParams.CommuneData.Objs.Add
+		4. Đọc dữ liệu vùng tìm kiếm
+			RunningParams.TileData.RTree.Add
+			RunningParams.TileData.Objs.Add
+		5. Đọc dữ liệu quận/huyện ưu tiên thấp khi tìm kiếm
+			RunningParams.DistrictPriority.Add
+		
 	2. Tải dữ liệu khu đô thị
 		PlaceManager.LoadData()
 	3. Tải dữ liệu từ khóa tìm kiếm
@@ -18,10 +30,24 @@ I. Tiến trình ngầm khởi tạo dữ liệu - InitData_DoWork
 II. Tìm kiếm địa chỉ theo tọa độ
 	1. Khởi tạo DISTANCE_INTERSECT_ROAD
 		public static double DISTANCE_INTERSECT_ROAD = 0.0002f;
-	2. Khởi tạo RTRectangle
+	2. Khởi tạo vùng tìm kiếm RTRectangle
 		RTRectangle rec = new RTRectangle(pts.Lng - its, pts.Lat - its, pts.Lng + its, pts.Lat + its, 0.0f, 0.0f);
 	3. Lấy vùng theo tọa độ
 		3.1 Xác định vùng tìm kiếm
+			- Ban đầu khi load dữ liệu đã có load Danh sách dữ liệu vùng:
+				Sử dụng thuật toán RTree.Intersects để xác định vùng theo tọa độ
+				1 vùng đã có ID vùng: CommuneID, Danh sách các điểm trong vùng PointList
+				Nếu ko có vùng trả về null, có thì dùng CommuneID xác định xã phường, xác định đc DistrictID
+
+		3.2. Nếu vùng tìm kiếm có dữ liệu thì tiến hành:
+			- Ban đầu khi load dữ liệu đã có load Danh sách dữ liệu vùng:
+				Sử dụng thuật toán RTree.Intersects để xác định vùng theo tọa độ
+				1 vùng đã có ID vùng: CommuneID, Danh sách các điểm trong vùng PointList
+				Nếu ko có vùng trả về null, có thì dùng CommuneID xác định xã phường, xác định đc DistrictID
+				
+			- Từ DistrictID, xác định đc quận huyện, ProvinceID Id tỉnh thành
+			- Từ ProvinceID xác định đc tỉnh thành
+			trả về kết quả
 		
 			// 1. Xác định xã phường
 		 
@@ -30,6 +56,8 @@ II. Tìm kiếm địa chỉ theo tọa độ
 			// 3. Xác định tỉnh/thành
 			
 			// Trả về kết quả
+		=> Lúc này kết quả địa chỉ đã có: xã/phường, quận/huyện, tỉnh/thành
+		
 	4. Tìm kiếm theo dữ liệu của Bình Anh
 		4.1 // Ưu tiên tìm khu đô thị (Lấy khu đô thị theo tọa độ)
 			// Tiến hành tìm kiếm
@@ -38,6 +66,10 @@ II. Tìm kiếm địa chỉ theo tọa độ
 			// 3. Xác định khu đô thị
 			// Trả về kết quả
 		4.2 // Nếu không tìm theo đường (Tìm đường theo tọa độ)
-			// Xác định lại khung tìm kiếm
-			
+			// Xác định lại khung tìm kiếm : BAGPoint neighbor = NodeDetect(kdt, pts);
+				Sử dụng thư viện KDTree để Xác định node gần nhất để xét rect
 			// Tiến hành tìm kiếm
+				Xác định đoạn đường theo tọa độ
+					// Lấy danh sách segment trong phạm vi cho phép
+				
+					// Tính toán khoảng cách điểm đến segment
