@@ -8,32 +8,22 @@ namespace BAGeocoding.Api
     {
         private ILogger<BackgroundWorkerService> _logger;
         private readonly IConfiguration _config;
-        private RegionManagerService _region;
-        public BackgroundWorkerService(ILogger<BackgroundWorkerService> logger, IConfiguration config, RegionManagerService region)
+        public BackgroundWorkerService(ILogger<BackgroundWorkerService> logger, IConfiguration config)
         {
             _logger = logger;
             _config = config;
             LoadConfig();
-            _region = region;
         }
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //var result = false;
-            //while (!result)
-            //{
-            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            //    result = await InitDataAsync();
-            //    _logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
-            //}
-            var addBADistrict = false;
-            while (!addBADistrict)
+            var result = false;
+            while (!result)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await _region.AddBAGDistrict();
+                result = await InitDataAsync();
                 _logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
             }
-
         }
 
         private void LoadConfig()
