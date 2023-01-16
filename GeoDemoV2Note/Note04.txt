@@ -1,0 +1,124 @@
+Báo cáo
+1. Convert source bỏ những phần liên quan đến SQL server
+- Ko sử dụng project .Dal
+- Đang hiểu là Api tìm tọa độ - địa chỉ thì đang sử dụng thuật toán Ktree, KDtree tìm các tập điểm lân cận trong tập dữ liệu sẵn có, 
+là dữ liệu số, có quy tắc, tập dữ liệu của BinhAnh đủ lớn nên đưa ra kết quả được.
+ //RTree để tìm kiếm theo tọa độ, // KDTree để tìm node gần nhất
+Còn api địa chỉ - tọa độ: người dùng sẽ nhập ko cố định, nhiều trường hợp khác nhau, chó kiểm soát,
+có lẽ đề xuất người dùng nên nhập theo quy tắc nào đó, nếu nhập ko ra kết quả, mình sẽ gợi ý cách nhập cho chuẩn xác,
+tạo các quy tắc có thể nhập
+
+
+Những file đang bị thay đổi:
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Utility\AppEnv.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Utility\ObjextExtender.cs
+
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Entity\Utility\UTLAuthHeader.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Entity\Utility\UTLConditionBase.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Entity\Utility\UTLDataEnum.cs
+
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Entity\MapTool\USRUser.cs
+
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\BAGRouting.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\CheckData\CheckDataManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapTool\CTLGridManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\ImportData\ImportDataManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\ImportData\ImportDataPlaceManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\ImportData\ImportDataRouteManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MainProcessing.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\OrgAPI.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapObj\PointOfInterestManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapImg\RequestURLManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\RestfulApi\RFAStopwatchManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapObj\RoadNameManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapObj\RouterManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\RunningParams.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\WriteData\WriteDataManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapTool\WRKPlanApprovedManager.cs
+D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapTool\WRKPlanDataManager.cs
+
+
+2. Thư viện RTree
+- Convert thư viện RTree sang .Net 7
+
+3. Thư viện KDTree
+- Convert thư viện KDTree sang .Net 7
+
+4. Thư viện GDAL
+- Convert thư viện GDAL sang .Net 7
+
+
+5. Convert source lên .Net 7
+
+
+
+ source code này hiện tại đang thiếu thông tin kết nối đến SQL server
+
+
+
+1.Xây dựng từ khóa tìm kiếm
+
+
+2.Tìm đường đang sai
+145 Phố Bà Triệu, Hai Bà Trưng, Hà Nội, Việt Nam
+
+
+Api cung cấp dịch vụ tọa độ - địa chỉ
+
+Em nghiên cứu thêm thì đang hiểu thực hiện các phần và hiểu như sau ạ:
+
+Mục I. Dữ liệu sử dụng tìm kiếm
+ - Là dữ liệu các file .ba init ban đầu (ngầm khởi tạo dữ liệu).
+ - Dữ liệu đang chạy init gồm:
+	+ dữ liệu vùng (tỉnh/thành, quận/huyện, xã/phường, dữ liệu vùng tìm kiếm, dữ liệu quận/huyện ưu tiên thấp khi tìm kiếm)
+	+ dữ liệu khu đô thị
+	+ dữ liệu từ khóa tìm kiếm
+	+ dữ liệu địa điểm
+	+ dữ liệu đường
+		
+Mục II. Convert source lên Net 7, chạy Api Tọa độ - địa chỉ giống với source code anh Tuấn gửi
+- Source code đã cho bỏ đi các phần liên quan đến sql
+- Source code ko sử dụng project .Dal
+- Thư viện RTree để tìm kiếm theo tọa độ,
+- Thư viện KDTree để tìm node gần nhất
+
+Mục III. Nghiên cứu Api Tọa độ - địa chỉ đã thực hiện như sau:
+	1. Dùng hằng số DISTANCE_INTERSECT_ROAD = 0.0002f
+	2. Khởi tạo vùng tìm kiếm (Sử dụng thư viện RTree)
+		RTRectangle rec = new RTRectangle(pts.Lng - DISTANCE_INTERSECT_ROAD, pts.Lat - DISTANCE_INTERSECT_ROAD, pts.Lng + DISTANCE_INTERSECT_ROAD, pts.Lat + DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
+	3. Lấy vùng theo tọa độ (Sử dụng thư viện RTree)
+		3.1 Xác định vùng tìm kiếm
+			- Ban đầu khi load dữ liệu đã có load Danh sách dữ liệu vùng:
+				Sử dụng thuật toán RTree.Intersects để xác định vùng theo tọa độ, 1 vùng đã có ID vùng:
+		3.2. Nếu vùng tìm kiếm có dữ liệu thì tiến hành:
+			- Ban đầu khi load dữ liệu đã có load Danh sách dữ liệu vùng:
+				Sử dụng thuật toán RTree.Intersects để xác định vùng theo tọa độ
+				1 vùng đã có ID vùng: CommuneID, Danh sách các điểm trong vùng PointList
+				Dùng thuật toán "Kiểm tra điểm trong vùng" từ danh sách PointList đã init ban đầu
+				Từ đó xác định được xã/phường, quận/huyện, tỉnh/thành
+	4. Tìm kiếm theo dữ liệu của Bình Anh
+		4.1 Ưu tiên tìm khu đô thị (Lấy khu đô thị theo tọa độ)
+			Tiến hành tìm kiếm: Xác định ô đất => lô đất => khu đô thị
+		4.2 Nếu 4.1 không có kết quả thì tìm theo đường (Tìm đường theo tọa độ)
+			Sử dụng thư viện KDTree Xác định lại khung tìm kiếm : BAGPoint neighbor = NodeDetect(kdt, pts);
+			Sử dụng thư viện KDTree để Xác định node gần nhất để tìm node gần nhất
+			- Tiến hành tìm kiếm:
+				+ Xác định đoạn đường theo tọa độ: có sử dụng hằng số DISTANCE_INTERSECT_EPSILON = 0.0005f;
+				+ Tính toán số nhà
+			
+Anh Hòa, anh Tuấn xem giúp em, em có thắc mắc chưa rõ như này ạ:
+- Ở Mục III có đang dùng hằng số DISTANCE_INTERSECT_ROAD = 0.0002f, hằng số DISTANCE_INTERSECT_EPSILON = 0.0005f 
+em đang chưa rõ các hằng số tính từ công thức nào ạ?
+- Ở mục III3.2. có danh sách PointList đã được init ban đầu, em đang hiểu mỗi đối tượng trong danh sách PointList
+là 1 vùng, bao gồm nhiều điểm bao quanh, 1 vùng này là 1 xã/phường của Việt Nam.
+ Nếu đúng như vậy thì chỉ chỉ cần chuẩn bị dữ liệu vùng này cho tất cả các xã/phường của Việt Nam và vùng này được bao bới nhiều điểm càng chi tiết các tốt
+ thì lúc đó Api Tọa độ - địa chỉ cho kết quả càng chính xác
+- Thư viện GDAL em tìm hiểu thì nó dùng để hỗ trợ đọc dữ liệu, import dữ liệu không gian địa lý đúng ko ạ?
+Khi convert source sang Net 7 em có convert thư viện GDAL, phần em đang nghiên cứu thì có sử dụng thư viện GDAL nhưng lại liên quan đến project .DAL,
+em đã ẩn các phần liên quan đến project. GDAL, nhờ anh giải thích thêm các phần sử dụng thư viện GDAl ạ.
+- Em đang hiểu lỗi khi dịch ứng dụng này ở dạng 32bit nhưng sang 64 bit ko đc có nghĩa là đang dịch source code trên nên Net 7 cho thư viện GDAL ko đc đúng ko ạ?
+
+
+
+
+		
