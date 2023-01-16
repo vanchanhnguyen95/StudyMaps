@@ -11,7 +11,7 @@ var conn = builder.Configuration.GetSection("GeoDatabaseSettings");
 builder.Services.Configure<GeoDatabaseSettings>(
     builder.Configuration.GetSection("GeoDatabaseSettings"));
 
-builder.Services.AddTransient<IGeoService, GeoService>();
+builder.Services.AddScoped<IGeoService, GeoService>();
 
 builder.Services.AddHostedService<BackgroundWorkerService>();
 

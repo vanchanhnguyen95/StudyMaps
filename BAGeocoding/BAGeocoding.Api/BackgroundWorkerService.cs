@@ -43,7 +43,6 @@ namespace BAGeocoding.Api
 #pragma warning restore CS8604 // Possible null reference argument.
             RunningParams.TestSpeed = Convert.ToBoolean(_config.GetSection("ServiceTestSpeed").Get<string>());
             RunningParams.DataSpeed = Convert.ToBoolean(_config.GetSection("ServiceDataSpeed").Get<string>());
-            RunningParams.CheckAuthen = Convert.ToBoolean(_config.GetSection("CheckAuthenticate").Get<string>());
 
 #pragma warning disable CS8601 // Possible null reference assignment.
             RunningParams.GOOGLE_GEOCODE_KEY = _config.GetSection("GoogleKey").Get<string>();
