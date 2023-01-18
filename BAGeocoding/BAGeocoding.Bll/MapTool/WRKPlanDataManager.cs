@@ -104,220 +104,227 @@ namespace BAGeocoding.Bll.ImportData
         //    }
         //}
 
-        ///// <summary>
-        ///// Import dữ liệu đường
-        ///// </summary>
-        //public static bool ImportSegment(WRKPlan planInfo, string fileMap, string fileName, ref EnumWPLImportData state)
-        //{
-        //    try
-        //    {
-        //        // 1. Xây dựng RTree
-        //        state = EnumWPLImportData.Success;
-        //        RTree<MCLGrid> gridRTree = InitGridRTree(planInfo, ref state);
-        //        if (gridRTree == null || gridRTree.Count == 0)
-        //            return false;
-        //        // 2. Lấy dữ liệu tên
-        //        Hashtable htObjectName = ReadObjectName(EnumBAGObjectType.Polyline, fileName, ref state);
-        //        if (htObjectName == null || htObjectName.Count == 0)
-        //            return false;
-        //        // 3. Đọc file dữ liệu
-        //        OrgAPI ds = new OrgAPI(fileMap, 0);
-        //        int nIndex = 1;
-        //        if (RunningParams.ImportFileType == EnumBAGFileType.Shp)
-        //            nIndex = 0;
-        //        int nFeature = ds.GetFeatureCount() + nIndex;
-        //        for (int i = nIndex; i < nFeature; i++)
-        //        {
-        //            Feature f = ds.GetFeatureById(i);
-        //            Geometry geo = f.GetGeometryRef();
-        //            if (geo == null)
-        //                continue;
-        //            int gtype = geo.GetGeometryType();
-        //            if (gtype == ogr.wkbLineString)
-        //            {
-        //                #region ==================== Đọc thông tin từ file bản đồ ====================
-        //                WRKPlanSegment segment = new WRKPlanSegment();
-        //                segment.MigrateID = f.GetFieldAsInteger("ID");
-        //                segment.PlanID = planInfo.PlanID;
-        //                if (htObjectName.ContainsKey(segment.MigrateID) == true)
-        //                {
-        //                    WRKPlanObjBase objectInfo = (WRKPlanObjBase)htObjectName[segment.MigrateID];
-        //                    segment.Name = objectInfo.Name;
-        //                    segment.NoteNew = objectInfo.NoteNew;
-        //                }
-        //                else
-        //                {
-        //                    segment.Name = string.Empty;
-        //                    segment.NoteNew = string.Empty;
-        //                }
-        //                try
-        //                {
+        /// <summary>
+        /// Import dữ liệu đường
+        /// </summary>
+        public static bool ImportSegment(WRKPlan planInfo, string fileMap, string fileName, ref EnumWPLImportData state)
+        {
+            try
+            {
+                // 1. Xây dựng RTree
+                state = EnumWPLImportData.Success;
+                RTree<MCLGrid> gridRTree = InitGridRTree(planInfo, ref state);
+                if (gridRTree == null || gridRTree.Count == 0)
+                    return false;
+                // 2. Lấy dữ liệu tên
+                Hashtable htObjectName = ReadObjectName(EnumBAGObjectType.Polyline, fileName, ref state);
+                if (htObjectName == null || htObjectName.Count == 0)
+                    return false;
+                // 3. Đọc file dữ liệu
+                OrgAPI ds = new OrgAPI(fileMap, 0);
+                int nIndex = 1;
+                if (RunningParams.ImportFileType == EnumBAGFileType.Shp)
+                    nIndex = 0;
+                //int nFeature = ds.GetFeatureCount() + nIndex;// Chanh
+                long nFeature = ds.GetFeatureCount() + nIndex;
+                for (int i = nIndex; i < nFeature; i++)
+                {
+                    Feature f = ds.GetFeatureById(i);
+                    Geometry geo = f.GetGeometryRef();
+                    if (geo == null)
+                        continue;
+                    //int gtype = geo.GetGeometryType();//Chanh
+                    wkbGeometryType gtype = geo.GetGeometryType();
+                    //if (gtype == ogr.wkbLineString) Chanh
+                    if (gtype == wkbGeometryType.wkbLineString)
+                    {
+                        #region ==================== Đọc thông tin từ file bản đồ ====================
+                        WRKPlanSegment segment = new WRKPlanSegment();
+                        segment.MigrateID = f.GetFieldAsInteger("ID");
+                        segment.PlanID = planInfo.PlanID;
+                        if (htObjectName.ContainsKey(segment.MigrateID) == true)
+                        {
+                            WRKPlanObjBase objectInfo = (WRKPlanObjBase)htObjectName[segment.MigrateID];
+                            segment.Name = objectInfo.Name;
+                            segment.NoteNew = objectInfo.NoteNew;
+                        }
+                        else
+                        {
+                            segment.Name = string.Empty;
+                            segment.NoteNew = string.Empty;
+                        }
+                        try
+                        {
 
-        //                    segment.Direction = (byte)f.GetFieldAsInteger("Direction");
-        //                }
-        //                catch (Exception abx)
-        //                {
-        //                    LogFile.WriteError(abx.ToString());
-        //                    return false;
-        //                }
-        //                segment.ClassFunc = (byte)f.GetFieldAsInteger("ClassFunc");
-        //                segment.LevelID = (short)f.GetFieldAsInteger("Level");
-        //                segment.KindID = (byte)f.GetFieldAsInteger("Kind");
+                            segment.Direction = (byte)f.GetFieldAsInteger("Direction");
+                        }
+                        catch (Exception abx)
+                        {
+                            LogFile.WriteError(abx.ToString());
+                            return false;
+                        }
+                        segment.ClassFunc = (byte)f.GetFieldAsInteger("ClassFunc");
+                        segment.LevelID = (short)f.GetFieldAsInteger("Level");
+                        segment.KindID = (byte)f.GetFieldAsInteger("Kind");
 
-        //                segment.StartLeft = (short)f.GetFieldAsInteger("StartLeft");
-        //                segment.StartRight = (short)f.GetFieldAsInteger("StartRight");
-        //                segment.EndLeft = (short)f.GetFieldAsInteger("EndLeft");
-        //                segment.EndRight = (short)f.GetFieldAsInteger("EndRight");
+                        segment.StartLeft = (short)f.GetFieldAsInteger("StartLeft");
+                        segment.StartRight = (short)f.GetFieldAsInteger("StartRight");
+                        segment.EndLeft = (short)f.GetFieldAsInteger("EndLeft");
+                        segment.EndRight = (short)f.GetFieldAsInteger("EndRight");
 
-        //                segment.MinSpeed = (short)f.GetFieldAsInteger("MinSpeed");
-        //                segment.MaxSpeed = (short)f.GetFieldAsInteger("MaxSpeed");
+                        segment.MinSpeed = (short)f.GetFieldAsInteger("MinSpeed");
+                        segment.MaxSpeed = (short)f.GetFieldAsInteger("MaxSpeed");
 
-        //                segment.RoadOptsSet(EnumMTLRoadOption.IsNumber, f.GetFieldAsInteger("IsNumber") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.IsBridge, f.GetFieldAsInteger("IsBridge") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.IsPrivate, f.GetFieldAsInteger("IsPrivate") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.IsPed, f.GetFieldAsInteger("IsPed") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.IsFee, false);
+                        segment.RoadOptsSet(EnumMTLRoadOption.IsNumber, f.GetFieldAsInteger("IsNumber") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.IsBridge, f.GetFieldAsInteger("IsBridge") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.IsPrivate, f.GetFieldAsInteger("IsPrivate") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.IsPed, f.GetFieldAsInteger("IsPed") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.IsFee, false);
 
-        //                segment.RoadOptsSet(EnumMTLRoadOption.AllowPed, f.GetFieldAsInteger("AllowPed") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.AllowWalk, f.GetFieldAsInteger("AllowMoto") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.AllowBicycle, f.GetFieldAsInteger("AllowMoto") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.AllowMoto, f.GetFieldAsInteger("AllowMoto") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.AllowCar, f.GetFieldAsInteger("AllowCar") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.AllowBus, f.GetFieldAsInteger("AllowBus") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.AllowTruck, f.GetFieldAsInteger("AllowTruck") > 0);
-        //                segment.RoadOptsSet(EnumMTLRoadOption.AllowTaxi, f.GetFieldAsInteger("AllowCar") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.AllowPed, f.GetFieldAsInteger("AllowPed") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.AllowWalk, f.GetFieldAsInteger("AllowMoto") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.AllowBicycle, f.GetFieldAsInteger("AllowMoto") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.AllowMoto, f.GetFieldAsInteger("AllowMoto") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.AllowCar, f.GetFieldAsInteger("AllowCar") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.AllowBus, f.GetFieldAsInteger("AllowBus") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.AllowTruck, f.GetFieldAsInteger("AllowTruck") > 0);
+                        segment.RoadOptsSet(EnumMTLRoadOption.AllowTaxi, f.GetFieldAsInteger("AllowCar") > 0);
 
-        //                segment.RoadLength = 0;
-        //                segment.PointCount = (short)geo.GetPointCount();
-        //                segment.PointList = new List<BAGPoint>();
-        //                for (int j = 0; j < segment.PointCount; j++)
-        //                {
-        //                    segment.PointList.Add(new BAGPoint(geo.GetX(j), geo.GetY(j)));
-        //                    if(j > 0)
-        //                        segment.RoadLength += (decimal)segment.PointList[j].Distance(segment.PointList[j - 1]);
-        //                }
-        //                segment.Coords = MapHelper.PolylineAlgorithmEncode(segment.PointList);
+                        segment.RoadLength = 0;
+                        segment.PointCount = (short)geo.GetPointCount();
+                        segment.PointList = new List<BAGPoint>();
+                        for (int j = 0; j < segment.PointCount; j++)
+                        {
+                            segment.PointList.Add(new BAGPoint(geo.GetX(j), geo.GetY(j)));
+                            if (j > 0)
+                                segment.RoadLength += (decimal)segment.PointList[j].Distance(segment.PointList[j - 1]);
+                        }
+                        segment.Coords = MapHelper.PolylineAlgorithmEncode(segment.PointList);
 
-        //                segment.NoteOld = string.Empty;
+                        segment.NoteOld = string.Empty;
 
-        //                segment.StateOptsSet(EnumMTLStateOption.IsVisible, true);
-        //                segment.ActionID = 0;
-        //                segment.ApprovedState = (byte)f.GetFieldAsInteger("AppStatus");     //ApprovedState
-        //                segment.EditorID = RunningParams.USER.UserID;
-        //                #endregion
+                        segment.StateOptsSet(EnumMTLStateOption.IsVisible, true);
+                        segment.ActionID = 0;
+                        segment.ApprovedState = (byte)f.GetFieldAsInteger("AppStatus");     //ApprovedState
+                        segment.EditorID = RunningParams.USER.UserID;
+                        #endregion
 
-        //                #region ==================== Bổ sung thông tin Grid và thêm vào CSDL ====================
-        //                DetectGridInfo(gridRTree, ref segment);
-        //                if (segment.GridEdit == 0)
-        //                    LogFile.WriteData(string.Format("Đường nằm ngoài grid, SegmentID = {0}", segment.MigrateID));
-        //                else if (WRKPlanSegmentDAO.Generate(segment) == false)
-        //                    LogFile.WriteData(string.Format("Lỗi import dữ liệu đường, SegmentID = {0}", segment.MigrateID));
-        //                #endregion
-                        
-        //            }
-        //        }
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogFile.WriteData("WRKPlanDataManager.ImportPoint, ex: " + ex.ToString());
-        //        state = EnumWPLImportData.ObjectError;
-        //        return false;
-        //    }
-        //}
+                        #region ==================== Bổ sung thông tin Grid và thêm vào CSDL ====================
+                        /*Chanh Start*/
+                        //DetectGridInfo(gridRTree, ref segment);
+                        //if (segment.GridEdit == 0)
+                        //    LogFile.WriteData(string.Format("Đường nằm ngoài grid, SegmentID = {0}", segment.MigrateID));
+                        //else if (WRKPlanSegmentDAO.Generate(segment) == false)
+                        //    LogFile.WriteData(string.Format("Lỗi import dữ liệu đường, SegmentID = {0}", segment.MigrateID));
+                        /*Chanh End*/
+                        #endregion
 
-        ///// <summary>
-        ///// Xây dựng RTree grid của kế hoạch
-        ///// </summary>
-        //private static RTree<MCLGrid> InitGridRTree(WRKPlan planInfo, ref EnumWPLImportData state)
-        //{
-        //    try
-        //    {
-        //        List<WRKPlanGrid> gridList = WRKPlanGridDAO.GetByPlan(planInfo.PlanID, false);
-        //        if (gridList == null || gridList.Count == 0)
-        //        {
-        //            state = EnumWPLImportData.GridMissing;
-        //            return null;
-        //        }
-        //        RTree<MCLGrid> gridRTree = new RTree<MCLGrid>();
-        //        for (int i = 0; i < gridList.Count; i++)
-        //            gridRTree.Add(gridList[i].GridInfo.GetRectangle(), gridList[i].GridInfo);
-        //        return gridRTree;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogFile.WriteData("WRKPlanDataManager.InitGridRTree, ex: " + ex.ToString());
-        //        state = EnumWPLImportData.GridError;
-        //        return null;
-        //    }
-        //}
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteData("WRKPlanDataManager.ImportPoint, ex: " + ex.ToString());
+                state = EnumWPLImportData.ObjectError;
+                return false;
+            }
+        }
 
-        ///// <summary>
-        ///// Đọc tên đối tượng
-        ///// </summary>
-        //private static Hashtable ReadObjectName(EnumBAGObjectType typeID, string fileName, ref EnumWPLImportData state)
-        //{
-        //    int indexId = -1;
-        //    int indexName = -1;
-        //    int indexNote = -1;
-        //    long objectID = 0;
-        //    List<string> lineData = null;
-        //    Hashtable htObjectName = new Hashtable();
-        //    try
-        //    {
-        //        StreamReader streamReader = new StreamReader(fileName, Encoding.UTF8);
-        //        while (streamReader.EndOfStream == false)
-        //        {
-        //            lineData = StringUlt.StringAnalyze(streamReader.ReadLine(), ',');
+        /// <summary>
+        /// Xây dựng RTree grid của kế hoạch
+        /// </summary>
+        private static RTree<MCLGrid> InitGridRTree(WRKPlan planInfo, ref EnumWPLImportData state)
+        {
+            try
+            {
+                /*Chanh Start*/
+                //List<WRKPlanGrid> gridList = WRKPlanGridDAO.GetByPlan(planInfo.PlanID, false);
+                //if (gridList == null || gridList.Count == 0)
+                //{
+                //    state = EnumWPLImportData.GridMissing;
+                //    return null;
+                //}
+                /*Chanh End*/
+                RTree<MCLGrid> gridRTree = new RTree<MCLGrid>();
+                //for (int i = 0; i < gridList.Count; i++)
+                //    gridRTree.Add(gridList[i].GridInfo.GetRectangle(), gridList[i].GridInfo);
+                return gridRTree;
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteData("WRKPlanDataManager.InitGridRTree, ex: " + ex.ToString());
+                state = EnumWPLImportData.GridError;
+                return null;
+            }
+        }
 
-        //            if (indexId < 0 || indexName < 0)
-        //            {
-        //                #region ==================== Lay chi muc du lieu ====================
-        //                for (int i = 0; i < lineData.Count; i++)
-        //                {
-        //                    switch (lineData[i].Trim().ToUpper())
-        //                    {
-        //                        case "ID":
-        //                            indexId = i;
-        //                            break;
-        //                        case "NAME":
-        //                            indexName = i;
-        //                            break;
-        //                        case "NOTE":
-        //                            indexNote = i;
-        //                            break;
-        //                        default:
-        //                            break;
-        //                    }
-        //                }
-        //                continue;
-        //                #endregion
-        //            }
-        //            else
-        //            {
-        //                #region ==================== Xu ly du lieu ====================
-        //                objectID = Convert.ToInt64(lineData[indexId]);
-        //                if (htObjectName.ContainsKey(objectID) == false)
-        //                {
-        //                    if (indexNote > -1)
-        //                        htObjectName.Add(objectID, new WRKPlanObjBase { Name = lineData[indexName].Trim(), NoteNew = lineData[indexNote].Trim() });
-        //                    else
-        //                        htObjectName.Add(objectID, new WRKPlanObjBase { Name = lineData[indexName].Trim(), NoteNew = string.Empty });
-        //                }
-        //                else
-        //                    LogFile.WriteProcess(string.Format("Lỗi trùng dữ liệu tên đối tượng, ObjectID: {0}", objectID));
-        //                #endregion
-        //            }
-        //        }
-        //        return htObjectName;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogFile.WriteData(string.Format("WRKPlanDataManager.ReadObjectName({0}), ex: {1}", fileName, ex));
-        //        state = EnumWPLImportData.NameError;
-        //        return null;
-        //    }
-        //}
+        /// <summary>
+        /// Đọc tên đối tượng
+        /// </summary>
+        private static Hashtable ReadObjectName(EnumBAGObjectType typeID, string fileName, ref EnumWPLImportData state)
+        {
+            int indexId = -1;
+            int indexName = -1;
+            int indexNote = -1;
+            long objectID = 0;
+            List<string> lineData = null;
+            Hashtable htObjectName = new Hashtable();
+            try
+            {
+                StreamReader streamReader = new StreamReader(fileName, Encoding.UTF8);
+                while (streamReader.EndOfStream == false)
+                {
+                    lineData = StringUlt.StringAnalyze(streamReader.ReadLine(), ',');
+
+                    if (indexId < 0 || indexName < 0)
+                    {
+                        #region ==================== Lay chi muc du lieu ====================
+                        for (int i = 0; i < lineData.Count; i++)
+                        {
+                            switch (lineData[i].Trim().ToUpper())
+                            {
+                                case "ID":
+                                    indexId = i;
+                                    break;
+                                case "NAME":
+                                    indexName = i;
+                                    break;
+                                case "NOTE":
+                                    indexNote = i;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        continue;
+                        #endregion
+                    }
+                    else
+                    {
+                        #region ==================== Xu ly du lieu ====================
+                        objectID = Convert.ToInt64(lineData[indexId]);
+                        if (htObjectName.ContainsKey(objectID) == false)
+                        {
+                            if (indexNote > -1)
+                                htObjectName.Add(objectID, new WRKPlanObjBase { Name = lineData[indexName].Trim(), NoteNew = lineData[indexNote].Trim() });
+                            else
+                                htObjectName.Add(objectID, new WRKPlanObjBase { Name = lineData[indexName].Trim(), NoteNew = string.Empty });
+                        }
+                        else
+                            LogFile.WriteProcess(string.Format("Lỗi trùng dữ liệu tên đối tượng, ObjectID: {0}", objectID));
+                        #endregion
+                    }
+                }
+                return htObjectName;
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteData(string.Format("WRKPlanDataManager.ReadObjectName({0}), ex: {1}", fileName, ex));
+                state = EnumWPLImportData.NameError;
+                return null;
+            }
+        }
 
         ///// <summary>
         ///// Xác định mã Grid theo điểm
@@ -481,7 +488,7 @@ namespace BAGeocoding.Bll.ImportData
         //    //byte[] utf8Bytes = Encoding.Convert(Encoding.Unicode, Encoding.UTF8, utf16Bytes);
         //    //return Encoding.UTF8.GetString(utf8Bytes);
         //}
-        
+
         //public static bool ExportSegment(WRKPlan planInfo, WRKPlanOptionExport exportOpt)
         //{
         //    try

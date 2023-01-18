@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAGeocoding.Utility", "BAGeocoding.Utility\BAGeocoding.Utility.csproj", "{631DB785-7CEF-4E30-A9AE-1FD652B18536}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BAGeocoding.Utility", "BAGeocoding.Utility\BAGeocoding.Utility.csproj", "{631DB785-7CEF-4E30-A9AE-1FD652B18536}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAGeocoding.Entity", "BAGeocoding.Entity\BAGeocoding.Entity.csproj", "{925BD063-5E54-4CB6-AF45-86E9A15216AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BAGeocoding.Entity", "BAGeocoding.Entity\BAGeocoding.Entity.csproj", "{925BD063-5E54-4CB6-AF45-86E9A15216AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAGeocoding.Bll", "BAGeocoding.Bll\BAGeocoding.Bll.csproj", "{28717D4C-693B-4194-B4AE-5FE486195FE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BAGeocoding.Bll", "BAGeocoding.Bll\BAGeocoding.Bll.csproj", "{28717D4C-693B-4194-B4AE-5FE486195FE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAGeocoding.Api", "BAGeocoding.Api\BAGeocoding.Api.csproj", "{A5A96376-3D0F-4414-B287-2D42A2D7A480}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BAGeocoding.Api", "BAGeocoding.Api\BAGeocoding.Api.csproj", "{A5A96376-3D0F-4414-B287-2D42A2D7A480}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BAGeocoding.Test", "BAGeocoding.Test\BAGeocoding.Test.csproj", "{5337F703-5285-4A81-B37D-017313D62712}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A5A96376-3D0F-4414-B287-2D42A2D7A480}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5A96376-3D0F-4414-B287-2D42A2D7A480}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5A96376-3D0F-4414-B287-2D42A2D7A480}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5337F703-5285-4A81-B37D-017313D62712}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5337F703-5285-4A81-B37D-017313D62712}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5337F703-5285-4A81-B37D-017313D62712}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5337F703-5285-4A81-B37D-017313D62712}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

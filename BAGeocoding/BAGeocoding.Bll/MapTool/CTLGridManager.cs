@@ -34,7 +34,8 @@ namespace BAGeocoding.Bll.ImportData
                 int nIndex = 1;
                 if (RunningParams.ImportFileType == EnumBAGFileType.Shp)
                     nIndex = 0;
-                int nFeature = ds.GetFeatureCount() + nIndex;
+                //int nFeature = ds.GetFeatureCount() + nIndex; // Chanh
+                long nFeature = ds.GetFeatureCount() + nIndex;
                 List<int> processList = new List<int>();
                 for (int i = nIndex; i < nFeature; i++)
                 {
@@ -42,9 +43,10 @@ namespace BAGeocoding.Bll.ImportData
                     Geometry geo = f.GetGeometryRef();
                     if (geo == null)
                         continue;
-                    //int gtype = geo.GetGeometryType();
-                    int gtype = geo.GetGeometryType();
-                    if (gtype == ogr.wkbLineString)
+                    //int gtype = geo.GetGeometryType();//Chanh
+                    int gtype = (int)geo.GetGeometryType();
+                    //if (gtype == ogr.wkbLineString)//Chanh
+                    if (gtype == Ogr.wkb25DBit)
                     {
                         int nCount = geo.GetPointCount();
                         MCLGrid gridInfo = new MCLGrid();

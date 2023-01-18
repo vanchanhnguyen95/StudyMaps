@@ -33,7 +33,8 @@ namespace BAGeocoding.Bll.ImportData
                 int nIndex = 1;
                 if (RunningParams.ImportFileType == EnumBAGFileType.Shp)
                     nIndex = 0;
-                int nFeature = ds.GetFeatureCount() + nIndex;
+                //int nFeature = ds.GetFeatureCount() + nIndex;//Chanh
+                long nFeature = ds.GetFeatureCount() + nIndex;
                 List<WRKPlanPoint> result = new List<WRKPlanPoint>();
                 for (int i = nIndex; i < nFeature; i++)
                 {
@@ -41,8 +42,10 @@ namespace BAGeocoding.Bll.ImportData
                     Geometry geo = f.GetGeometryRef();
                     if (geo == null)
                         continue;
-                    int gtype = geo.GetGeometryType();
-                    if (gtype == ogr.wkbPoint)
+                    //int gtype = geo.GetGeometryType();//Chanh
+                    int gtype = (int)geo.GetGeometryType();
+                    //if (gtype == ogr.wkbPoint)//Chanh
+                    if (gtype == Ogr.wkb25DBit)
                     {
                         #region ==================== Đọc thông tin từ file bản đồ ====================
                         WRKPlanPoint point = new WRKPlanPoint();
@@ -97,7 +100,8 @@ namespace BAGeocoding.Bll.ImportData
                 int nIndex = 1;
                 if (RunningParams.ImportFileType == EnumBAGFileType.Shp)
                     nIndex = 0;
-                int nFeature = ds.GetFeatureCount() + nIndex;
+                //int nFeature = ds.GetFeatureCount() + nIndex;//Chanh
+                long nFeature = ds.GetFeatureCount() + nIndex;
                 List<WRKPlanSegment> result = new List<WRKPlanSegment>();
                 for (int i = nIndex; i < nFeature; i++)
                 {
@@ -105,8 +109,10 @@ namespace BAGeocoding.Bll.ImportData
                     Geometry geo = f.GetGeometryRef();
                     if (geo == null)
                         continue;
-                    int gtype = geo.GetGeometryType();
-                    if (gtype == ogr.wkbLineString)
+                    //int gtype = geo.GetGeometryType();//Chanh
+                    int gtype = (int)geo.GetGeometryType();
+                    //if (gtype == ogr.wkbLineString)//Chanh
+                    if (gtype == Ogr.wkb25DBit)
                     {
                         #region ==================== Đọc thông tin từ file bản đồ ====================
                         WRKPlanSegment segment = new WRKPlanSegment();

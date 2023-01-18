@@ -6,6 +6,7 @@ using System.Collections;
 
 //using OSGeo.OGR;
 //using OSGeo.OSR;
+using MaxRev.Gdal.Core;
 using OSGeo.OGR;
 using OSGeo.OSR;
 
@@ -35,13 +36,15 @@ namespace BAGeocoding.Bll
             b_write = wr > 0 ? true : false;
             try
             {
-                ogr.RegisterAll();
+                //ogr.RegisterAll();Chanh
+                GdalBase.ConfigureAll();
             }
             catch (Exception ex)
             {
                 LogFile.WriteError(ex.ToString());
             }
-            ds = ogr.Open(fileName, wr);
+            //ds = ogr.Open(fileName, wr);Chanh
+            ds = Ogr.Open(fileName, wr);
         }
 
         public OrgAPI(string s_folder, string s_layer, int wkb, int wr)
@@ -50,7 +53,8 @@ namespace BAGeocoding.Bll
             string tmp_Dir = System.IO.Directory.GetCurrentDirectory();
             try
             {
-                OSGeo.OGR.ogr.RegisterAll();
+                //ogr.RegisterAll();Chanh
+                GdalBase.ConfigureAll();
             }
             catch (Exception ex)
             {
@@ -77,7 +81,8 @@ namespace BAGeocoding.Bll
             return layer.GetName();
         }
 
-        public int GetFeatureCount()
+        //public int GetFeatureCount() //Chanh
+        public long GetFeatureCount()
         {
             Layer layer = ds.GetLayerByIndex(0);
             return layer.GetFeatureCount(0);
@@ -111,17 +116,20 @@ namespace BAGeocoding.Bll
 
         public void CreateLayer(string s_folder, string s_layer, int wkb)
         {
-            Driver driver = ogr.GetDriverByName("ESRI Shapefile");
+            //Driver driver = ogr.GetDriverByName("ESRI Shapefile");//Chanh
+            Driver driver = Ogr.GetDriverByName("ESRI Shapefile");
             if (driver != null)
             {
                 ds = driver.CreateDataSource(s_folder, new string[] { });
-                layer = ds.CreateLayer(s_layer, null, wkb, new string[] { });
+                //layer = ds.CreateLayer(s_layer, null, wkb, new string[] { });//Chanh
+                layer = ds.CreateLayer(s_layer, null, (wkbGeometryType)wkb, new string[] { });
             }
         }
 
         public void CreateField(string name, int type, int leng)
         {
-            FieldDefn fdefn = new FieldDefn(name, type);
+            //FieldDefn fdefn = new FieldDefn(name, type);//Chanh
+            FieldDefn fdefn = new FieldDefn(name,(FieldType)type);
             fdefn.SetWidth(leng);
             int exec = layer.CreateField(fdefn, 1);
         }

@@ -7,15 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MaxRev.Gdal.Core" Version="3.6.1.100" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BAGeocoding.Entity\BAGeocoding.Entity.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="KDTree">
       <HintPath>..\..\Dll\KDTree.dll</HintPath>
-    </Reference>
-    <Reference Include="OSGeo">
-      <HintPath>..\..\Dll\OSGeo.dll</HintPath>
     </Reference>
     <Reference Include="RTree">
       <HintPath>..\..\Dll\RTree.dll</HintPath>
