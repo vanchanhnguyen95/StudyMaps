@@ -1,0 +1,66 @@
+Tìm kiếm tọa độ theo địa chỉ
+
+1. Xây dựng từ khóa tìm kiếm hiện tại
+	1.1 Chuyển đổi sang gồm: 1 chuỗi có dấu, 1 chuỗi không dấu
+	1.2 Dùng chuỗi ko dấu đi Xây dựng từ khóa tìm kiếm
+		Các từ khóa tìm kiếm được nhập vào, tách nhau ra bằng dấu phẩy
+		1.2.1. Trường hợp 1 param (ko có dấu phẩy trong cụm từ tìm kiếm)
+			- Gán Số nhà tìm kiếm = 0: Building = 0;
+			- Gán Tên Đường tìm kiếm là param 1
+			- Gán Quận/huyện tìm kiếm là "": District = "";
+			- Gán tỉnh tìm kiếm ở Hà Nội:  Province = "ha noi"
+			- Nhập từ có kết quả (Tên đường): Chu Văn An
+			
+		1.2.2. Trường hợp 2 param (có 1 dấu phẩy)
+			* Chưa phân biệt từ cuối nhập vào có là tên tỉnh hay không
+				- Gán Số nhà tìm kiếm = 0: Building = 0;
+				- Gán Tên Đường tìm kiếm là param 1: Road = tmp[0].Trim();
+				- Gán Quận/huyện tìm kiếm là "": District = "";
+				- Gán Tỉnh tìm kiếm là param 2:  Province = tmp[1].Trim();
+				- Nhập từ có kết quả (Tên đường, Tên Tỉnh): Hoàng Thị Loan, Đà Nẵng
+			**** Nếu từ cuối nhập vào là tên tỉnh
+				
+		1.2.3. Trường hợp 3 param (có 2 dấu phẩy)
+			* Nếu lấy được số nhà từ param 1
+				- Gán Tên Đường tìm kiếm là param 2: Road = tmp[1].Trim();
+				- Gán Quận/huyện tìm kiếm là "": District = "";
+				- Gán Tỉnh tìm kiếm là param 3: Province = tmp[2].Trim();
+				- Số nhà được lấy từ hàm Building = DataUtl.GetNumber(tmp[0], 1, ref numberResult)
+				- Nhập từ có kết quả (Số nhà, Tên Đường, Tên Tỉnh): 120, Trần Phú, Quảng Ninh
+				
+			* Nếu không lấy được số nhà từ param 1
+				- Gán Tên Đường là param 1: Road = tmp[0].Trim();
+				- Gán Quận/huyện tìm kiếm là param 2: District = tmp[1].Trim();
+				- Gán Tỉnh tìm kiếm là param 3: Province = tmp[2].Trim();
+				- Số nhà được lấy từ hàm Building = DataUtl.GetNumber(tmp[0], 1, ref numberResult)
+				- Nhập từ có kết quả (Tên đường, Tên Quận/huyện, Tên Tỉnh): Lê Thanh Nghị, Cẩm Phả, Quảng Ninh
+			
+		1.2.4. Trường hợp 4 param (có 3 dấu phẩy)
+			- Số nhà được lấy từ hàm Building = DataUtl.GetNumber(tmp[0], 1, ref numberResult)
+			- Gán Tên Đường là param 2: Road = tmp[1].Trim();
+			- Gán Quận/huyện tìm kiếm là param 3: District = tmp[2].Trim();
+			- Gán Tỉnh tìm kiếm là param 4: Province = tmp[3].Trim();
+			- Nhập từ có kết quả (Số nhà, Tên đường, tên Quận/huyện, Tên Tỉnh): 79, Tô Hiệu, Lê Chân, Hải Phòng
+			
+		- Nhập từ có kết quả (Tên đường): Chu Văn An
+		- Nhập từ có kết quả (Tên đường, Tên Tỉnh): Hoàng Thị Loan, Đà Nẵng
+		- Nhập từ có kết quả (Số nhà, Tên Đường, Tên Tỉnh): 120, Trần Phú, Quảng Ninh
+		- Nhập từ có kết quả (Tên đường, Tên Quận/huyện, Tên Tỉnh): Lê Thanh Nghị, Cẩm Phả, Quảng Ninh
+		- Nhập từ có kết quả (Số nhà, Tên đường, tên Quận/huyện, Tên Tỉnh): 79, Tô Hiệu, Lê Chân, Hải Phòng
+		
+2. Tìm kiếm vùng
+	2.1 Tìm kiếm tỉnh
+	
+	2.2 Tìm kiếm quận/huyện
+	
+3. Tìm kiếm đường
+	3.1 Lấy các thông tin
+	
+	3.2 Trả về kết quả
+
+
+143 Đường Nguyễn Tuân, Thanh Xuân Trung, Thanh Xuân, Hà Nội
+143 Đ. Nguyễn Tuân, Thanh Xuân Trung, Thanh Xuân, Hà Nội, Việt Nam
+
+10 Phố Lê Văn Thiêm, Thanh Xuân Trung, Thanh Xuân, Hà Nội
+10 P. Lê Văn Thiêm, Nhân Chính, Thanh Xuân, Hà Nội, Việt Nam
