@@ -54,5 +54,22 @@ namespace BAGeocoding.Api.Controllers.V1
             var objTest = new PBLAddressResult(geo);
             return new PBLAddressResult(geo);
         }
+
+        [HttpPost]
+        [MapToApiVersion("1.0")]
+        [Route("GeoByAddressV2")]
+        public async Task<PBLAddressResultV2> GeoByAddressV2([FromBody] GeoByAddressVm? body)
+        {
+            var result = new PBLAddressResultV2();
+            if (RunningParams.ProcessState != EnumProcessState.Success)
+            {
+                return result;
+            }
+            var geo = await _geoService.GeoByAddressAsyncV2(body?.address, "vn");
+            if (geo == null) return result;
+
+            var objTest = new PBLAddressResultV2(geo);
+            return new PBLAddressResultV2(geo);
+        }
     }
 }

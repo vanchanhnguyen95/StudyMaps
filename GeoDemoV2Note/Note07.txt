@@ -1,7 +1,7 @@
 Tìm kiếm tọa độ theo địa chỉ
 
 1. Xây dựng từ khóa tìm kiếm hiện tại
-	1.1 Chuyển đổi sang gồm: 1 chuỗi có dấu, 1 chuỗi không dấu
+	1.1 Chuyển đổi từ khóa tìm kiếm có dạng: 1 chuỗi có dấu, 1 chuỗi không dấu
 	1.2 Dùng chuỗi ko dấu đi Xây dựng từ khóa tìm kiếm
 		Các từ khóa tìm kiếm được nhập vào, tách nhau ra bằng dấu phẩy
 		1.2.1. Trường hợp 1 param (ko có dấu phẩy trong cụm từ tìm kiếm)
@@ -47,6 +47,16 @@ Tìm kiếm tọa độ theo địa chỉ
 		- Nhập từ có kết quả (Số nhà, Tên Đường, Tên Tỉnh): 120, Trần Phú, Quảng Ninh
 		- Nhập từ có kết quả (Tên đường, Tên Quận/huyện, Tên Tỉnh): Lê Thanh Nghị, Cẩm Phả, Quảng Ninh
 		- Nhập từ có kết quả (Số nhà, Tên đường, tên Quận/huyện, Tên Tỉnh): 79, Tô Hiệu, Lê Chân, Hải Phòng
+		
+		- Nhập (Tên đường): Chu Văn An
+		- Nhập (Tên đường, Tên Tỉnh): Hoàng Thị Loan, Đà Nẵng
+		- Nhập (Số nhà, Tên Đường, Tên Tỉnh): 120, Trần Phú, Quảng Ninh
+		- Nhập (Tên đường, Tên Quận/huyện, Tên Tỉnh): Lê Thanh Nghị, Cẩm Phả, Quảng Ninh
+		- Nhập (Số nhà, Tên đường, tên Quận/huyện, Tên Tỉnh): 79, Tô Hiệu, Lê Chân, Hải Phòng
+		
+																						133 Tô Hiệu, Hà Đông, Hà Nội
+		133 Đường Tô Hiệu, Hà Cầu, Hà Đông, Hà Nội
+		81, Tô Hiệu, Lê Chân, Hải Phòng
 		
 2. Tìm kiếm vùng
 	2.1 Tìm kiếm tỉnh

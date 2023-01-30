@@ -616,6 +616,46 @@ namespace BAGeocoding.Bll
         }
 
         /// <summary>
+        /// Tìm kiếm tọa độ theo địa chỉ V2
+        /// </summary>
+        public static RPBLAddressResultV2 GeoByAddressV2(string keyStr, string lanStr)
+        {
+            try
+            {
+                // 1. Xây dựng từ khóa tìm kiếm
+                BAGSearchKey keySearch = new BAGSearchKey(2, keyStr.Trim(), LatinToAscii.Latin2Ascii(keyStr.Trim().ToLower()));
+                if (keySearch.IsValid == false)
+                    return null;
+                else if (keySearch.IsSpecial == true)
+                    keySearch.IsSpecial = RunningParams.RoadSpecial.ContainsKey(keySearch.Road);
+
+                // 2. Tìm kiếm vùng
+                // 2.1 Tìm kiếm tỉnh
+                short provinceID = BAGDecoding.SearchProvinceByName(keySearch.Province);
+                if (provinceID < 0)
+                    return null;
+                // 2.2 Tìm kiếm quận/huyện
+                short districtID = BAGDecoding.SearchDistrictByName(keySearch.District, (byte)provinceID);
+
+                // 3. Tìm kiếm đường
+                // 3.1 Lấy các thông tin
+                DTSSegment gsSegment = (DTSSegment)RunningParams.ProvinceData.Segm[provinceID];
+                EnumBAGLanguage language = (lanStr == "vn") ? EnumBAGLanguage.Vn : EnumBAGLanguage.En;
+                // 3.2 Trả về kết quả
+                //if (provinceID == 15 || provinceID == 16 || provinceID == 17 || provinceID == 19 || provinceID == 26)
+                if (RunningParams.HTProvincePriority.ContainsKey(provinceID) == true)
+                    return GeoByAddressHaNoiV2(keySearch, gsSegment, districtID, language);
+                else
+                    return GeoByAddressV2(keySearch, gsSegment, districtID, language);
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError(string.Format("MainProcessing.GeoByAddress({0}, {1}), ex: {2}", keyStr, lanStr, ex.ToString()));
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Tìm kiếm tọa độ qua địa chỉ
         /// </summary>
         private static RPBLAddressResult GeoByAddress(BAGSearchKey keySearch, DTSSegment gsSegment, short districtID, EnumBAGLanguage language)
@@ -632,6 +672,39 @@ namespace BAGeocoding.Bll
                 // 2.1 Tìm kiếm thông tin vùng
                 RTRectangle rec = new RTRectangle(resultRoad.Lng - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lng + Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
                 RPBLAddressResult resultRegion = BAGEncoding.RegionByGeo(rec, new BAGPoint(resultRoad.Lng, resultRoad.Lat), language);
+                if (resultRegion == null)
+                    return null;
+                // 2.2 Bổ sung thông tin và trả về kết quả
+                resultRegion.Lng = resultRoad.Lng;
+                resultRegion.Lat = resultRoad.Lat;
+                resultRegion.Building = resultRoad.Building;
+                resultRegion.Road = resultRoad.Road;
+                return resultRegion;
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError(string.Format("MainProcessing.GeoByAddress, ex: {0}", ex.ToString()));
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Tìm kiếm tọa độ qua địa chỉ V2
+        /// </summary>
+        private static RPBLAddressResultV2 GeoByAddressV2(BAGSearchKey keySearch, DTSSegment gsSegment, short districtID, EnumBAGLanguage language)
+        {
+            try
+            {
+                // 1. Tìm kiếm đường
+                // 1.1 Tìm kiếm đường ưu tiên ở Hà Nội cũ
+                RPBLAddressResultV2 resultRoad = BAGDecoding.SearchRoadByNameV2(gsSegment, keySearch, districtID);
+                if (resultRoad == null)
+                    return null;
+
+                // 2. Tiến hành tìm kiếm vùng
+                // 2.1 Tìm kiếm thông tin vùng
+                RTRectangle rec = new RTRectangle(resultRoad.Lng - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lng + Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
+                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPoint(resultRoad.Lng, resultRoad.Lat), language);
                 if (resultRegion == null)
                     return null;
                 // 2.2 Bổ sung thông tin và trả về kết quả
@@ -673,6 +746,50 @@ namespace BAGeocoding.Bll
                 // 2.1 Tìm kiếm thông tin vùng
                 RTRectangle rec = new RTRectangle(resultRoad.Lng - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lng + Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
                 RPBLAddressResult resultRegion = BAGEncoding.RegionByGeo(rec, new BAGPoint(resultRoad.Lng, resultRoad.Lat), language);
+                if (resultRegion == null)
+                    return null;
+                // 2.2 Bổ sung thông tin và trả về kết quả
+                resultRegion.Lng = resultRoad.Lng;
+                resultRegion.Lat = resultRoad.Lat;
+                resultRegion.Building = resultRoad.Building;
+                resultRegion.Road = resultRoad.Road;
+                resultRegion.MinSpeed = resultRoad.MinSpeed;
+                resultRegion.MaxSpeed = resultRoad.MaxSpeed;
+                resultRegion.DataExt = resultRoad.DataExt;
+                return resultRegion;
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError(string.Format("MainProcessing.GeoByAddressHaNoi, ex: {0}", ex.ToString()));
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Tìm kiếm tọa độ qua địa chỉ (Áp dụng cho Hà Nội) V2
+        /// </summary>
+        private static RPBLAddressResultV2 GeoByAddressHaNoiV2(BAGSearchKey keySearch, DTSSegment gsSegment, short districtID, EnumBAGLanguage language)
+        {
+            try
+            {
+                // 1. Tìm kiếm đường
+                // 1.1 Tìm kiếm đường ưu tiên ở Hà Nội cũ
+                RPBLAddressResultV2 resultRoad = BAGDecoding.SearchRoadByNameHaNoiV2(gsSegment, keySearch, districtID);
+                // 1.2 Nếu không có kết quả thì tìm ra Ha Tây cũ
+                if (resultRoad == null)
+                {
+                    // 1.2.1 Chỉ tìm kiếm khi có giới hạn quận huyện và quận huyện đó không thuộc Hà Tây cũ
+                    if (districtID == -1 || RunningParams.DistrictPriority.ContainsKey(districtID) == false)
+                        resultRoad = BAGDecoding.SearchRoadByNameHaNoiV2(gsSegment, keySearch, -1, true);
+                    // 1.2.2 Kiểm tra kết quả
+                    if (resultRoad == null)
+                        return null;
+                }
+
+                // 2. Tiến hành tìm kiếm vùng
+                // 2.1 Tìm kiếm thông tin vùng
+                RTRectangle rec = new RTRectangle(resultRoad.Lng - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lng + Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
+                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPoint(resultRoad.Lng, resultRoad.Lat), language);
                 if (resultRegion == null)
                     return null;
                 // 2.2 Bổ sung thông tin và trả về kết quả

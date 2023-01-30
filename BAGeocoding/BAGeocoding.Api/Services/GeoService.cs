@@ -9,6 +9,9 @@ namespace BAGeocoding.Api.Services
         Task<List<RPBLAddressResult>> AddressByGeoAsync(string? lngStr, string? latStr);
         // Tìm kiếm tọa độ theo địa chỉ
         Task<RPBLAddressResult> GeoByAddressAsync(string? keyStr, string? lanStr);
+
+        // Tìm kiếm tọa độ theo địa chỉ
+        Task<RPBLAddressResultV2> GeoByAddressAsyncV2(string? keyStr, string? lanStr);
     }
 
     public class GeoService : IGeoService
@@ -23,6 +26,11 @@ namespace BAGeocoding.Api.Services
         public async Task<RPBLAddressResult> GeoByAddressAsync(string? keyStr, string? lanStr)
         {
             return await Task.Run(() => MainProcessing.GeoByAddress(keyStr ?? "", lanStr ?? ""));
+        }
+
+        public async Task<RPBLAddressResultV2> GeoByAddressAsyncV2(string? keyStr, string? lanStr)
+        {
+            return await Task.Run(() => MainProcessing.GeoByAddressV2(keyStr ?? "", lanStr ?? ""));
         }
 
     }

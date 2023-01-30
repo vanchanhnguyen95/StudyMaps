@@ -197,6 +197,78 @@ namespace BAGeocoding.Bll
         }
 
         /// <summary>
+        /// Tìm đường theo từ khóa
+        /// </summary>
+        public static RPBLAddressResultV2 SearchRoadByNameV2(DTSSegment seg, BAGSearchKey key, short dis)
+        {
+            try
+            {
+                List<string> keyList = DataUtl.ProcessKeyList(key.Road);
+                List<BAGKeyRate> keyRateList = SearchSegmentByName(seg, keyList, dis);
+                if (keyRateList == null || keyRateList.Count == 0)
+                    return null;
+
+                #region ==================== Ưu tiên tên giống nhau (tỉ lệ cao) ====================
+                List<int> similarList = new List<int>();
+                RPBLAddressResultV2 result = null;
+                for (int i = 0; i < keyRateList.Count; i++)
+                {
+                    if (seg.Objs.ContainsKey(keyRateList[i].ObjectID) == false)
+                        continue;
+                    // Chỉ xét tỉ lệ 97% trở lên
+                    else if (keyRateList[i].Percent < 97)
+                        continue;
+                    // Nếu tỉ lệ là 100% thì phải kiểm tra đúng chuỗi (Nguyen Dinh Thi <> Nguyen Thi Dinh)
+                    else if (keyRateList[i].Percent > 99)
+                    {
+                        // Kiểm tra cả tên (Tránh từ khóa đảo lộn)
+                        BAGSegment segment = (BAGSegment)seg.Objs[keyRateList[i].ObjectID];
+                        if (segment.EName.ToLower().Equals(key.Road) == false)
+                            continue;
+                        similarList.Add(keyRateList[i].ObjectID);
+                        // Kiểm tra nếu tiếng Việt => giống cả dấu (Hàng Đậu <> Hàng Dầu)
+                        if (key.IsSpecial == true && key.Original.IndexOf(segment.VName.ToLower()) < 0)
+                            continue;
+                    }
+                    if (SearchRoadByNameBuildResultV2((BAGSegment)seg.Objs[keyRateList[i].ObjectID], key, false, ref result) == true)
+                        break;
+                }
+                // Trường hợp tiếng việt không giống => Cố gắng đưa ra từ gần giống (Hàng Dau => Hàng Đậu OR Hàng Dầu)
+                if (result == null && similarList.Count > 0)
+                {
+                    for (int i = 0; i < similarList.Count; i++)
+                    {
+                        if (SearchRoadByNameBuildResultV2((BAGSegment)seg.Objs[similarList[i]], key, true, ref result) == true)
+                            break;
+                    }
+                }
+                if (result != null)
+                    return result;
+                #endregion
+
+                #region ==================== Tìm kết quả gần giống ====================
+                return null;
+                //for (int i = 0; i < keyRateList.Count; i++)
+                //{
+                //    if (seg.Objs.ContainsKey(keyRateList[i].ObjectID) == false)
+                //        continue;
+                //    // Chỉ xét tỉ lệ 33% trở lên
+                //    else if (keyRateList[i].Percent < 33)
+                //        continue;
+                //    else if (SearchRoadByNameBuildResult((BAGSegment)seg.Objs[keyRateList[i].ObjectID], key, ref result) == true)
+                //        break;
+                //}
+                //return result;
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGDecoding.SearchRoadByName, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Tìm đường theo từ khóa (Hà Nội)
         /// </summary>
         public static RPBLAddressResult SearchRoadByNameHaNoi(DTSSegment seg, BAGSearchKey key, short dis, bool all = false)
@@ -239,6 +311,78 @@ namespace BAGeocoding.Bll
                     for (int i = 0; i < similarList.Count; i++)
                     {
                         if (SearchRoadByNameBuildResult((BAGSegment)seg.Objs[similarList[i]], key, true, ref result) == true)
+                            break;
+                    }
+                }
+                if (result != null)
+                    return result;
+                #endregion
+
+                #region ==================== Tìm kết quả gần giống ====================
+                return null;
+                //for (int i = 0; i < keyRateList.Count; i++)
+                //{
+                //    if (seg.Objs.ContainsKey(keyRateList[i].ObjectID) == false)
+                //        continue;
+                //    // Chỉ xét tỉ lệ 33% trở lên
+                //    else if (keyRateList[i].Percent < 33)
+                //        continue;
+                //    else if (SearchRoadByNameBuildResult((BAGSegment)seg.Objs[keyRateList[i].ObjectID], key, ref result) == true)
+                //        break;
+                //}
+                //return result;
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGDecoding.SearchRoadByNameHaNoi, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Tìm đường theo từ khóa (Hà Nội) V2
+        /// </summary>
+        public static RPBLAddressResultV2 SearchRoadByNameHaNoiV2(DTSSegment seg, BAGSearchKey key, short dis, bool all = false)
+        {
+            try
+            {
+                List<string> keyList = DataUtl.ProcessKeyList(key.Road);
+                List<BAGKeyRate> keyRateList = SearchSegmentByNameHaNoi(seg, keyList, dis, all);
+                if (keyRateList == null || keyRateList.Count == 0)
+                    return null;
+
+                #region ==================== Ưu tiên tên giống nhau (tỉ lệ cao) ====================
+                List<int> similarList = new List<int>();
+                RPBLAddressResultV2 result = null;
+                for (int i = 0; i < keyRateList.Count; i++)
+                {
+                    if (seg.Objs.ContainsKey(keyRateList[i].ObjectID) == false)
+                        continue;
+                    // Chỉ xét tỉ lệ 97% trở lên
+                    else if (keyRateList[i].Percent < 97)
+                        continue;
+                    // Nếu tỉ lệ là 100% thì phải kiểm tra đúng chuỗi (Nguyen Dinh Thi <> Nguyen Thi Dinh)
+                    else if (keyRateList[i].Percent > 99)
+                    {
+                        // Kiểm tra cả tên (Tránh từ khóa đảo lộn)
+                        BAGSegment segment = (BAGSegment)seg.Objs[keyRateList[i].ObjectID];
+                        if (segment.EName.ToLower().Equals(key.Road) == false)
+                            continue;
+                        similarList.Add(keyRateList[i].ObjectID);
+                        // Kiểm tra nếu tiếng Việt => giống cả dấu (Hàng Đậu <> Hàng Dầu)
+                        if (key.IsSpecial == true && key.Original.IndexOf(segment.VName.ToLower()) < 0)
+                            continue;
+                    }
+                    if (SearchRoadByNameBuildResultV2((BAGSegment)seg.Objs[keyRateList[i].ObjectID], key, false, ref result) == true)
+                        break;
+                }
+                // Trường hợp tiếng việt không giống => Cố gắng đưa ra từ gần giống (Hàng Dau => Hàng Đậu OR Hàng Dầu)
+                if ((result == null || result.Road == null || result.Road.Length == 0) && similarList.Count > 0)
+                {
+                    for (int i = 0; i < similarList.Count; i++)
+                    {
+                        if (SearchRoadByNameBuildResultV2((BAGSegment)seg.Objs[similarList[i]], key, true, ref result) == true)
                             break;
                     }
                 }
@@ -608,6 +752,206 @@ namespace BAGeocoding.Bll
                             result.Building = building;
                             result.Lng = (float)segmentInfo.PointList[indexPos].Lng;
                             result.Lat = (float)segmentInfo.PointList[indexPos].Lat;
+                        }
+                    }
+                }
+                #endregion
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Kiểm tra theo số nhà để xác định đoạn đường chính xác V2
+        /// </summary>
+        private static bool SearchRoadByNameBuildResultV2(BAGSegment segmentInfo, BAGSearchKey searchKey, bool ignoreSide, ref RPBLAddressResultV2 result)
+        {
+            // 1. Khởi tạo kết quả
+            int indexPos = 0;
+            bool dataFlag = true;
+            short deltaTemp = 0;
+            short deltaLeft = 0;
+            short deltaRight = 0;
+            short building = 0;
+            short buildingLeft = 0;
+            short buildingRight = 0;
+            float deltaLength = 0;
+            if (result == null)
+                result = new RPBLAddressResultV2();
+
+            // 2. Kiểm tra số nhà
+            if (DataUtl.CheckBuilding(segmentInfo.IsSerial, searchKey.Building, segmentInfo.StartLeft, segmentInfo.EndLeft) == true)
+            {
+                #region ================ Kiểm tra số nhà bên trái ================
+                result.Accurate = (searchKey.Building > 0);
+                result.Building = searchKey.Building;
+                result.Road = segmentInfo.VName;
+                result.MinSpeed = segmentInfo.MinSpeed;
+                result.MaxSpeed = segmentInfo.MaxSpeed;
+                result.DataExt = segmentInfo.DataExt;
+                if (searchKey.Building == 0)
+                {
+                    result.Lng = segmentInfo.PointList[0].Lng;
+                    result.Lat = segmentInfo.PointList[0].Lat;
+                }
+                else if (searchKey.Building == segmentInfo.StartLeft)
+                {
+                    result.Lng = segmentInfo.PointList[0].Lng;
+                    result.Lat = segmentInfo.PointList[0].Lat;
+                }
+                else if (searchKey.Building == segmentInfo.EndLeft)
+                {
+                    result.Lng = segmentInfo.PointList[segmentInfo.PointList.Count - 1].Lng;
+                    result.Lat = segmentInfo.PointList[segmentInfo.PointList.Count - 1].Lat;
+                }
+                else
+                {
+                    if (segmentInfo.StartLeft == segmentInfo.EndLeft)
+                        deltaLength = 0;
+                    else if (segmentInfo.StartLeft < segmentInfo.EndLeft)
+                        deltaLength = segmentInfo.SegLength * (searchKey.Building - segmentInfo.StartLeft) / (segmentInfo.EndLeft - segmentInfo.StartLeft);
+                    else
+                        deltaLength = segmentInfo.SegLength * (segmentInfo.StartLeft - searchKey.Building) / (segmentInfo.StartLeft - segmentInfo.EndLeft);
+                    for (int i = 1; i < segmentInfo.PointList.Count; i++)
+                    {
+                        if (segmentInfo.PointList[i].D2Start > deltaLength)
+                        {
+                            double percent = (deltaLength - segmentInfo.PointList[i - 1].D2Start) / (segmentInfo.PointList[i].D2Start - segmentInfo.PointList[i - 1].D2Start);
+                            result.Lng = (segmentInfo.PointList[i - 1].Lng + (segmentInfo.PointList[i].Lng - segmentInfo.PointList[i - 1].Lng) * percent);
+                            result.Lat = (segmentInfo.PointList[i - 1].Lat + (segmentInfo.PointList[i].Lat - segmentInfo.PointList[i - 1].Lat) * percent);
+                            break;
+                        }
+                    }
+                }
+                return true;
+                #endregion
+            }
+            // 2.2 Kiểm tra số nhà bên phải
+            else if (DataUtl.CheckBuilding(segmentInfo.IsSerial, searchKey.Building, segmentInfo.StartRight, segmentInfo.EndRight) == true)
+            {
+                #region ================ Kiểm tra số nhà bên phải ================
+                result.Accurate = (searchKey.Building > 0);
+                result.Building = searchKey.Building;
+                result.Road = segmentInfo.VName;
+                result.MinSpeed = segmentInfo.MinSpeed;
+                result.MaxSpeed = segmentInfo.MaxSpeed;
+                result.DataExt = segmentInfo.DataExt;
+                if (searchKey.Building == 0)
+                {
+                    result.Lng = segmentInfo.PointList[0].Lng;
+                    result.Lat = segmentInfo.PointList[0].Lat;
+                }
+                else if (searchKey.Building == segmentInfo.StartRight)
+                {
+                    result.Lng = segmentInfo.PointList[0].Lng;
+                    result.Lat = segmentInfo.PointList[0].Lat;
+                }
+                else if (searchKey.Building == segmentInfo.EndRight)
+                {
+                    result.Lng = segmentInfo.PointList[segmentInfo.PointList.Count - 1].Lng;
+                    result.Lat = segmentInfo.PointList[segmentInfo.PointList.Count - 1].Lat;
+                }
+                else
+                {
+                    if (segmentInfo.StartRight == segmentInfo.EndRight)
+                        deltaLength = 0;
+                    else if (segmentInfo.StartRight < segmentInfo.EndRight)
+                        deltaLength = segmentInfo.SegLength * (searchKey.Building - segmentInfo.StartRight) / (segmentInfo.EndRight - segmentInfo.StartRight);
+                    else
+                        deltaLength = segmentInfo.SegLength * (segmentInfo.StartRight - searchKey.Building) / (segmentInfo.StartRight - segmentInfo.EndRight);
+                    for (int i = 1; i < segmentInfo.PointList.Count; i++)
+                    {
+                        if (segmentInfo.PointList[i].D2Start > deltaLength)
+                        {
+                            double percent = (deltaLength - segmentInfo.PointList[i - 1].D2Start) / (segmentInfo.PointList[i].D2Start - segmentInfo.PointList[i - 1].D2Start);
+                            result.Lng = (segmentInfo.PointList[i - 1].Lng + (segmentInfo.PointList[i].Lng - segmentInfo.PointList[i - 1].Lng) * percent);
+                            result.Lat = (segmentInfo.PointList[i - 1].Lat + (segmentInfo.PointList[i].Lat - segmentInfo.PointList[i - 1].Lat) * percent);
+                            break;
+                        }
+                    }
+                }
+                return true;
+                #endregion
+            }
+            // 2.3 Trường hợp kết quả đầu tiên
+            else if (ignoreSide == true || segmentInfo.IsSerial == true || (searchKey.Building % 2 == segmentInfo.StartLeft % 2) || (searchKey.Building % 2 == segmentInfo.StartRight % 2) || (segmentInfo.StartLeft == 0 && segmentInfo.StartRight == 0))
+            {
+                #region ================ Kiểm tra số nhà cùng bên ================
+                if (result.Road == null || result.Road.Length == 0)
+                {
+                    // 2.3.1 Lấy số nhà và vị trí điểm
+                    // 2.3.1.1 Đường số nhà liên tiếp
+                    if (segmentInfo.IsSerial == true)
+                    {
+                        buildingLeft = DataUtl.DetechBuilding(searchKey.Building, segmentInfo.StartLeft, segmentInfo.EndLeft, segmentInfo.PointList.Count, ref deltaLeft, ref indexPos);
+                        buildingRight = DataUtl.DetechBuilding(searchKey.Building, segmentInfo.StartRight, segmentInfo.EndRight, segmentInfo.PointList.Count, ref deltaRight, ref indexPos);
+                        if (deltaLeft < deltaRight)
+                            result.Building = buildingLeft;
+                        else
+                            result.Building = buildingRight;
+                    }
+                    // 2.3.1.2 Số nhà bên trái
+                    else if (searchKey.Building % 2 == segmentInfo.StartLeft % 2)
+                        result.Building = DataUtl.DetechBuilding(searchKey.Building, segmentInfo.StartLeft, segmentInfo.EndLeft, segmentInfo.PointList.Count, ref deltaTemp, ref indexPos);
+                    // 2.3.1.2 Số nhà bên phải
+                    else
+                        result.Building = DataUtl.DetechBuilding(searchKey.Building, segmentInfo.StartRight, segmentInfo.EndRight, segmentInfo.PointList.Count, ref deltaTemp, ref indexPos);
+
+                    // 2.3.2 Ghi nhận lại kết quả
+                    result.Road = segmentInfo.VName;
+                    result.MinSpeed = segmentInfo.MinSpeed;
+                    result.MaxSpeed = segmentInfo.MaxSpeed;
+                    result.DataExt = segmentInfo.DataExt;
+                    result.Lng = segmentInfo.PointList[indexPos].Lng;
+                    result.Lat = segmentInfo.PointList[indexPos].Lat;
+                }
+                // 2.4 Các kết quả sau
+                else if (segmentInfo.StartLeft > 0 || segmentInfo.StartRight > 0)
+                {
+                    // 2.4.1 Lấy số nhà và vị trí điểm
+
+                    // 2.4.1.1 Đường số nhà liên tiếp
+                    if (segmentInfo.IsSerial == true)
+                    {
+                        buildingLeft = DataUtl.DetechBuilding(searchKey.Building, segmentInfo.StartLeft, segmentInfo.EndLeft, segmentInfo.PointList.Count, ref deltaLeft, ref indexPos);
+                        buildingRight = DataUtl.DetechBuilding(searchKey.Building, segmentInfo.StartRight, segmentInfo.EndRight, segmentInfo.PointList.Count, ref deltaRight, ref indexPos);
+                        if (segmentInfo.StartLeft > 0 && deltaLeft < deltaRight)
+                            result.Building = buildingLeft;
+                        else if (segmentInfo.StartRight > 0 && deltaRight < deltaLeft)
+                            result.Building = buildingRight;
+                        else
+                            dataFlag = false;
+                    }
+                    // 2.4.1.2 Số nhà bên trái
+                    else if (segmentInfo.StartLeft > 0 && searchKey.Building % 2 == segmentInfo.StartLeft % 2)
+                        building = DataUtl.DetechBuilding(searchKey.Building, segmentInfo.StartLeft, segmentInfo.EndLeft, segmentInfo.PointList.Count, ref deltaTemp, ref indexPos);
+                    // 2.4.1.2 Số nhà bên phải
+                    else if (segmentInfo.StartRight > 0 && searchKey.Building % 2 == segmentInfo.StartRight % 2)
+                        building = DataUtl.DetechBuilding(searchKey.Building, segmentInfo.StartRight, segmentInfo.EndRight, segmentInfo.PointList.Count, ref deltaTemp, ref indexPos);
+                    else
+                        dataFlag = false;
+
+                    if (dataFlag == true)
+                    {
+                        // 2.4.2 Xác định xem kết quả mới có tốt hơn không
+                        short min = Math.Min(result.Building, building);
+                        short max = Math.Max(result.Building, building);
+                        // 2.4.2.1 Nếu số nhà cần tìm bé hơn 2 kết quả (cũ + mới) => Nếu kết quả mới lớn hơn cũ thì bỏ qua
+                        if (searchKey.Building < min && building > result.Building)
+                            indexPos = -1;
+                        // 2.4.2.1 Nếu số nhà cần tìm lớn hơn 2 kết quả (cũ + mới) => Nếu kết quả mới bé hơn cũ thì bỏ qua
+                        else if (searchKey.Building > max && building < result.Building)
+                            indexPos = -1;
+                        // 2.4.2.1 Nếu số nhà cần tìm nằm giữa 2 kết quả (cũ + mới) => Cũ gần hơn thì bỏ qua
+                        else if (searchKey.Building > min && searchKey.Building < max && Math.Abs(searchKey.Building - building) > Math.Abs(result.Building - searchKey.Building))
+                            indexPos = -1;
+
+                        // 2.4.3 Kiểm tra cập nhật lại kết quả
+                        if (indexPos > -1)
+                        {
+                            result.Building = building;
+                            result.Lng = segmentInfo.PointList[indexPos].Lng;
+                            result.Lat = segmentInfo.PointList[indexPos].Lat;
                         }
                     }
                 }

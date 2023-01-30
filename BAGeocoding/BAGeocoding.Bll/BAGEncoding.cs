@@ -33,6 +33,23 @@ namespace BAGeocoding.Bll
         }
 
         /// <summary>
+        /// Lấy vùng theo tọa độ V2
+        /// </summary>
+        public static RPBLAddressResultV2 RegionByGeoV2(RTRectangle rec, BAGPoint pts, EnumBAGLanguage lan)
+        {
+            try
+            {
+                short provinceID = 0;
+                return RegionByGeoV2(rec, pts, lan, ref provinceID);
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGEncoding.RegionByGeo, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Lấy vùng theo tọa độ
         /// </summary>
         public static RPBLAddressResult RegionByGeo(RTRectangle rec, BAGPoint pts, EnumBAGLanguage lan, ref short pri)
@@ -96,6 +113,52 @@ namespace BAGeocoding.Bll
                     Province = (lan == EnumBAGLanguage.Vn) ? province.VName : province.EName
                 };
                 */
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGEncoding.RegionByGeo, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Lấy vùng theo tọa độ V2
+        /// </summary>
+        public static RPBLAddressResultV2 RegionByGeoV2(RTRectangle rec, BAGPoint pts, EnumBAGLanguage lan, ref short pri)
+        {
+            try
+            {
+                // Xác định vùng tìm kiếm
+                BAGTile tile = TileByGeo(rec, pts);
+                if (tile == null)
+                    return null;
+                // 1. Xác định xã phường
+                else if (RunningParams.CommuneData.Objs.ContainsKey(tile.CommuneID) == false)
+                    return null;
+                BAGCommune commune = (BAGCommune)RunningParams.CommuneData.Objs[tile.CommuneID];
+                //LogFile.WriteProcess(string.Format("{0} - {1}", commune.CommuneID, commune.VName));
+                // 2. Xác định quận huyện
+                if (RunningParams.DistrictData.Objs.ContainsKey(commune.DistrictID) == false)
+                    return null;
+                BAGDistrict district = (BAGDistrict)RunningParams.DistrictData.Objs[commune.DistrictID];
+                // 3. Xác định tỉnh/thành
+                if (RunningParams.ProvinceData.Objs.ContainsKey(district.ProvinceID) == false)
+                    return null;
+                BAGProvince province = (BAGProvince)RunningParams.ProvinceData.Objs[district.ProvinceID];
+                pri = province.ProvinceID;
+
+                // Trả về kết quả
+                return new RPBLAddressResultV2
+                {
+                    Lng = pts.Lng,
+                    Lat = pts.Lat,
+                    Commune = (lan == EnumBAGLanguage.Vn) ? commune.VName : commune.EName,
+                    District = (lan == EnumBAGLanguage.Vn) ? district.VName : district.EName,
+                    Province = (lan == EnumBAGLanguage.Vn) ? province.VName : province.EName,
+
+                    DistrictID = district.DistrictID,
+                    ProvinceID = province.ProvinceID
+                };
             }
             catch (Exception ex)
             {
