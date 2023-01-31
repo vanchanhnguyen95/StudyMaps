@@ -53,11 +53,8 @@ Tìm kiếm tọa độ theo địa chỉ
 		- Nhập (Số nhà, Tên Đường, Tên Tỉnh): 120, Trần Phú, Quảng Ninh
 		- Nhập (Tên đường, Tên Quận/huyện, Tên Tỉnh): Lê Thanh Nghị, Cẩm Phả, Quảng Ninh
 		- Nhập (Số nhà, Tên đường, tên Quận/huyện, Tên Tỉnh): 79, Tô Hiệu, Lê Chân, Hải Phòng
-		
-																						133 Tô Hiệu, Hà Đông, Hà Nội
-		133 Đường Tô Hiệu, Hà Cầu, Hà Đông, Hà Nội
-		81, Tô Hiệu, Lê Chân, Hải Phòng
-		
+																133, Tô Hiệu, Hà Đông, Hà Nội
+
 2. Tìm kiếm vùng
 	2.1 Tìm kiếm tỉnh
 	

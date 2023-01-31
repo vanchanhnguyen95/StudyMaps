@@ -1,0 +1,42 @@
+Swashbuckle.AspNetCore.SwaggerGen.SwaggerGeneratorException: Conflicting method/path combination "GET WeatherForecast" for actions - DemoRedis.Controllers.WeatherForecastController.GetAsync (DemoRedis),DemoRedis.Controllers.WeatherForecastController.CreateAsync (DemoRedis). Actions require a unique method/path combination for Swagger/OpenAPI 3.0. Use ConflictingActionsResolver as a workaround
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GenerateOperations(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GeneratePaths(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GetSwaggerDocumentWithoutFilters(String documentName, String host, String basePath)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GetSwaggerAsync(String documentName, String host, String basePath)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+
+HEADERS
+=======
+Accept: application/json,*/*
+Host: localhost:7094
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: vi,en-US;q=0.9,en;q=0.8,vi-VN;q=0.7,fr-FR;q=0.6,fr;q=0.5
+Cache-Control: no-cache
+Pragma: no-cache
+Referer: https://localhost:7094/swagger/index.html
+sec-ch-ua: "Not_A Brand";v="99", "Google Chrome";v="109", "Chromium";v="109"
+DNT: 1
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+sec-fetch-site: same-origin
+sec-fetch-mode: cors
+sec-fetch-dest: empty
+
+
+Phần Tìm kiếm tọa độ theo địa chỉ thì hiện tại cũng đã thực hiện tìm kiếm được ạ,
+cần cung cấp những thông tin: Số nhà, Tên đường, tên Quận/huyện, Tên Tỉnh thì sẽ có kết quả chuẩn nhất
+Khi tìm kiếm thì mình có quy định mỗi param cách nhau bằng dấu phẩy để thực hiện tìm kiếm ạ,
+Có những cách nhập như sau nha anh:
+- Nhập (Tên đường): Chu Văn An
+- Nhập (Tên đường, Tên Tỉnh): Hoàng Thị Loan, Đà Nẵng
+- Nhập (Số nhà, Tên Đường, Tên Tỉnh): 120, Trần Phú, Quảng Ninh
+- Nhập (Tên đường, Tên Quận/huyện, Tên Tỉnh): Lê Thanh Nghị, Cẩm Phả, Quảng Ninh
+- Nhập (Số nhà, Tên đường, tên Quận/huyện, Tên Tỉnh): 79, Tô Hiệu, Lê Chân, Hải Phòng
+ phần Tìm kiếm tọa độ theo địa chỉ,Tìm kiếm địa chỉ theo tọa độ thì hiện tại tìm kiếm trong dữ liệu nền của Bình Anh là có kết quả tương ứng theo 2 phần như nhau rồi ạ.
+ 
+ 
+ Xử lý phần nhập bất kỳ cho việc tìm kiếm tọa độ theo địa chỉ
+=> sẽ cho kết quả gợi ý khoảng 10 đoạn

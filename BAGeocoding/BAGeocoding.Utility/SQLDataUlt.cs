@@ -6,9 +6,9 @@ namespace BAGeocoding.Utility
     [Serializable]
     public class SQLDataUlt : ICloneable //345,456456456
     {
-        protected virtual T GetDataValue<T>(DataRow dataRow, string columnName)
+        protected virtual T? GetDataValue<T>(DataRow dataRow, string columnName)
         {
-            T ret = default(T);
+            T? ret = default(T);
             if (dataRow.Table.Columns.Contains(columnName) == true)
             {
                 try
@@ -34,9 +34,9 @@ namespace BAGeocoding.Utility
             return ret;
         }
 
-        protected virtual T GetDataValue<T>(DataRow dataRow, int indexColumn)
+        protected virtual T? GetDataValue<T>(DataRow dataRow, int indexColumn)
         {
-            T ret = default(T);
+            T? ret = default(T);
             if (dataRow.Table.Columns.Count > indexColumn)
             {
                 try
@@ -61,9 +61,9 @@ namespace BAGeocoding.Utility
             return ret;
         }
 
-        protected virtual T GetDataValue<T>(DataRow dataRow, string columnName, object defaultValue)
+        protected virtual T? GetDataValue<T>(DataRow dataRow, string columnName, object defaultValue)
         {
-            T ret = default(T);
+            T? ret = default(T);
             Type t = typeof(T);
 
             if (dataRow.Table.Columns.Contains(columnName) == false)
