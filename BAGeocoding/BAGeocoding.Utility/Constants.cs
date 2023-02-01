@@ -52,6 +52,10 @@ namespace BAGeocoding.Utility
         public static string LOGIN_USERNAME = "admin";
         public static string LOGIN_PASSWORD = "123123";
 
+        // Chanh
+        public static string MONGO_CONNECTION_STRING = @"mongodb://localhost:27017";
+        public static string MONGO_GEO_DB = @"geo-db";
+
         // Đường dẫn ghi logs
         //public static string DEFAULT_DIRECTORY_LOGS = @"D:\Working\BAGeocoding\BAGeocoding.Service\Logs\";
         //public static string DEFAULT_DIRECTORY_DATA = @"D:\Working\BAGeocoding\BAGeocoding.Service\App_Data\";

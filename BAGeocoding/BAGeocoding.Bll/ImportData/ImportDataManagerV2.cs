@@ -1,33 +1,23 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-
-using OSGeo.OGR;
-
-using BAGeocoding.Dal.MapObj;
+﻿using BAGeocoding.Dal.MapObj;
 using BAGeocoding.Dal.SearchData;
-using BAGeocoding.Dal.SegmentEdit;
-
 using BAGeocoding.Entity.Enum;
 using BAGeocoding.Entity.MapObj;
 using BAGeocoding.Entity.SearchData;
-
 using BAGeocoding.Utility;
-
+using OSGeo.OGR;
 using RTree.Engine;
 using RTree.Engine.Entity;
-using OSGeo.OSR;
+using System.Collections;
+using System.Text;
 
 namespace BAGeocoding.Bll.ImportData
 {
-    public class ImportDataManager
+    public class ImportDataManagerV2
     {
         /// <summary>
         /// Import dữ liệu vùng (Tỉnh, Huyện, Xã)
         /// </summary>
-        public static bool ImportRegion(EnumBAGRegionType typeID, string fileMap, string fileName)
+        public static async Task<bool> ImportRegion(EnumBAGRegionType typeID, string fileMap, string fileName)
         {
             try
             {
@@ -37,19 +27,19 @@ namespace BAGeocoding.Bll.ImportData
                 switch (typeID)
                 {
                     case EnumBAGRegionType.Province:
-                        //ProvinceDAO.Clear();
-                        //RegionKeyDAO.Clear(EnumBAGRegionType.Province);
+                        await ProvinceDAOV2.Clear();
+                        await RegionKeyDAOV2.Clear(EnumBAGRegionType.Province);
                         break;
                     case EnumBAGRegionType.District:
-                        //DistrictDAO.Clear();
-                        //RegionKeyDAO.Clear(EnumBAGRegionType.District);
+                        await DistrictDAOV2.Clear();
+                        await RegionKeyDAOV2.Clear(EnumBAGRegionType.District);
                         break;
                     case EnumBAGRegionType.Commune:
-                        //CommuneDAO.Clear();
-                        //RegionKeyDAO.Clear(EnumBAGRegionType.Commune);
+                        await CommuneDAOV2.Clear();
+                        await RegionKeyDAOV2.Clear(EnumBAGRegionType.Commune);
                         break;
                     case EnumBAGRegionType.Tile:
-                        //TileDAO.Clear();
+                        await TileDAOV2.Clear();
                         break;
                     default:
                         break;
@@ -78,7 +68,7 @@ namespace BAGeocoding.Bll.ImportData
                         {
                             case EnumBAGRegionType.Province:
                                 #region ==================== Read Province ====================
-                                BAGProvince province = new BAGProvince();
+                                BAGProvinceV2 province = new BAGProvinceV2();
                                 province.ProvinceID = Convert.ToInt16(f.GetFieldAsInteger("ProvinceID"));
                                 if (province.ProvinceID == 9999)
                                     province.ProvinceID = 254;
@@ -94,7 +84,7 @@ namespace BAGeocoding.Bll.ImportData
                                     else
                                         province.VName = string.Empty;
                                     province.EName = LatinToAscii.Latin2Ascii(province.VName);
-                                    province.PointList = new List<BAGPoint>();
+                                    province.PointList = new List<BAGPointV2>();
                                     //for (int j = 0; j < nCount; j++)
                                     //{
                                     //    province.PointList.Add(new BAGPoint(geo.GetX(j), geo.GetY(j)));
@@ -128,12 +118,29 @@ namespace BAGeocoding.Bll.ImportData
                                     //    }
                                     //}
                                     /*Chanh End */
+                                    if (await ProvinceDAOV2.Add(province) == false)
+                                        LogFile.WriteError("");
+                                    else
+                                    {
+                                        List<string> keyList = StringUlt.SplitKeySearch(province.EName);
+                                        for (byte j = 0; j < keyList.Count; j++)
+                                        {
+                                            await RegionKeyDAOV2.Add(new BAGRegionKeyV2
+                                            {
+                                                EnumTypeID = EnumBAGRegionType.Province,
+                                                KeyStr = keyList[j],
+                                                ObjectID = province.ProvinceID,
+                                                IndexID = j,
+                                                Rate = DataUtl.KeySearchCalcRate(j, keyList.Count)
+                                            });
+                                        }
+                                    }
                                 }
                                 #endregion
                                 break;
                             case EnumBAGRegionType.District:
                                 #region ==================== Read District ====================
-                                BAGDistrict district = new BAGDistrict();
+                                BAGDistrictV2 district = new BAGDistrictV2();
                                 district.DistrictID = Convert.ToInt16(f.GetFieldAsInteger("DistrictID"));
                                 district.ProvinceID = Convert.ToInt16(f.GetFieldAsInteger("ProvinceID"));
                                 if (district.ProvinceID == 9999)
@@ -161,32 +168,32 @@ namespace BAGeocoding.Bll.ImportData
                                 //    district.LatStr += string.Format("{0:N8}", geo.GetY(j));
                                 //    district.GeoStr += string.Format("{0:N8} {1:N8}", geo.GetX(j), geo.GetY(j));
                                 //}
-                                /*Chanh Start*/
-                                //if (DistrictDAO.Add(district) == false)
-                                //    LogFile.WriteError("");
-                                //else
-                                //{
-                                //    List<string> keyList = StringUlt.SplitKeySearch(district.EName);
-                                //    for (byte j = 0; j < keyList.Count; j++)
-                                //    {
-                                //        RegionKeyDAO.Add(new BAGRegionKey
-                                //        {
-                                //            EnumTypeID = EnumBAGRegionType.District,
-                                //            KeyStr = keyList[j],
-                                //            ObjectID = district.DistrictID,
-                                //            IndexID = j,
-                                //            Rate = DataUtl.KeySearchCalcRate(j, keyList.Count)
-                                //        });
-                                //    }
-                                //}
-                                /*Chanh End*/
+
+                                if (await DistrictDAOV2.Add(district) == false)
+                                    LogFile.WriteError("");
+                                else
+                                {
+                                    List<string> keyList = StringUlt.SplitKeySearch(district.EName);
+                                    for (byte j = 0; j < keyList.Count; j++)
+                                    {
+                                        await RegionKeyDAOV2.Add(new BAGRegionKeyV2
+                                        {
+                                            EnumTypeID = EnumBAGRegionType.District,
+                                            KeyStr = keyList[j],
+                                            ObjectID = district.DistrictID,
+                                            IndexID = j,
+                                            Rate = DataUtl.KeySearchCalcRate(j, keyList.Count)
+                                        });
+                                    }
+                                }
+
                                 #endregion
                                 break;
                             case EnumBAGRegionType.Commune:
                                 #region ==================== Read Commune ====================
                                 try
                                 {
-                                    BAGCommune commune = new BAGCommune();
+                                    BAGCommuneV2 commune = new BAGCommuneV2();
                                     commune.CommuneID = Convert.ToInt16(f.GetFieldAsInteger("CommuneID"));
                                     if (processList.Exists(item => item == commune.CommuneID) == true)
                                         continue;
@@ -197,7 +204,7 @@ namespace BAGeocoding.Bll.ImportData
                                         commune.VName = string.Empty;
                                     commune.EName = LatinToAscii.Latin2Ascii(commune.VName);
                                     commune.DistrictID = Convert.ToInt16(f.GetFieldAsInteger("DistrictID"));
-                                    commune.PointList = new List<BAGPoint>();
+                                    commune.PointList = new List<BAGPointV2>();
                                     //for (int j = 0; j < nCount; j++)
                                     //{
                                     //    commune.PointList.Add(new BAGPoint(geo.GetX(j), geo.GetY(j)));
@@ -211,24 +218,24 @@ namespace BAGeocoding.Bll.ImportData
                                     //    commune.LatStr += string.Format("{0:N8}", geo.GetY(j));
                                     //    commune.GeoStr += string.Format("{0:N8} {1:N8}", geo.GetX(j), geo.GetY(j));
                                     //}
-                                    //if (CommuneDAO.Add(commune) == true)
-                                    //{
-                                    //    //for (int j = 0; j < commune.PointList.Count; j++)
-                                    //    //    RegionPointDAO.Add(typeID, commune.CommuneID, commune.PointList[j], j + 1);
+                                    if (await CommuneDAOV2.Add(commune) == true)
+                                    {
+                                        //for (int j = 0; j < commune.PointList.Count; j++)
+                                        //    RegionPointDAO.Add(typeID, commune.CommuneID, commune.PointList[j], j + 1);
 
-                                    //    List<string> keyList = StringUlt.SplitKeySearch(commune.EName);
-                                    //    for (byte j = 0; j < keyList.Count; j++)
-                                    //    {
-                                    //        RegionKeyDAO.Add(new BAGRegionKey
-                                    //        {
-                                    //            EnumTypeID = EnumBAGRegionType.Commune,
-                                    //            KeyStr = keyList[j],
-                                    //            ObjectID = commune.CommuneID,
-                                    //            IndexID = j,
-                                    //            Rate = DataUtl.KeySearchCalcRate(j, keyList.Count)
-                                    //        });
-                                    //    }
-                                    //}
+                                        List<string> keyList = StringUlt.SplitKeySearch(commune.EName);
+                                        for (byte j = 0; j < keyList.Count; j++)
+                                        {
+                                            await RegionKeyDAOV2.Add(new BAGRegionKeyV2
+                                            {
+                                                EnumTypeID = EnumBAGRegionType.Commune,
+                                                KeyStr = keyList[j],
+                                                ObjectID = commune.CommuneID,
+                                                IndexID = j,
+                                                Rate = DataUtl.KeySearchCalcRate(j, keyList.Count)
+                                            });
+                                        }
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
@@ -240,16 +247,16 @@ namespace BAGeocoding.Bll.ImportData
                                 #region ==================== Read Tile ====================
                                 try
                                 {
-                                    BAGTile tile = new BAGTile();
+                                    BAGTileV2 tile = new BAGTileV2();
                                     tile.TileID = Convert.ToInt32(f.GetFieldAsInteger("TileID"));
                                     tile.CommuneID = Convert.ToInt16(f.GetFieldAsInteger("CommuneID"));
                                     if (processList.Exists(item => item == tile.TileID) == true)
                                         continue;
                                     processList.Add(tile.TileID);
-                                    tile.PointList = new List<BAGPoint>();
+                                    tile.PointList = new List<BAGPointV2>();
                                     for (int j = 0; j < nCount; j++)
                                     {
-                                        tile.PointList.Add(new BAGPoint(geo.GetX(j), geo.GetY(j)));
+                                        tile.PointList.Add(new BAGPointV2(geo.GetX(j), geo.GetY(j)));
                                         if (j > 0)
                                         {
                                             tile.LngStr += ",";
@@ -260,7 +267,7 @@ namespace BAGeocoding.Bll.ImportData
                                         tile.LatStr += string.Format("{0:N8}", geo.GetY(j));
                                         tile.GeoStr += string.Format("{0:N8} {1:N8}", geo.GetX(j), geo.GetY(j));
                                     }
-                                    //TileDAO.Add(tile);
+                                    await TileDAOV2.Add(tile);
                                 }
                                 catch (Exception ex)
                                 {

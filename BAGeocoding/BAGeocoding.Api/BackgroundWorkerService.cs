@@ -1,5 +1,6 @@
 ﻿using BAGeocoding.Api.Services;
 using BAGeocoding.Bll;
+using BAGeocoding.Entity.Enum;
 using BAGeocoding.Utility;
 
 namespace BAGeocoding.Api
@@ -17,11 +18,18 @@ namespace BAGeocoding.Api
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var result = false;
-            while (!result)
+            //var result = false;
+            //while (!result)
+            //{
+            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            //    result = await InitDataAsync();
+            //    _logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
+            //}
+            //var result = false;
+            while (RunningParams.ProcessState != EnumProcessState.Success)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                result = await InitDataAsync();
+                await InitDataAsync();
                 _logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
             }
         }

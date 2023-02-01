@@ -20,12 +20,12 @@ using BAGeocoding.Entity.Enum.Route;
 
 namespace BAGeocoding.Bll
 {
-    public class MainProcessing
+    public class MainProcessingV2
     {
         /// <summary>
         /// Khởi tạo dữ liệu
         /// </summary>
-        public static bool InitData()
+        public static async Task<bool> InitData()
         {
             try
             {
@@ -36,6 +36,7 @@ namespace BAGeocoding.Bll
                 else if (RunningParams.ProcessState == EnumProcessState.Error)
                     return false;
                 RunningParams.ProcessState = EnumProcessState.Processing;
+               
                 BackgroundWorker bg = new BackgroundWorker();
                 bg.DoWork += new DoWorkEventHandler(InitData_DoWork);
                 bg.RunWorkerAsync();
@@ -241,7 +242,7 @@ namespace BAGeocoding.Bll
                 return false;
             }
         }
-
+        
         /// <summary>
         /// Tìm kiếm địa chỉ theo tọa độ
         /// </summary>

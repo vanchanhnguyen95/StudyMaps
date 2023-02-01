@@ -9,7 +9,6 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 using MongoDB.Driver;
 using Amazon.Runtime.Internal.Util;
 using MongoDB.Bson.Serialization.Conventions;
@@ -26,19 +25,19 @@ namespace BAGeocoding.Dal.Ext
         /// <summary>
         /// Lấy cache catalog
         /// </summary>
-        public static CacheCatalogDataV2 Catalog()
+        public static async Task<CacheCatalogDataV2> Catalog()
         {
             try
             {
                 var pack = new ConventionPack { new CamelCaseElementNameConvention() };
                 ConventionRegistry.Register("elementNameConvention", pack, x => true);
 
-                var client = new MongoClient("mongodb://localhost:27017");
-                var database = client.GetDatabase("geo-db");
+                var client = new MongoClient(Constants.MONGO_CONNECTION_STRING);
+                var database = client.GetDatabase(Constants.MONGO_GEO_DB);
                 var _cache = database.GetCollection<CacheCatalogDataV2>(nameof(CacheCatalogDataV2));
 
                 // Lấy danh sách CacheCatalogData trong database
-                CacheCatalogDataV2 ds = _cache.Find(new BsonDocument()).FirstOrDefault();
+                CacheCatalogDataV2 ds =  await _cache.Find(new BsonDocument()).FirstOrDefaultAsync();
 
                 if (ds != null)
                 {

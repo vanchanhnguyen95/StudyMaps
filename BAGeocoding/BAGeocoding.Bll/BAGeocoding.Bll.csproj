@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BAGeocoding.Dal\BAGeocoding.Dal.csproj" />
     <ProjectReference Include="..\BAGeocoding.Entity\BAGeocoding.Entity.csproj" />
   </ItemGroup>
 

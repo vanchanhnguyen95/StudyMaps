@@ -21,4 +21,24 @@ namespace BAGeocoding.Entity.MapObj
             Distance = (float)distance;
         }
     }
+
+    public class BAGDistanceV2
+    {
+        public BAGSegment Segment { get; set; }
+        public EnumBAGAnchor Anchor { get; set; }
+        public BAGPointV2 Point { get; set; }
+        public int PointIndex { get; set; }
+        public float Distance { get; set; }
+        public bool IsLeft { get; set; }
+        public float Percen { get; set; }
+
+        public BAGDistanceV2() { }
+
+        public BAGDistanceV2(EnumBAGAnchor anchor, BAGPointV2 point, double distance)
+        {
+            Anchor = anchor;
+            Point = point;
+            Distance = (float)distance;
+        }
+    }
 }

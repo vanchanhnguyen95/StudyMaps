@@ -27,7 +27,8 @@ namespace BAGeocoding.Api.Controllers.V1
             var result = new List<PBLAddressResult>();
             if (RunningParams.ProcessState != EnumProcessState.Success)
             {
-                return result;
+                //return result;
+                MainProcessing.InitData();
             }
             var addresses = await _geoService.AddressByGeoAsync(body?.lng, body?.lat);
             if (addresses?.Count > 0)
