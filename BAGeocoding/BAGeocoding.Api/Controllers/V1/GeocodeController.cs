@@ -1,4 +1,5 @@
-﻿using BAGeocoding.Api.Services;
+﻿using BAGeocoding.Api.Models;
+using BAGeocoding.Api.Services;
 using BAGeocoding.Api.ViewModels;
 using BAGeocoding.Bll;
 using BAGeocoding.Entity.Enum;
@@ -59,18 +60,17 @@ namespace BAGeocoding.Api.Controllers.V1
         [HttpPost]
         [MapToApiVersion("1.0")]
         [Route("GeoByAddressV2")]
-        public async Task<PBLAddressResultV2> GeoByAddressV2([FromBody] GeoByAddressVm? body)
+        public async Task<Result<object>> GeoByAddressV2([FromBody] GeoByAddressVm? body)
         {
-            var result = new PBLAddressResultV2();
-            if (RunningParams.ProcessState != EnumProcessState.Success)
-            {
-                return result;
-            }
-            var geo = await _geoService.GeoByAddressAsyncV2(body?.address, "vn");
-            if (geo == null) return result;
+            return await _geoService.GeoByAddressAsyncV2(body?.address, "vn");
+        }
 
-            var objTest = new PBLAddressResultV2(geo);
-            return new PBLAddressResultV2(geo);
+        [HttpPost]
+        [MapToApiVersion("1.0")]
+        [Route("AutosuggestAddress")]
+        public async Task<Result<object>> AutosuggestAddress([FromBody] GeoByAddressVm? body)
+        {
+            return await _geoService.AutosuggestAddress(body?.address, "vn",10);
         }
     }
 }

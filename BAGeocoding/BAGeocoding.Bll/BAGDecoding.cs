@@ -269,20 +269,21 @@ namespace BAGeocoding.Bll
         }
 
         /// <summary>
-        /// Tìm đường theo từ khóa (Hà Nội)
+        /// Lấy danh sách đường tìm kiếm theo từ khóa
         /// </summary>
-        public static RPBLAddressResult SearchRoadByNameHaNoi(DTSSegment seg, BAGSearchKey key, short dis, bool all = false)
+        public static List<RPBLAddressResultV2> SearchListRoadByName(DTSSegment seg, BAGSearchKey key, short dis)
         {
             try
             {
                 List<string> keyList = DataUtl.ProcessKeyList(key.Road);
-                List<BAGKeyRate> keyRateList = SearchSegmentByNameHaNoi(seg, keyList, dis, all);
+                List<BAGKeyRate> keyRateList = SearchSegmentByName(seg, keyList, dis);
                 if (keyRateList == null || keyRateList.Count == 0)
                     return null;
 
                 #region ==================== Ưu tiên tên giống nhau (tỉ lệ cao) ====================
                 List<int> similarList = new List<int>();
-                RPBLAddressResult result = null;
+                RPBLAddressResultV2 result = null;
+                List<RPBLAddressResultV2> listResult = new List<RPBLAddressResultV2>();
                 for (int i = 0; i < keyRateList.Count; i++)
                 {
                     if (seg.Objs.ContainsKey(keyRateList[i].ObjectID) == false)
@@ -302,6 +303,76 @@ namespace BAGeocoding.Bll
                         if (key.IsSpecial == true && key.Original.IndexOf(segment.VName.ToLower()) < 0)
                             continue;
                     }
+                    if (SearchRoadByNameBuildResultV2((BAGSegment)seg.Objs[keyRateList[i].ObjectID], key, false, ref result) == true)
+                        listResult.Add(result);
+
+                    //if (i > limit)
+                    //    break;
+                }
+                // Trường hợp tiếng việt không giống => Cố gắng đưa ra từ gần giống (Hàng Dau => Hàng Đậu OR Hàng Dầu)
+                //if (result == null && similarList.Count > 0)
+                //{
+                //    for (int i = 0; i < similarList.Count; i++)
+                //    {
+                //        if (SearchRoadByNameBuildResultV2((BAGSegment)seg.Objs[similarList[i]], key, true, ref result) == true)
+                //            break;
+                //    }
+                //}
+                if (listResult != null)
+                    return listResult;
+                return null;
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGDecoding.SearchRoadByName, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Tìm đường theo từ khóa (Hà Nội)
+        /// </summary>
+        public static RPBLAddressResult SearchRoadByNameHaNoi(DTSSegment seg, BAGSearchKey key, short dis, bool all = false)
+        {
+            try
+            {
+                List<string> keyList = DataUtl.ProcessKeyList(key.Road);
+                List<BAGKeyRate> keyRateList = SearchSegmentByNameHaNoi(seg, keyList, dis, all);
+                if (keyRateList == null || keyRateList.Count == 0)
+                    return null;
+
+                #region ==================== Ưu tiên tên giống nhau (tỉ lệ cao) ====================
+                List<int> similarList = new List<int>();
+                RPBLAddressResult result = null;
+                for (int i = 0; i < keyRateList.Count; i++)
+                {
+                    //if (seg.Objs.ContainsKey(keyRateList[i].ObjectID) == false)
+                    //    continue;
+                    //// Chỉ xét tỉ lệ 97% trở lên
+                    //else if (keyRateList[i].Percent < 97)
+                    //    continue;
+                    //// Nếu tỉ lệ là 100% thì phải kiểm tra đúng chuỗi (Nguyen Dinh Thi <> Nguyen Thi Dinh)
+                    //else if (keyRateList[i].Percent > 99)
+                    //{
+                    //    // Kiểm tra cả tên (Tránh từ khóa đảo lộn)
+                    //    BAGSegment segment = (BAGSegment)seg.Objs[keyRateList[i].ObjectID];
+                    //    if (segment.EName.ToLower().Equals(key.Road) == false)
+                    //        continue;
+                    //    similarList.Add(keyRateList[i].ObjectID);
+                    //    // Kiểm tra nếu tiếng Việt => giống cả dấu (Hàng Đậu <> Hàng Dầu)
+                    //    if (key.IsSpecial == true && key.Original.IndexOf(segment.VName.ToLower()) < 0)
+                    //        continue;
+                    //}
+                    // Kiểm tra cả tên (Tránh từ khóa đảo lộn)
+                    BAGSegment segment = (BAGSegment)seg.Objs[keyRateList[i].ObjectID];
+                    if (segment.EName.ToLower().Equals(key.Road) == false)
+                        continue;
+                    similarList.Add(keyRateList[i].ObjectID);
+                    // Kiểm tra nếu tiếng Việt => giống cả dấu (Hàng Đậu <> Hàng Dầu)
+                    if (key.IsSpecial == true && key.Original.IndexOf(segment.VName.ToLower()) < 0)
+                        continue;
+
                     if (SearchRoadByNameBuildResult((BAGSegment)seg.Objs[keyRateList[i].ObjectID], key, false, ref result) == true)
                         break;
                 }
@@ -413,6 +484,69 @@ namespace BAGeocoding.Bll
         }
 
         /// <summary>
+        /// Tìm đường theo từ khóa (Hà Nội) V2
+        /// </summary>
+        public static List<RPBLAddressResultV2> SearchListRoadByNameHaNoi(DTSSegment seg, BAGSearchKey key, short dis, bool all = false)
+        {
+            try
+            {
+                List<string> keyList = DataUtl.ProcessKeyList(key.Road);
+                List<BAGKeyRate> keyRateList = SearchSegmentByNameHaNoi(seg, keyList, dis, all);
+                if (keyRateList == null || keyRateList.Count == 0)
+                    return null;
+
+                #region ==================== Ưu tiên tên giống nhau (tỉ lệ cao) ====================
+                List<int> similarList = new List<int>();
+                RPBLAddressResultV2 result = null;
+                List<RPBLAddressResultV2> lstResult = new List<RPBLAddressResultV2>();
+                for (int i = 0; i < keyRateList.Count; i++)
+                {
+                    if (seg.Objs.ContainsKey(keyRateList[i].ObjectID) == false)
+                        continue;
+                    // Chỉ xét tỉ lệ 97% trở lên
+                    else if (keyRateList[i].Percent < 97)
+                        continue;
+                    // Nếu tỉ lệ là 100% thì phải kiểm tra đúng chuỗi (Nguyen Dinh Thi <> Nguyen Thi Dinh)
+                    else if (keyRateList[i].Percent > 99)
+                    {
+                        // Kiểm tra cả tên (Tránh từ khóa đảo lộn)
+                        BAGSegment segment = (BAGSegment)seg.Objs[keyRateList[i].ObjectID];
+                        if (segment.EName.ToLower().Equals(key.Road) == false)
+                            continue;
+                        similarList.Add(keyRateList[i].ObjectID);
+                        // Kiểm tra nếu tiếng Việt => giống cả dấu (Hàng Đậu <> Hàng Dầu)
+                        if (key.IsSpecial == true && key.Original.IndexOf(segment.VName.ToLower()) < 0)
+                            continue;
+                    }
+                    if (SearchRoadByNameBuildResultV2((BAGSegment)seg.Objs[keyRateList[i].ObjectID], key, false, ref result) == true)
+                        lstResult.Add(result);
+                }
+                // Trường hợp tiếng việt không giống => Cố gắng đưa ra từ gần giống (Hàng Dau => Hàng Đậu OR Hàng Dầu)
+                //if ((result == null || result.Road == null || result.Road.Length == 0) && similarList.Count > 0)
+                //{
+                //    for (int i = 0; i < similarList.Count; i++)
+                //    {
+                //        if (SearchRoadByNameBuildResultV2((BAGSegment)seg.Objs[similarList[i]], key, true, ref result) == true)
+                //            break;
+                //    }
+                //}
+                if (lstResult != null || lstResult.Any())
+                    return lstResult;
+
+                return null;
+                #endregion
+
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGDecoding.SearchRoadByNameHaNoi, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
+
+
+        /// <summary>
         /// Tìm danh sách đoạn đường theo từ khóa
         /// </summary>
         private static List<BAGKeyRate> SearchSegmentByName(DTSSegment segList, List<string> keyList, short districtID)
@@ -434,7 +568,7 @@ namespace BAGeocoding.Bll
                             {
                                 BAGKeyRate keyRate = new BAGKeyRate((BAGKeyRate)segmentKey.ObjectID[keyTmp]);
                                 // Tìm tất cả hoặc trùng quận/huyện
-                                if (districtID == -1  || keyRate.ReferenceID == districtID)
+                                if (districtID == -1 || keyRate.ReferenceID == districtID)
                                     resultHT.Add(keyTmp, keyRate);
                             }
                         }
