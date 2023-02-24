@@ -49,7 +49,7 @@ namespace Elastic02.Services
         {
             var response = await _elasticRepository.GetIndexAsync();
 
-            return response.Indices?.Select(q => new IndexDetail
+            return response.Indices.Select(q => new IndexDetail
             {
                 Key = q.Key.Name,
                 Values = q.Value.Settings.ToDictionary(e => e.Key, v => v.Value)

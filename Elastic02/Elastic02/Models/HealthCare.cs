@@ -46,11 +46,12 @@ namespace Elastic02.Models
         /// Index true will make property to available for search, 
         /// Fielddata true for sorting, aggregations, or scripting.
         /// </summary> 
-        [Text(Index = true, Fielddata = true, Analyzer = "my_vi_analyzer")]
+        //[Text(Index = true, Fielddata = true, Analyzer = "my_vi_analyzer")]
+        [Text(Index = true, Fielddata = true)]
         public string Name { get; set; }
-        [Text(Index = true, Fielddata = true, Analyzer = "my_vi_analyzer")]
+        [Text(Index = true, Fielddata = true)]
         public string Keywords { get; set; }
-        [Text(Index = true, Fielddata = true, Analyzer = "my_vi_analyzer")]
+        [Text(Index = true, Fielddata = true)]
         public string Specialist { get; set; }
         [GeoPoint]
         public string geoLocation { get; set; }
