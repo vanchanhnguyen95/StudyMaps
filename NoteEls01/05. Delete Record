@@ -1,0 +1,21 @@
+var filter = Builders<Tasko>.Filter.Eq("_id", ObjectId.Parse("5a8fd6698d2ae55a40829b72"));
+
+await col.DeleteOneAsync(filter);
+
+AutosuggestAddress
+
+1bc9
+
+
+https://127.0.0.1:9200/
+
+https://127.0.0.0:9200/
+
+elastic/RXdviP6fUbX8p22wl7Z1
+
+cmake -S . -B Build
+
+cmake -S -DBUILD_JAVA=1 ..
+
+
+https://www.filehorse.com/download-apache-maven/60478/download/

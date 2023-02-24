@@ -1,0 +1,2 @@
+"tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon",
+"developer,programmer,coder,lập trình viên,kỹ sư phần mềm"
