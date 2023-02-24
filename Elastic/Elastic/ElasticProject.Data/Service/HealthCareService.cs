@@ -64,7 +64,6 @@ namespace ElasticProject.Data.Service
                 .CharFilters("html_strip", "healhcareES_custom")
                 .Tokenizer("vi_tokenizer")
                 .Filters("lowercase", "stop", "icu_folding"))
-                //asciifolding icu_folding
                 ))));
                 return "OK";
             }
@@ -128,17 +127,7 @@ namespace ElasticProject.Data.Service
                 {
                     item.geoLocation = new GeoLocation(item.Latitude, item.Longitude);
                 }
-                //.BulkAsync(b => b.Index("products").IndexMany(products));
-                //_client.BulkAsync(b => b.Index("healthCares").IndexMany(healthCares));
                 var response = await _client.IndexManyAsync(healthCares, indexName);
-                ////var response = await _client.CreateAsync(model, q => q.Index("healthcare"));
-                //var response = await _client.CreateAsync(healthCares[0], q => q.Index("healthcare"));
-                //if (response.ApiCall?.HttpStatusCode == 409)
-                //{
-                //    await _client.UpdateAsync<HealthCareModel>(healthCares[0].id, a => a.Index("healthcare").Doc(healthCares[0]));
-                //}
-
-                //await _client.IndexDocumentAsync(model);
                 return "OK";
             }
             catch (Exception ex)

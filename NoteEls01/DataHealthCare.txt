@@ -1,0 +1,9 @@
+[
+  {
+    "id": "1",
+    "name": "Bùi Thị Tuyết Mai",
+    "keywords": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "specialist": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "geoLocation": "21.00808337496294, 105.85863701952076"
+  }
+]
