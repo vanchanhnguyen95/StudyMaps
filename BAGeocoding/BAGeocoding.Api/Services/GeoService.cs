@@ -38,6 +38,7 @@ namespace BAGeocoding.Api.Services
             var ret = await Task.Run(() => MainProcessing.GeoByAddressV2(keyStr ?? "", lanStr ?? ""));
             if (RunningParams.ProcessState != EnumProcessState.Success)
             {
+                MainProcessing.InitData();
                 return Result<object>.Error("500", "Chưa khởi tạo xong dữ liệu", RunningParams.ProcessState.ToString());
             }
 

@@ -8,3 +8,5 @@ https://stackoverflow.com/questions/14353502/exception-while-using-gdal-in-c-sha
 {"Unable to load DLL 'ogr_wrap' or one of its dependencies: The specified module could not be found. (0x8007007E)"}
 
 System.IO.DirectoryNotFoundException: 'Could not find a part of the path 'D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Test\bin\Debug\net7.0\TEST\BAGeocoding\BAGeocoding.Service\Logs\Logs.txt'.'
+
+

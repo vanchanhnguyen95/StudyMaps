@@ -49,27 +49,27 @@ II. Tìm kiếm địa chỉ theo tọa độ
 			- Từ ProvinceID xác định đc tỉnh thành
 			trả về kết quả
 		
-			// 1. Xác định xã phường
+			1. Xác định xã phường
 		 
-			// 2. Xác định quận huyện
+			2. Xác định quận huyện
 			
-			// 3. Xác định tỉnh/thành
+			3. Xác định tỉnh/thành
 			
-			// Trả về kết quả
+			Trả về kết quả
 		=> Lúc này kết quả địa chỉ đã có: xã/phường, quận/huyện, tỉnh/thành
 		
 	4. Tìm kiếm theo dữ liệu của Bình Anh
-		4.1 // Ưu tiên tìm khu đô thị (Lấy khu đô thị theo tọa độ)
-			// Tiến hành tìm kiếm
-			// 1. Xác định ô đất
-			// 2. Xác định lô đất
-			// 3. Xác định khu đô thị
-			// Trả về kết quả
-		4.2 // Nếu không tìm theo đường (Tìm đường theo tọa độ)
-			// Xác định lại khung tìm kiếm : BAGPoint neighbor = NodeDetect(kdt, pts);
+		4.1 Ưu tiên tìm khu đô thị (Lấy khu đô thị theo tọa độ)
+			Tiến hành tìm kiếm
+			1. Xác định ô đất
+			2. Xác định lô đất
+			3. Xác định khu đô thị
+			Trả về kết quả
+		4.2 Nếu không tìm theo đường (Tìm đường theo tọa độ)
+			Xác định lại khung tìm kiếm : BAGPoint neighbor = NodeDetect(kdt, pts);
 				Sử dụng thư viện KDTree để Xác định node gần nhất để xét rect
-			// Tiến hành tìm kiếm
+			Tiến hành tìm kiếm
 				Xác định đoạn đường theo tọa độ
-					// Lấy danh sách segment trong phạm vi cho phép
+					Lấy danh sách segment trong phạm vi cho phép
 				
-					// Tính toán khoảng cách điểm đến segment
+					Tính toán khoảng cách điểm đến segment

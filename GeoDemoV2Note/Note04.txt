@@ -50,11 +50,7 @@ D:\Project\GeoDemoV2\BAGeocoding\BAGeocoding.Bll\MapTool\WRKPlanDataManager.cs
 
 5. Convert source lên .Net 7
 
-
-
- source code này hiện tại đang thiếu thông tin kết nối đến SQL server
-
-
+source code này hiện tại đang thiếu thông tin kết nối đến SQL server
 
 1.Xây dựng từ khóa tìm kiếm
 

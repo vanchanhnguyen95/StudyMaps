@@ -22,6 +22,3 @@ Em đanng thấy chưa có source code của các project BAGeocoding: Manager, 
 Tình hình chung là như vậy ạ, em đang ngẫm cách lưu trữ dữ liệu của BinhAnh, cách dùng các thư viện để thực hiện phép tìm kiếm ạ.
 Em đang nhờ phòng IT cấp server để dựng Api Tìm kiếm địa chỉ theo tọa độ demo rồi ạ
 Anh Hòa, anh Tuấn xem tư vấn giúp em ạ
-
-Cách deploy lên iis windowserver 2016
-https://www.youtube.com/watch?v=79z8Ppqz1sA

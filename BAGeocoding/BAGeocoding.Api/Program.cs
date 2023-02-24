@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
-var conn = builder.Configuration.GetSection("GeoDatabaseSettings");
 
 // Add services to the container.
 builder.Services.Configure<GeoDatabaseSettings>(
