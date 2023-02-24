@@ -1,0 +1,18 @@
+Analysis và Analyzers
+Analysis hiểu là một process thực hiện các công việc như sau
+
+Đầu tiên sẽ xử lý tách từ từ một đoạn text đầu vào thành các terms (từ hoặc cụm từ) phù hợp để sử dụng trong việc đánh chỉ mục ngược
+Sau đó thì phân tích, chuẩn hóa các terms này để thu được data mong muốn phục vụ việc tìm kiếm. Nó giống như việc mình muốn ăn bưởi ngoài loại bỏ vỏ, tách từng múi sau khi đã có từng múi rồi thì mình lại phải bóc từng múi và bỏ hạt vậy.
+
+Những công việc này do các thành phần máy phân tích (analyzers) đảm nhiệm thực hiện. Mỗi một analyzer là sự kết hợp của 3 functions sau:
+
+Character filters: Thanh niên này có nhiệm vụ xử lý chuỗi đầu vào trước khi được tách từ, có thể coi như làm "sạch" chuỗi ví dụ như việc loại bỏ các thẻ html_tag hay chuyền ký hiệu & thành thành chữ "and". Công việc nhẹ nhàng đơn giản như việc rửa sạch rồi bóc vỏ bưởi vậy
+Tokenizer Chuỗi sau khi được làm "sạch" bởi Chracter filters thì sẽ được tách từ bởi một bộ tách từ tokenizer do mình lựa chọn hoặc định nghĩa, đơn giản nhất là tách từ theo khoảng trắng hay dấu chấm câu, các từ được tách ra này gọi là term, hay nói vui như vừa nãy sẽ là các múi bưởi
+Token filters Cuối cùng, mỗi term được qua Token filters (bộ lọc thẻ) để "làm mượt" thêm, ví dụ như việc chuyển các ký tự hoa về ký tự thường (lowercase) hay loại bỏ các từ dừng (từ xuất hiện nhiều nhưng gần như không ảnh hưởng tới kết quả tìm kiếm). Đây chính là khâu bóc vỏ bỏ hạt trên từng múi
+
+Elastic 7.17.1
+Geo-bounding box queryedit
+Matches geo_point and geo_shape values that intersect a bounding box.
+
+
+

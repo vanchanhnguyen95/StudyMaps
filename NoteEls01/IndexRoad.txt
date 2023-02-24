@@ -1,0 +1,24 @@
+###########################################################
+PUT road/_settings
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_vi_analyzer": {
+          "tokenizer": "vi_tokenizer",
+          "filter": [
+            "lowercase",
+            "ascii_folding"
+          ]
+        }
+      },
+      "filter": {
+        "ascii_folding": {
+          "type": "asciifolding",
+          "preserve_original": true
+        }
+      }
+    }
+  }
+}
+###########################################################

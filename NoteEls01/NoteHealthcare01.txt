@@ -1,0 +1,95 @@
+
+'The filename, directory name, or volume label syntax is incorrect. : 'D:\Project\Elastic\Elastic\ElasticProject.Api\20220901\__sm.ba\''
+9.22690004, 105.41582642
+
+Count = 795370
+
+ https://artifacts.elastic.co/downloads/elasticsearch-plugins/analysis-icu/analysis-icu-7.3.2.zip.
+ 
+ sudo bin/elasticsearch-plugin install https://artifacts.elastic.co/downloads/elasticsearch-plugins/analysis-icu/analysis-icu-7.3.1.zip
+ 
+ Bùi Thị Tuyết Mai - Tai Mũi họng 21.00808337496294, 105.85863701952076
+ Phòng Khám Tai Mũi Họng - Bs Lê Thị Thu Hà  20.98021078415897, 105.83395750769253
+ 
+ [
+  {
+    "id": "1",
+    "name": "Bùi Thị Tuyết Mai",
+    "address": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "keywords": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "specialist": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "geoLocation": {
+      "lng": 105.85863701952076,
+      "lat": 21.00808337496294
+    }
+  }
+]
+
+[
+  {
+    "id": "1",
+    "name": "Bùi Thị Tuyết Mai",
+    "keywords": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "specialist": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "geoLocation": {
+      "lng": 105.85863701952076,
+      "lat": 21.00808337496294
+    }
+  },
+  {
+    "id": "2",
+    "name": "Bs Lê Thị Thu Hà",
+    "keywords": "Phòng Khám Tai Mũi Họng - Bs Lê Thị Thu Hà",
+    "specialist": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "geoLocation": {
+      "lng": 105.8339642132154,
+      "lat": 20.980214540743365
+    }
+  },
+  {
+    "id": "2",
+    "name": "Bs Lê Thị Thu Hà",
+    "keywords": "Phòng Khám Tai Mũi Họng - Bs Lê Thị Thu Hà",
+    "specialist": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "geoLocation": {
+      "lng": 105.8339642132154,
+      "lat": 20.980214540743365
+    }
+  }
+]
+
+[
+  {
+    "id": "1",
+    "keywords":  "Bùi Thị Tuyết Mai",
+    "specialist":  "Bùi Thị Tuyết Mai",
+  }
+]
+
+Invalid NEST response built from a unsuccessful (400) low level call on PUT: /healthcare/_create/1
+# Audit trail of this API call:
+ - [1] ProductCheckOnStartup: Took: 00:00:00.1860937
+ - [2] ProductCheckSuccess: Node: http://localhost:9200/ Took: 00:00:00.1797895
+ - [3] BadResponse: Node: http://localhost:9200/ Took: 00:00:00.0360950
+# OriginalException: Elasticsearch.Net.ElasticsearchClientException: Request failed to execute. Call: Status code 400 from: PUT /healthcare/_create/1. ServerError: Type: mapper_parsing_exception Reason: "failed to parse field [specialist] of type [date] in document with id '1'. Preview of field's value: 'Bùi Thị Tuyết Mai'" CausedBy: "Type: illegal_argument_exception Reason: "failed to parse date field [Bùi Thị Tuyết Mai] with format [strict_date_optional_time||epoch_millis]" CausedBy: "Type: date_time_parse_exception Reason: "Failed to parse with all enclosed parsers"""
+# Request:
+<Request stream not captured or already read to completion by serializer. Set DisableDirectStreaming() on ConnectionSettings to force it to be set on the response.>
+# Response:
+<Response stream not captured or already read to completion by serializer. Set DisableDirectStreaming() on ConnectionSettings to force it to be set on the response.>
+
+curl -X 'POST' \
+  'https://localhost:7084/InsertDataHealthcare?indexName=healthcare' \
+  -H 'accept: text/plain' \
+  -H 'Content-Type: application/json' \
+  -d '[
+  {
+    "id": "1",
+    "name": "Bùi Thị Tuyết Mai",
+    "keywords": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "specialist": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "geoLocation": {
+      "lng": 105.85863701952076,
+      "lat": 21.00808337496294
+    }
+  }
+]'

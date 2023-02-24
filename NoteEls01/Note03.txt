@@ -1,0 +1,33 @@
+I. BAGeocode.App
+
+II. BAGeocode.Bll
+
+III. BAGeocode.Dal
+
+IV. BAGeocode.Entity
+
+V. BAGeocode.Utility
+
+
+XFElasticSearchTest.cs
+	private void Search()
+	Tiến hành gọi dịch vụ tìm kiếm Elastic
+	
+Còn cái đọc ghi vào elasticsearch thì anh ý bảo mất code rồi nhỉ?
+
+phần elasticsearch thì đang thực hiện tìm kiếm như nào thì cũng ko có code anh nhỉ
+
+Em có ngâm cứu source code anh gửi thì em đang hiểu và nhờ anh xác nhận như sau ạ:
+1. Source code nhằm mục đích:
+  quản lý gọi đến các dịch vụ tìm kiếm của elasticsearch
+
+2. Source code anh gửi có thể dụng demo 1 luồng chạy không ạ?
+  
+3. Phần Tìm kiếm elasticsearch thì dựng ở bên khác, source này mình gọi đến dùng thôi
+
+4. Phần Đọc, Ghi, Update, Xóa dữ liệu vào elasticsearch, đánh index theo các api thì cũng mất code rồi anh nhỉ?
+
+5. Hiện tại khi import dữ liệu vào elasticsearch để đánh index là mình đang đang lưu theo từng tỉnh, từng vùng đăc biệt riêng,
+ mỗi cái sẽ đánh 1 index riêng anh nhỉ? Mình đang đồng độ import vào sever sql và elasticsearch à anh?
+ 
+6. Anh gửi thông tin server sql đang dùng để import dữ liệu, em ngâm cứu tiếp nhé anh.

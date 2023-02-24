@@ -1,0 +1,170 @@
+Dùng Elasticsearch Geo Api để giải quyết các bài toán tìm kiếm địa điểm
+https://viblo.asia/p/dung-elasticsearch-geo-api-de-giai-quyet-cac-bai-toan-tim-kiem-dia-diem-aqkznbleznA#_21-tao-va-setting-index-2
+
+2, Modeling restaurant data
+Tạo và setting index
+
+Truy vấn geo_shape: tìm tài liệu có hình dạng địa lý giao nhau, được
+chứa bởi hoặc không giao nhau với hình dạng địa lý đã chỉ định.
+• Truy vấn geo_bounding_box: tìm tài liệu có điểm địa lý rơi vào hình
+chữ nhật đã chỉ định.
+• Truy vấn geo_distance: tìm tài liệu có điểm địa lý trong khoảng cách
+chỉ định của điểm trung tâm.
+• Truy vấn geo_polygon: tìm tài liệu với các điểm địa lý trong đa giác
+được chỉ định.
+
+
+đang thuê lại đồng chí đó viết lại tài liệu
+
+anh Tú Anh, anh xem giúp em ý này ạ:
+1. Source code anh gửi:
+- Đang chạy thử và đang lỗi "Thêm mới key xác thực", lỗi kết nối Db
+- Em phán đoán là thiếu thông tin kết nối DB BAGEOCODING, nhờ anh cung cấp thêm thông tin Db thêm nhé
+
+2. Source code anh gửi còn thêm mục đích là: Đồng bộ dữ liệu từ sql sang dịch vụ elasticsearch:
+Khi khởi tạo dịch vụ thì load dữ liệu từ sql server, cập nhật dữ liệu từ sql sang elasticsearch,
+ khi có thay đổi dữ liệu từ sql server sẽ cập nhật thay đổi cả elasticsearch
+ 
+3. Theo như em hiểu ở mục 2 thì cần có dữ liệu để đồng bộ sql server và elasticsearch,
+nhờ anh gửi thông tin Db, anh Tuấn cùng em ngâm cứu nhé
+
+4. Xử lý hiện tại thì mình chỉ gửi dữ liệu đồng bộ từ sql server sang cho dịch vụ elasticsearch.
+ Elasticsearch thì được dựng riêng, mình chỉ gọi api để sử dụng đúng ko ạ?
+ 
+5. Dịch vụ elasticsearch mình đang gọi đến đang thực hiện tìm kiếm với input: "từ khóa tìm kiếm + khu vực/tỉnh (nếu ko có tỉnh thì tìm toàn bộ Việt Nam)"  đúng ko ạ? 
+ Anh có thêm thông tin gì vể dịch vụ elasticsearch đã dựng ko ạ
+ 
+##############################################################
+Sử dụng tìm kiếm theo geo 1
+https://hamidmosalla.com/2021/12/31/how-to-use-elastic-search-geo-shape-query/
+https://www.google.com/maps/d/u/0/viewer?mid=1jDveTb_U0OiDIjBgLWSB-sg9tm5strZV&ll=48.85294705051521%2C2.448999630810418&z=15
+
+
+
+############################################################
+
+20.97649825883316, 105.83519994964533
+
+
+##### Kịch bản và kết quả
+Với dữ liệu Danh bạ y tế đã được đánh chỉ mục trên ElasticSearch, thử
+nghiệm sử dụng tính năng tìm kiếm với kịch bản như sau:
+• Tìm kiếm theo từ khóa bất kỳ với tiếng Việt có dấu
+• Tìm kiếm từ khóa bất kỳ với tiếng Việt không dấu
+• Tìm kiếm bao gồm tiếng Việt có dấu và không dấu
+• Tìm kiếm chính xác từ khóa
+
+• Tìm kiếm các từ khóa có từ viết tắt như “bs” hoặc “bv” hoặc những từ
+khóa chuyên khoa đã cấu hình sẵn như “tmh”…
+• Tìm kiếm với gợi ý (Autocomplete) có sử dụng fuzzy trong ElasticSearch
+• Tìm kiếm theo GEO có cấu hình giới hạn về khoảng cách, phạm vi cần tìm
+• Tìm kiếm theo GEO và có từ khóa kèm theo
+• Tìm kiếm theo tỉnh
+
+
+ var createIndexResponse = client.Indices.Create(indexName, c => c
+ .Settings(s => s
+ .Analysis(a => a
+ .CharFilters(cf => cf
+ .Mapping("healhcareES_custom", mcf => mcf
+ .Mappings(
+ "Bs=> Bác sĩ",
+ "bs=> Bác sĩ",
+ "BS => Bác sĩ",
+ "Bac si=>Bác sĩ",
+ "bac si=>Bác sĩ",
+ "PK=>Phòng khám",
+ "pk=>Phòng khám",
+ "phong kham=>Phòng khám",
+ "BV=> Bệnh viện",
+ "bv=> Bệnh viện",
+ "TMH=>Tai mũi họng",
+ "tmh=>Tai mũi họng",
+ "RHM=> Răng hàm mặt",
+ "rhm=> Răng hàm mặt",
+ "X-ray=> X quang",
+ "x-quang=> X quang",
+ "Sản phụ khoa=> khám thai"
+ )))
+ .Analyzers(an => an
+ .Custom("vn_analyzer", ca => ca
+ .CharFilters("html_strip", "healhcareES_custom")
+ .Tokenizer("vi_tokenizer")
+ .Filters("lowercase", "stop", "icu_folding"))
+ )))
+ 
+ var createIndexResponse = client.Indices.Create(indexName, c => c
+ .Settings(s => s
+ .Analysis(a => a
+ .CharFilters(cf => cf
+ .Mapping("healhcareES_custom", mcf => mcf
+ .Mappings(
+ "Bs=> Bác sĩ",
+ "bs=> Bác sĩ",
+ "BS => Bác sĩ",
+ "Bac si=>Bác sĩ",
+ "bac si=>Bác sĩ",
+ "PK=>Phòng khám",
+ "pk=>Phòng khám",
+ "phong kham=>Phòng khám",
+ "BV=> Bệnh viện",
+ "bv=> Bệnh viện",
+ "TMH=>Tai mũi họng",
+ "tmh=>Tai mũi họng",
+ "RHM=> Răng hàm mặt",
+ "rhm=> Răng hàm mặt",
+ "X-ray=> X quang",
+ "x-quang=> X quang",
+ "Sản phụ khoa=> khám thai"
+ )))
+ .Analyzers(an => an
+ .Custom("vn_analyzer", ca => ca
+ .CharFilters("html_strip", "healhcareES_custom")
+ .Tokenizer("vi_tokenizer")
+ .Filters("lowercase", "stop", "icu_folding"))
+ )))
+
+
+PUT /healthcare
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_analyzer": {
+          "tokenizer": "vi_tokenizer",
+          "char_filter": [
+            "html_strip",
+            "healhcareES_custom"
+          ],
+          "filter": [
+            "icu_folding"
+          ]
+        }
+      },
+      "char_filter": {
+        "my_mappings_char_filter": {
+          "type": "mapping",
+          "mappings": [
+            "Bs=> Bác sĩ",
+            "bs=> Bác sĩ",
+            "BS => Bác sĩ",
+            "Bac si=>Bác sĩ",
+            "bac si=>Bác sĩ",
+            "PK=>Phòng khám",
+            "pk=>Phòng khám",
+            "phong kham=>Phòng khám",
+            "BV=> Bệnh viện",
+            "bv=> Bệnh viện",
+            "TMH=>Tai mũi họng",
+            "tmh=>Tai mũi họng",
+            "RHM=> Răng hàm mặt",
+            "rhm=> Răng hàm mặt",
+            "X-ray=> X quang",
+            "x-quang=> X quang",
+            "Sản phụ khoa=> khám thai"
+          ]
+        }
+      }
+    }
+  }
+}

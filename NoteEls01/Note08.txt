@@ -1,0 +1,135 @@
+aas
+
+Anh Tú Anh cho em hỏi này ạ:
+
+1. Hiện tại thì dữ liệu từ phòng bản đồ gửi vào cho elastic search để đánh index thì là 1 đối tượng, đối tượng ấy có thể là Point hoặc Polyline hoặc Polygon đúng ko ạ?
+2. Nếu như ý 1 thì Dịch vụ tìm kiếm trên elastic sẽ là: nhập vào 1 từ khóa tìm kiếm => trả về là danh sách từ khóa gợi ý, mỗi từ khóa sẽ đi kèm với dữ liệu tọa độ có thể là 1 Point hoặc 1 Polyline hoặc 1 Polygon
+ Hay kết quả trả về là 1 từ khóa gợi ý đi kèm với 1 Point có 1 tọa độ (lat,long) ạ
+3. Em đang nghiên cứu thì xây dựng dữ liệu import vào là 1 từ khóa gợi ý kèm với 1 tọa độ(lat,long) và dữ liệu test đang còn ít,
+anh gửi thông tin dữ liệu import vào SQL, đồng bộ vào elastic em cùng anh Tuấn test, nghiên cứu các phương án tiếp anh nhé
+
+3. Anh gửi em thông tin dữ liệu sẽ import vào SQL, em với anh Tuấn nghiên cứu cách đánh index anh nhé
+ 
+##### Kịch bản và kết quả
+Với dữ liệu Danh bạ y tế đã được đánh chỉ mục trên ElasticSearch, thử
+nghiệm sử dụng tính năng tìm kiếm với kịch bản như sau:
+• Tìm kiếm theo từ khóa bất kỳ với tiếng Việt có dấu
+• Tìm kiếm từ khóa bất kỳ với tiếng Việt không dấu
+• Tìm kiếm bao gồm tiếng Việt có dấu và không dấu
+• Tìm kiếm chính xác từ khóa
+
+• Tìm kiếm các từ khóa có từ viết tắt như “tphcm, hanoi, thudo” hoặc những từ
+khóa chuyên khoa đã cấu hình sẵn như “tmh”…
+• Tìm kiếm với gợi ý (Autocomplete) có sử dụng fuzzy trong ElasticSearch
+• Tìm kiếm theo GEO có cấu hình giới hạn về khoảng cách, phạm vi cần tìm
+• Tìm kiếm theo GEO và có từ khóa kèm theo
+• Tìm kiếm theo tỉnh
+
+Tối ưu hóa tìm kiếm elastic search
+ https://viblo.asia/p/toi-uu-hoa-elasticsearch-queries-voi-pagination-bJzKmodDl9N
+ 
+ Geospatial
+ 
+ https://butchiso.com/2014/10/elasticsearch-va-geospatial-search.html
+ 
+ {
+    "location" : {
+        "type" : "point",
+        "coordinates" : [106.690952, 10.775365]
+    },
+    "name": "Beafsteak Nam Sơn"
+}
+
+{
+    "location" : {
+        "type" : "point",
+        "coordinates" : [ 106.688704, 10.768050]
+    },
+    "name": "Đo Đo Quán"
+}
+
+{
+    "location" : {
+        "type" : "point",
+        "coordinates" : [ 106.658514, 10.754105]
+    },
+    "name": "Chè Hà Ký"
+}
+
+{
+    "location" : {
+        "type" : "point",
+        "coordinates" : [ 106.652302, 10.755465 ]
+    },
+    "name": "Cơm Gà Đông Nguyên"
+}
+
+{
+    "location" : {
+        "type" : "point",
+        "coordinates" : [ 106.724668, 10.831478 ]
+    },
+    "name": "Nhà Hàng Sân Vườn Bên Sông"
+}
+
+{
+    "location" : {
+        "type" : "point",
+        "coordinates" : [ 106.763260, 10.869835 ]
+    },
+    "name": "Lẩu Dê Bình Điền"
+}
+
+#############################################################
+{
+  "name": "Beafsteak Nam Sơn",
+  "location": "10.775365, 106.690952"
+}
+{
+  "name": "Đo Đo Quán",
+  "location": "10.768050, 106.688704"
+}
+{
+  "name": "Chè Hà Ký",
+  "location": "10.754105, 106.658514"
+}
+
+{
+  "name": "Cơm Gà Đông Nguyên",
+  "location": "10.755465,106.652302"
+}
+
+{
+  "name": "Nhà Hàng Sân Vườn Bên Sông",
+  "location": "10.831478, 106.724668"
+}
+{
+  "name": "Lẩu Dê Bình Điền",
+  "location": " 10.869835, 106.763260"
+}
+
+{
+  "name": "Lẩu Cửa Hàng Phương Nam",
+  "location": "10.86962619300272, 106.76313990177678"
+}
+
+{
+  "name": "Lẩu An Thanh Home",
+  "location": " 10.869754781978099, 106.76314636269976 "
+}
+10.869754781978099, 
+ 
+ 
+ Thao tác với geo-shape:
+ https://hamidmosalla.com/2021/12/31/how-to-use-elastic-search-geo-shape-query/
+ https://viblo.asia/p/geo-queries-trong-elasticsearchphan-1-924lJD6mKPM#_ngay-1-geo-shape-2
+ 
+ Thao tác với dữ liệu geopoint, bài toán tìm kiếm nhà hàng:
+ https://viblo.asia/p/dung-elasticsearch-geo-api-de-giai-quyet-cac-bai-toan-tim-kiem-dia-diem-aqkznbleznA
+ 
+ 
+ INTERSECTS: Là loại mặc định khi chúng ta không config thuộc tính này. Return tất cả các document mà có geo_shape field giao với geo shape query.
+DISJOINT: Return tất cả các document mà geo_shape field không có điểm chung với geo shape query.
+WITHIN: Return tất cả các document mà geo shape field nằm trong geo shape query.
+CONTAINS: Return tất cả các documents mà geo_shape field chứa geo_shape query.
+

@@ -1,0 +1,102 @@
+Hệ thống tìm kiếm thông tin autocomplete:
+• Từ dữ liệu thô Danh bạ y tế phải tiền xử lý để lọc bỏ dữ liệu thừa và
+phân loại bác sĩ, phòng khám, bệnh viện, bài viết
+• Thiết kế cơ sở dữ liệu để lưu trữ thông tin dữ liệu đã xử lý
+• Xây dựng tính năng đọc dữ liệu từ Cơ sở dữ liệu (Database), sau đó xử
+lý tách từ Tiếng Việt, đánh Index và đưa dữ liệu tìm kiếm lên
+ElasticSearch.
+• Tạo bộ vn_analyzer, vi_tokenizer, mapping dữ liệu với các cụm từ viết
+tắt, hoặc gần nghĩa trong y tế để ElasticSearch dễ dàng tìm kiếm với
+các từ đó.
+
+# Xử lý POI
+Lấy danh sách điểm theo tỉnh: BGCPointOfInterest
+		public int PoiID { get; set; }
+        public byte ProvinceID { get; set; }
+        public BGCKindInfo KindInfo { get; set; }
+        public string Name { get; set; }
+        public short House { get; set; }
+        public string Road { get; set; }
+        public string Address { get; set; }
+        public string Tel { get; set; }
+        public string Anchor { get; set; }
+        public string Info { get; set; }
+        public string Node { get; set; }
+        public string ShortKey { get; set; }
+        public BGCLngLat Coord { get; set; }
+		
+		
+Chuyển đổi sang dữ liệu cập nhật ElasticSearch: BGCElasticRequestCreate
+	public byte typeid { get; set; }
+        public int indexid { get; set; }
+        public byte shapeid { get; set; }
+        public string kindname { get; set; }
+        public string name { get; set; }
+        public string address { get; set; }
+        public string shortkey { get; set; }
+        public byte provinceid { get; set; }
+        public byte priority { get; set; }
+        public List<BGCElasticPointBase> coords { get; set; }
+
+		
+
+
+# Xử lý đường
+Lấy danh sách tỉnh: BGCProvince
+		public byte ProvinceID { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Abbreviate { get; set; }
+        public string Description { get; set; }
+        public bool Checked { get; set; }
+		
+Chuyển đổi sang dữ liệu cập nhật ElasticSearch: BGCElasticRequestCreate
+public byte typeid { get; set; }
+        public int indexid { get; set; }
+        public byte shapeid { get; set; }
+        public string kindname { get; set; }
+        public string name { get; set; }
+        public string address { get; set; }
+        public string shortkey { get; set; }
+        public byte provinceid { get; set; }
+        public byte priority { get; set; }
+        public List<BGCElasticPointBase> coords { get; set; }
+		
+		
+		typeid = (byte)EnumMapObjectType.RoadSegment;
+		indexid = other.RoadID;
+		shapeid = (byte)EnumMapObjectShape.Polyline;
+		kindname = "Đường";
+		if (other.NameExt.Length == 0)
+		{
+			name = other.RoadName;
+			address = string.Format("{0}, {1}", other.RoadName, other.Address);
+		}
+		else
+		{
+			name = string.Format("{0}, {1}", other.RoadName, other.NameExt);
+			address = string.Format("{0}, {1}, {2}", other.RoadName, other.NameExt, other.Address);
+		}
+		shortkey = string.Empty;
+		provinceid = other.ProvinceID;
+		priority = (byte)EnumElasticSearchPriority.Normal;
+		coords = new List<BGCElasticPointBase>();
+		coords.Add(new BGCElasticPointBase(other.Coord));
+		
+	
+	#:::::::::
+	####Các index cần xây dựng
+	* index chỉ lưu thông tin là shape chứa thông tin toàn bộ tỉnh:
+	- shape từng tỉnh, shape Hà Nội cũ, Hà Nội mới
+	* index riêng từng tỉnh
+	
+	1.Input: từ khóa tìm kiếm + khu vực (tọa độ:lat, long)
+		1.1. Trường hợp chia ra các api của các tỉnh riêng lẻ
+		- Kiểm tra thuộc tỉnh nào từ thông tin khu vực (tọa độ:lat, long)
+		- Thực hiện autocomplete tìm kiếm trên index tỉnh đó thôi
+		1.1. Trường hợp api các tỉnh chung 1 cái, đánh index chung
+		- Thực hiện tìm kiếm với vị trí bán kính khoảng 100km
+	
+	2.Input: từ khóa tìm kiếm (khu vực không xác định)
+	
+	

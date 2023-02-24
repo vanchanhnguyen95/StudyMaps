@@ -1,0 +1,244 @@
+[
+  {
+    "id": "1",
+    "name": "Bùi Thị Tuyết Mai",
+    "keywords": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+    "specialist": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+	"longitude": 105.85863701952076,
+     "latitude": 21.00808337496294,
+    "geoLocation": {
+      "longitude": 105.85863701952076,
+      "latitude": 21.00808337496294
+    }
+  },
+  {
+    "id": "2",
+    "name": "Bs Lê Thị Thu Hà",
+    "keywords": "Phòng Khám Tai Mũi Họng - Bs Lê Thị Thu Hà",
+    "specialist": "Bùi Thị Tuyết Mai - Tai Mũi họng",
+	"longitude": 105.8339642132154,
+     "latitude": 20.980214540743365,
+    "geoLocation": {
+      "longitude": 105.8339642132154,
+      "latitude": 20.980214540743365
+    }
+  },
+  {
+    "id": "3",
+    "name": "Bệnh Viện Đa Khoa An Việt",
+    "keywords": "Bệnh Viện Đa Khoa An Việt",
+    "specialist": "Bệnh Viện Đa Khoa An Việt",
+	"longitude": 105.84238902976598,
+      "latitude": 20.9972100116152,
+    "geoLocation": {
+      "longitude": 105.84238902976598,
+      "latitude": 20.9972100116152
+    }
+  },
+  {
+    "id": "4",
+    "name": "Tuyết Mai",
+    "keywords": "Phòng Khám Tai Mũi Họng Tuyết Mai",
+    "specialist": "Phòng Khám Tai Mũi Họng Tuyết Mai",
+	"longitude": 105.85863417087053,
+      "latitude": 21.00808581054313,
+    "geoLocation": {
+      "longitude": 105.85863417087053,
+      "latitude": 21.00808581054313
+    }
+  },
+  {
+    "id": "5",
+    "name": "Danh Quỳnh",
+    "keywords": "Phòng Khám Tai Mũi Họng Danh Quỳnh",
+    "specialist": "Phòng Khám Tai Mũi Họng Danh Quỳnh",
+	"longitude": 105.84243379418427,
+      "latitude": 20.978082530754737,
+    "geoLocation": {
+      "longitude": 105.84243379418427,
+      "latitude": 20.978082530754737
+    }
+  },
+  {
+    "id": "6",
+    "name": "Nhi",
+    "keywords": "Phòng Khám Tai Mũi Họng - Nhi",
+    "specialist": "Phòng Khám Tai Mũi Họng - Nhi",
+	"longitude": "105.82106562976597",
+      "latitude": "20.97542523093843",
+    "geoLocation": {
+      "longitude": "105.82106562976597",
+      "latitude": "20.97542523093843"
+    }
+  },
+  {
+    "id": "7",
+    "name": "National Otorhinolaryngology Hospital",
+    "keywords": "National Otorhinolaryngology Hospital",
+    "specialist": "National Otorhinolaryngology Hospital",
+	"longitude": "105.84060740031828",
+      "latitude": "20.999668129261703",
+    "geoLocation": {
+      "longitude": "105.84060740031828",
+      "latitude": "20.999668129261703"
+    }
+  },
+  {
+    "id": "8",
+    "name": "Bs Đào Đình Thi",
+    "keywords": "Phòng Khám Tai Mũi Họng Bs Đào Đình Thi",
+    "specialist": "Phòng Khám Tai Mũi Họng Bs Đào Đình Thi",
+	"longitude": "105.8365622156646",
+      "latitude": "21.005378042553833",
+    "geoLocation": {
+      "longitude": "105.8365622156646",
+      "latitude": "21.005378042553833"
+    }
+  },
+  {
+    "id": "9",
+    "name": "BSCK II. LÊ DUNG - BV VN CUBA",
+    "keywords": "PHÒNG KHÁM TAI - MŨI - HỌNG. BSCK II. LÊ DUNG - BV VN CUBA",
+    "specialist": "PHÒNG KHÁM TAI - MŨI - HỌNG. BSCK II. LÊ DUNG - BV VN CUBA",
+	"longitude": "105.86477564142284",
+      "latitude": "20.996992207528184",
+    "geoLocation": {
+      "longitude": "105.86477564142284",
+      "latitude": "20.996992207528184"
+    }
+  },
+  {
+    "id": "10",
+    "name": "Phòng Khám Tai - Mũi - Họng 121 Yên Phụ",
+    "keywords": "Phòng Khám Tai - Mũi - Họng 121 Yên Phụ",
+    "specialist": "Phòng Khám Tai - Mũi - Họng 121 Yên Phụ",
+	 "longitude": "105.83696175860257",
+      "latitude": "21.05341252869878",
+    "geoLocation": {
+      "longitude": "105.83696175860257",
+      "latitude": "21.05341252869878"
+    }
+  },
+  {
+    "id": "11",
+    "name": "Bs Nguyễn Văn Hướng",
+    "keywords": "Phòng Khám Tai Mũi Họng - Bs Nguyễn Văn Hướng",
+    "specialist": "Phòng Khám Tai Mũi Họng - Bs Nguyễn Văn Hướng",
+	"longitude": "105.83189924572343",
+      "latitude": "20.98847150083545",
+    "geoLocation": {
+      "longitude": "105.83189924572343",
+      "latitude": "20.98847150083545"
+    }
+  },
+  {
+    "id": "12",
+    "name": "Bs Bùi Thị Yến",
+    "keywords": "Phòng Khám Nhi Khoa - Bs Bùi Thị Yến",
+    "specialist": "Phòng Khám Nhi Khoa - Bs Bùi Thị Yến",
+	"longitude": "105.83203280461706",
+      "latitude": "21.02330436038332",
+    "geoLocation": {
+      "longitude": "105.83203280461706",
+      "latitude": "21.02330436038332"
+    }
+  },
+  {
+    "id": "13",
+    "name": "Phòng Khám Tai Mũi Họng - Bs Nguyễn Kim Nghĩa",
+    "keywords": "Phòng Khám Tai Mũi Họng - Bs Nguyễn Kim Nghĩa",
+    "specialist": "Phòng Khám Tai Mũi Họng - Bs Nguyễn Kim Nghĩa",
+	 "longitude": "105.81681855246858",
+      "latitude": "20.997716133493064",
+    "geoLocation": {
+      "longitude": "105.81681855246858",
+      "latitude": "20.997716133493064"
+    }
+  },
+  {
+    "id": "14",
+    "name": "Phòng Khám Tai Mũi Họng Tuyết Mai 2",
+    "keywords": "Phòng Khám Tai Mũi Họng Tuyết Mai 2",
+    "specialist": "Phòng Khám Tai Mũi Họng Tuyết Mai 2",
+	 "longitude": "105.86578227025942",
+      "latitude": "20.992088090262964",
+    "geoLocation": {
+      "longitude": "105.86578227025942",
+      "latitude": "20.992088090262964"
+    }
+  },
+  {
+    "id": "15",
+    "name": "Bs Xuân Dũng",
+    "keywords": "Điều trị bệnh hô hấp- tai mũi họng trẻ em Bs Xuân Dũng",
+    "specialist": "Điều trị bệnh hô hấp- tai mũi họng trẻ em Bs Xuân Dũng",
+	"longitude": "105.82032825921368",
+      "latitude": "20.972763587894367",
+    "geoLocation": {
+      "longitude": "105.82032825921368",
+      "latitude": "20.972763587894367"
+    }
+  },
+  {
+    "id": "16",
+    "name": "Vu Duc Khanh Medical Clinic",
+    "keywords": "Vu Duc Khanh Medical Clinic",
+    "specialist": "Vu Duc Khanh Medical Clinic",
+	"longitude": "105.84511851197512",
+      "latitude": "20.98094946978335",
+    "geoLocation": {
+      "longitude": "105.84511851197512",
+      "latitude": "20.98094946978335"
+    }
+  },
+  {
+    "id": "17",
+    "name": "Bs Nguyễn Thị Bích Hường",
+    "keywords": "Phòng Khám Tai Mũi Họng - Bs Nguyễn Thị Bích Hường",
+    "specialist": "Phòng Khám Tai Mũi Họng - Bs Nguyễn Thị Bích Hường",
+	"longitude": "105.84524784816796",
+      "latitude": "21.035885195758947",
+    "geoLocation": {
+      "longitude": "105.84524784816796",
+      "latitude": "21.035885195758947"
+    }
+  },
+  {
+    "id": "18",
+    "name": "Hai Ly ENT Clinic",
+    "keywords": "Phòng khám Tai mũi họng Hai Ly ENT Clinic",
+    "specialist": "Phòng khám Tai mũi họng Hai Ly ENT Clinic",
+	"longitude": "105.82739438191626",
+      "latitude": "21.01867687981797",
+    "geoLocation": {
+      "longitude": "105.82739438191626",
+      "latitude": "21.01867687981797"
+    }
+  },
+  {
+    "id": "19",
+    "name": "Dr Tuyên",
+    "keywords": "Phòng khám tai mũi họng Dr Tuyên",
+    "specialist": "Phòng khám tai mũi họng Dr Tuyên",
+	"longitude": "105.82985665921368",
+      "latitude": "20.970212871110267",
+    "geoLocation": {
+      "longitude": "105.82985665921368",
+      "latitude": "20.970212871110267"
+    }
+  },
+  {
+    "id": "20",
+    "name": "Bs Nguyễn Sỹ Nguyên",
+    "keywords": "Phòng Khám Tai Mũi Họng - Bs Nguyễn Sỹ Nguyên",
+    "specialist": "Phòng Khám Tai Mũi Họng - Bs Nguyễn Sỹ Nguyên",
+	"longitude": "105.83878960584113",
+      "latitude": "21.006423010707078",
+    "geoLocation": {
+      "longitude": "105.83878960584113",
+      "latitude": "21.006423010707078"
+    }
+  }
+  
+  
+]

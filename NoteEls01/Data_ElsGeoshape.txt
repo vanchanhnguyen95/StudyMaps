@@ -1,0 +1,113 @@
+[
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "HaNoi",
+        "name": "Hà Nội",
+        "address": "Hà Nội",
+        "shortkey": "hn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 106.61028043,
+                "lat": 10.86305495
+            }
+        ]
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "HaNoi",
+        "name": "Hà Nội",
+        "address": "Hà Nội",
+        "shortkey": "hn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 106.60989083,
+                "lat": 10.86321359
+            }
+        ]
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 2,
+        "kindname": "HaNoi",
+        "name": "Hà Nội",
+        "address": "Hà Nội",
+        "shortkey": "hn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 106.61028043,
+                "lat": 10.86305495
+            },
+            {
+                "lng": 106.60989083,
+                "lat": 10.86321359
+            }
+        ]
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 2,
+        "kindname": "HaNoi",
+        "name": "Hà Nội",
+        "address": "Hà Nội",
+        "shortkey": "hn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 106.61028043,
+                "lat": 10.86305495
+            },
+            {
+                "lng": 106.60989083,
+                "lat": 10.86321359
+            }
+        ]
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 3,
+        "kindname": "Test polygon",
+        "name": "Test polygon",
+        "address": "Test polygon",
+        "shortkey": "tplg",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 100.0,
+                "lat": 0.0
+            },
+            {
+                "lng": 101.0,
+                "lat": 0.0
+            },
+            {
+                "lng": 101.0,
+                "lat": 1.0
+            },
+            {
+                "lng": 100.0,
+                "lat": 1.0
+            },
+            {
+                "lng": 100.0,
+                "lat": 0.0
+            }
+        ]
+    }
+    
+
+]

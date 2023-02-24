@@ -1,0 +1,83 @@
+Thiết kế index
+I. Nếu không chia các index theo tỉnh
+ Chia ra 2 loại index:
+ 1. index có type là geo_shape
+  - trường location kiểu geo_shape: chứa cả thông tin: Point, LineString, Polygon
+  - trường name tìm kiếm
+ 2. index có type là geo_point
+  - chỉ lưu nhưng điểm có dạng point
+  - phục vụ cho việc cung cấp api truyền vào cả location, cả khoảng cách
+II. Nếu chia các index theo tỉnh hoặc theo khu vực ưu đặc biệt,
+từng khu vực lại chia nhỏ thêm 2 loại index để phục vụ tìm kiếm nhập vào thêm cả tọa độ, khoảng cách
+
+III. Trường hợp đối tượng sẽ có trường lưu thông tin geometry riêng và bản thân đối tượng cũng có 1 tọa độ geo_point riêng
+=> chỉ đánh 1 loại index: có 2 trường: 1 trường lưu thôn tin geometry, 1 trường geo_point để lưu tọa độ duy nhất điểm đó
+
+IV. Tạo index theo provinceid
+
+"settings": {
+        "analysis": {
+            "analyzer": {
+                "my_vi_analyzer": {
+                    "tokenizer": "vi_tokenizer",
+                    "filter": [
+                        "synonym_filter",
+                        "lowercase",
+                        "ascii_folding"
+                    ]
+                }
+            },
+            "filter": {
+                "ascii_folding": {
+                    "type": "asciifolding",
+                    "preserve_original": true
+                },
+                "synonym_filter": {
+                    "type": "synonym",
+                    "synonyms": [
+                        "ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
+                        "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
+                    ],
+                    "tokenizer": "keyword"
+                }
+            }
+        }
+    }
+}
+
+{
+    "mappings": {
+        "properties": {
+            "typeid": {
+                "type": "integer"
+            },
+            "indexid": {
+                "type": "integer"
+            },
+            "shapeid": {
+                "type": "integer"
+            },
+            "kindname": {
+                "type": "text"
+            },
+            "name": {
+                "type": "text"
+            },
+            "address": {
+                "type": "text"
+            },
+            "shortkey": {
+                "type": "text"
+            },
+            "provinceid": {
+                "type": "integer"
+            },
+            "priority": {
+                "type": "integer"
+            },
+            "location": {
+                "type": "geo_point"
+            }
+        }
+    }
+}

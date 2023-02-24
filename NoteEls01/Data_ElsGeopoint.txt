@@ -1,0 +1,362 @@
+[
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "HaNoi",
+        "name": "Hà Nội",
+        "address": "Hà Nội",
+        "shortkey": "hn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 106.61028043,
+                "lat": 10.86305495
+            }
+        ],
+        "location": "10.86305495, 106.61028043"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Ha Noi View",
+        "name": "Hà Nội View",
+        "address": "Hà Nội View",
+        "shortkey": "hn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.6229602,
+                "lat": 21.30760291
+            }
+        ],
+        "location": "21.30760291, 105.6229602"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Ha Noi View",
+        "name": "Hà Nội View",
+        "address": "Hà Nội View",
+        "shortkey": "hn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.62260883,
+                "lat": 21.30762487
+            }
+        ],
+        "location": "21.30762487, 105.62260883"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Do Doc Thu",
+        "name": "Đô Đốc Thủ",
+        "address": "Đô Đốc Thủ",
+        "shortkey": "ddt",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 106.62774758,
+                "lat": 10.79251785
+            }
+        ],
+        "location": "10.79251785, 106.62774758"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Ha Noi - Hai Phong",
+        "name": "Hà Nội - Hải Phòng",
+        "address": "Đô Đốc Thủ",
+        "shortkey": "ddt",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.92000646,
+                "lat": 21.00934566
+            }
+        ],
+        "location": "21.00934566, 105.92000646"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Cho Kim Ha Noi",
+        "name": "Chợ Kim Hà Nội",
+        "address": "Chợ Kim Hà Nội",
+        "shortkey": "ckhn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.86607063,
+                "lat": 21.18007007
+            }
+        ],
+        "location": "21.18007007, 105.86607063"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Song Hong Thu Do",
+        "name": "Sông Hồng Thủ Đô",
+        "address": "Sông Hồng Thủ Đô",
+        "shortkey": "shtd",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.58484112,
+                "lat": 21.29840325
+            }
+        ],
+        "location": "21.29840325, 105.58484112"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Xa Lo Ha Noi",
+        "name": "Xa Lộ Hà Nội",
+        "address": "Xa Lộ Hà Nội",
+        "shortkey": "xlhn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 106.71925407,
+                "lat": 10.86272726
+            }
+        ],
+        "location": "10.86272726, 106.71925407"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Kiet 27 Ha Noi",
+        "name": "Kiệt 27 Hà Nội",
+        "address": "Kiệt 27 Hà Nội",
+        "shortkey": "k27hn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 107.59353751,
+                "lat": 16.46466259
+            }
+        ],
+        "location": "16.46466259, 107.59353751"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Kiet 26 Ha Noi",
+        "name": "Kiệt 26 Hà Nội",
+        "address": "Kiệt 26 Hà Nội",
+        "shortkey": "k26hn",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 107.5936559,
+                "lat": 16.46352931
+            }
+        ],
+        "location": "16.46352931, 107.5936559"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Ho Chi Minh",
+        "name": "Hồ Chí Minh",
+        "address": "Hồ Chí Minh",
+        "shortkey": "hcm",
+        "provinceid": 29,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.64307174,
+                "lat": 20.82758727
+            }
+        ],
+        "location": "20.82758727, 105.64307174"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Ho Chi Minh Tay",
+        "name": "Hồ Chí Minh Tây",
+        "address": "Hồ Chí Minh Tây",
+        "shortkey": "hcmt",
+        "provinceid": 29,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 106.2352804,
+                "lat": 17.54155539
+            }
+        ],
+        "location": "17.54155539, 106.2352804"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Ho Chi Minh Dong",
+        "name": "Hồ Chí Minh Đông",
+        "address": "Hồ Chí Minh Đông",
+        "shortkey": "hcmd",
+        "provinceid": 29,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 107.01022127,
+                "lat": 16.81565031
+            }
+        ],
+        "location": "16.81565031, 107.01022127"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Ho Chi Minh To 3",
+        "name": "Hồ Chí Minh Tổ 3",
+        "address": "Hồ Chí Minh Đông",
+        "shortkey": "hcmt3",
+        "provinceid": 29,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.57934503,
+                "lat": 20.90262271
+            }
+        ],
+        "location": "20.90262271, 105.57934503"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Duong Dan Ho Chi Minh",
+        "name": "Đường Dẫn Hồ Chí Minh",
+        "address": "Đường Dẫn Hồ Chí Minh",
+        "shortkey": "ddhcm",
+        "provinceid": 29,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 106.58524614,
+                "lat": 10.68816687
+            }
+        ],
+        "location": "20.90262271, 105.57934503"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Phu Tho",
+        "name": "Phú Thọ",
+        "address": "Phú Thọ",
+        "shortkey": "pt",
+        "provinceid": 26,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.76544667,
+                "lat": 19.81316598
+            }
+        ],
+        "location": "19.81316598, 105.76544667"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Xom Phu Tho",
+        "name": "Xóm Phú Thọ",
+        "address": "Phú Thọ",
+        "shortkey": "xpt",
+        "provinceid": 16,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.86517792,
+                "lat": 21.20842633
+            }
+        ],
+        "location": " 21.20842633, 105.86517792"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Thon Phu Tho",
+        "name": "Thôn Phú Thọ",
+        "address": "Thôn Phú Thọ",
+        "shortkey": "xpt",
+        "provinceid": 13,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.44940869,
+                "lat": 21.25547326
+            }
+        ],
+        "location": " 21.25547326, 105.44940869"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Phu Tho 3",
+        "name": "Phú Thọ 3",
+        "address": "Phú Thọ 3",
+        "shortkey": "pt3",
+        "provinceid": 26,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.76246044,
+                "lat": 19.80886447
+            }
+        ],
+        "location": "19.80886447, 105.76246044"
+    },
+    {
+        "typeid": 33,
+        "indexid": 1,
+        "shapeid": 1,
+        "kindname": "Phu Tho 4",
+        "name": "Phú Thọ 4",
+        "address": "Phú Thọ 4",
+        "shortkey": "pt4",
+        "provinceid": 26,
+        "priority": 1,
+        "coords": [
+            {
+                "lng": 105.76075282,
+                "lat": 19.80807136
+            }
+        ],
+        "location": "19.80807136, 105.76075282"
+    }
+]

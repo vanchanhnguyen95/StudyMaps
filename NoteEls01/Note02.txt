@@ -1,0 +1,23 @@
+
+Các khái niệm cơ bản Elasticsearch
+https://viblo.asia/p/elasticsearch-cac-khai-niem-co-ban-phan-1-m68Z0O2jKkG
+
+analysis-vietnamese
+https://github.com/duydo/elasticsearch-analysis-vietnamese
+https://viblo.asia/p/elasticsearch-phan-tich-va-tim-kiem-du-lieu-tieng-viet-3P0lPveoKox
+
+Tạo từ đồng nghĩa
+https://butchiso.com/2016/04/tu-dong-nghia-trong-elasticsearch.html
+
+[Elasticsearch] Phân tích và tìm kiếm dữ liệu tiếng Việt
+https://viblo.asia/p/elasticsearch-phan-tich-va-tim-kiem-du-lieu-tieng-viet-3P0lPveoKox
+
+Khoảng cách Levenshtein và fuzzy query trong Elasticsearch
+https://viblo.asia/p/khoang-cach-levenshtein-va-fuzzy-query-trong-elasticsearch-jvElaOXAKkw
+
+Ưu nhược điểm của elasticsearch
+https://viblo.asia/p/series-elasticsearch-uu-nhuoc-diem-cua-elasticsearch-so-sanh-elasticsearch-voi-mongodb-OeVKByBM5kW
+https://bktranquangchung.wordpress.com/2018/09/14/elasticsearch-khai-niem-va-cac-cau-truy-van-co-ban/
+
+Khái niệm cơ bản về els
+https://bktranquangchung.wordpress.com/2018/09/14/elasticsearch-khai-niem-va-cac-cau-truy-van-co-ban/

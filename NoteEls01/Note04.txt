@@ -1,0 +1,44 @@
+
+https://viblo.asia/p/elasticsearch-cac-khai-niem-co-ban-phan-2-07LKXO0E5V4
+Analysis là quá trình chuyển đổi các Document Properties từ dạng text sang dạng Tokens of Terms. Các Token of Terms này sau đó sẽ được thêm vào Inverted Index để searching. Quá trình Analysis sẽ được thực hiện thông qua các Analyzer, các Analyzer này có thể là các Built-in Analyzer sẵn có của Elasticsearch hoặc là các Custom-Analyzer do chúng ta định nghĩa. Ta có thể chỉ định Analyzer ngay khi khởi tạo Index và trong khi thực hiện Searching.
+
+https://viblo.asia/p/elasticsearch-va-qua-trinh-phan-tich-du-lieu-cac-thanh-phan-cua-mot-analyzer-XL6lAvjg5ek\
+Analyzer là thứ sẽ xử lý dữ liệu được gửi lên elasticsearch và xử lý dữ liệu của một số loại query search như match query. Như mình đã đề cập ở bài viết trước, một analyzer bao gồm các thành phần sau: một hoặc nhiều character filter để chuẩn hóa dữ liệu trước khi phân tích, một tokenizer để phân tích dữ liệu và một hoặc nhiều token filter để chuẩn hóa dữ liệu sau khi phân tích.
+character filter để chuẩn hóa dữ liệu trước khi phân tích,
+một tokenizer để phân tích dữ liệu và một hoặc nhiều token filter để chuẩn hóa dữ liệu sau khi phân tích.
+
+|| Build in analyzer
+	1 Standard
+		Đây là analyzer mặc định, sử dụng standard, lowercase, và stop token-filter, sẽ đề cập ở phần sau
+	2 Simple
+		Simple analyzer tách đoạn text thành token khi gặp một ký tự không phải là letter. Nó bao gồm lowercase tokenizer
+		POST _analyze
+		{
+		  "analyzer": "simple",
+		  "text": "The 2 QUICK Brown-Foxes jumped over the lazy dog's bone."
+		}
+		
+	3 Whitespace
+	Tách đoạn text thành token dựa vào các whitespace. Nó bao gồm whitespace tokenizer
+	
+	4 Stop
+	Giống với Simple analyzer, tách đoạn text thành token khi gặp một ký tự không phải là letter nhưng có thêm một tính năng là loại bỏ các token là stopword(a, an, the, sẽ đề cập ở phần sau) nhờ có thêm một token filter là Stop Token Filter
+		POST my_index/_analyze
+		{
+		  "analyzer": "my_stop_analyzer",
+		  "text": "The 2 QUICK Brown-Foxes jumped over the lazy dog's bone."
+		}
+	
+	5 Keyword
+	Lấy tất cả đoạn text thành một token. Khuyến khích set field thành not_analyzed thay vì dùng analyzer keyword
+	
+	6 Pattern
+   Tách đoạn text thành token dựa vào biểu thức chính quy (RegEx), pattern mặc định là \W+: ngoại trừ tất cả non-word characters
+   
+   7 Language analyzer
+	Tập hợp các analyzer dành cho các ngôn ngữ khác nhau (arabic, armenian, basque, bengali, brazilian, bulgarian, catalan, cjk, czech, danish, dutch, english, finnish, french, galician, german, greek, hindi, hungarian, indonesian, irish, italian, latvian, lithuanian, norwegian, persian, portuguese, romanian, russian, sorani, spanish, swedish, turkish, thai).
+	
+	elasticsearch-analysis-vietnamese cho elasticsearch version 8.
+	https://github.com/wokaio/elasticsearch-analysis-vietnamese
+	
+	
