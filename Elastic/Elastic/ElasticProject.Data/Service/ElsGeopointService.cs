@@ -34,6 +34,8 @@ namespace ElasticProject.Data.Service
         {
             try
             {
+                // Check xem khởi tạo index chưa, nếu chưa khởi tạo thì phải khởi tạo index mới được
+
                 List<ElasticRequestCreateGeopoint> geopoints = new List<ElasticRequestCreateGeopoint>();
                 if (geopointsPush.Any())
                     geopointsPush.ForEach(item => geopoints.Add(new ElasticRequestCreateGeopoint(item)));

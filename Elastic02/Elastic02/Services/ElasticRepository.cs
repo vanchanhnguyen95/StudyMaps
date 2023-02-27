@@ -332,6 +332,10 @@ namespace Elastic02.Services
 
         public async Task<bool> BulkAsync(IEnumerable<T> objects)
         {
+            var existsIndex = await _elasticClient.Indices.ExistsAsync(_indexName);
+            if (!existsIndex.Exists)
+                await CreateIndexGeoAsync();
+
             var response =  await _elasticClient.BulkAsync(b => b.Index(_indexName).IndexMany(objects));
             if (response.ApiCall.Success)
                 return response.IsValid;

@@ -19,9 +19,9 @@
             lat = other.Lat;
         }
 
-        public static implicit operator List<object>(ElasticPointBase v)
-        {
-            throw new NotImplementedException();
-        }
+        //public static implicit operator List<object>(ElasticPointBase v)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
