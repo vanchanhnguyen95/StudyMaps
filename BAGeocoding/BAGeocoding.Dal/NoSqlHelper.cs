@@ -15,8 +15,10 @@ namespace BAGeocoding.Dal
     public class NoSqlHelper
     {
         //public static IMongoCollection<BAGSegmentV2> _collection;
-        public static MongoClient client = new MongoClient(Constants.MONGO_CONNECTION_STRING);
-        public static IMongoDatabase database = client.GetDatabase(Constants.MONGO_GEO_DB);
+        //public static MongoClient client = new MongoClient(Constants.MONGO_CONNECTION_STRING);
+        //public static IMongoDatabase database = client.GetDatabase(Constants.MONGO_GEO_DB);
+        public static MongoClient client = new MongoClient("");
+        public static IMongoDatabase database = client.GetDatabase("");
         public static ConventionPack pack = new ConventionPack { new CamelCaseElementNameConvention() };
     }
 }

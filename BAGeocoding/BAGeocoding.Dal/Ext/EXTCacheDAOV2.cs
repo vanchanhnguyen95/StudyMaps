@@ -32,8 +32,10 @@ namespace BAGeocoding.Dal.Ext
                 var pack = new ConventionPack { new CamelCaseElementNameConvention() };
                 ConventionRegistry.Register("elementNameConvention", pack, x => true);
 
-                var client = new MongoClient(Constants.MONGO_CONNECTION_STRING);
-                var database = client.GetDatabase(Constants.MONGO_GEO_DB);
+                //var client = new MongoClient(Constants.MONGO_CONNECTION_STRING);
+                //var database = client.GetDatabase(Constants.MONGO_GEO_DB);
+                var client = new MongoClient("");
+                var database = client.GetDatabase("");
                 var _cache = database.GetCollection<CacheCatalogDataV2>(nameof(CacheCatalogDataV2));
 
                 // Lấy danh sách CacheCatalogData trong database

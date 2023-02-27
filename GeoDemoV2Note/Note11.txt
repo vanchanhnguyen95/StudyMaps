@@ -1,0 +1,57 @@
+How to Deploy .Net Core Web Application to Ubuntu Linux
+https://www.youtube.com/watch?v=ll-1O-3IBmY
+
+https://localhost:7053/swagger/index.html
+
+http://10.0.20.228/
+http://10.0.20.228:7053/swagger/index.html
+
+####  To Publish Web Api
+dotnet publish --configuration Release
+
+
+===> Vào thư mục publish
+D:\Publish\GeoDemoV2>
+Kiểm tra thông tin dotnet đã cài chưa, version mấy?
+dotnet --info
+
+Chạy project publish
+dotnet BAGeocoding.Api.dll
+
+kiểm tra ipconfig dưới máy window
+ipconfig
+
+Thêm url mới vào project để có thể gọi đc api rồi publish lại:(tại file program.cs)
+app.Urls.Add("http://10.0.20.228:5000");// Windows IP
+app.Urls.Add("http://localhost:5000");// 127.0.0.1 IP
+
+
+####  Trên ubuntu 18.04
+Cài đặt .net 7 sdk
+https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu
+
+####  Kiểm tra ubuntu hiện tại:
+lsb_release -a
+
+####  kiểm tra ifconfig trên ubuntu
+
+#### Tạo thư mục để deploy trên ubuntu
+sudo mkdir -p /var/www/geodemov2
+
+mkdir geodemov2
+
+\\wsl$\Ubuntu-18.04\home\chanhnguyen\geodemov2
+
+
+ 
+rm -r geodemov2
+cd  /var/www/geodemov2
+
+#### Copy dữ liệu từ thư mục windows sang wsl$\Ubuntu-18
+sudo cp -a /mnt/d/publish/geodemov2/* /var/www/geodemov2
+
+sudo chmod -R 755 *
+
+ http://192.168.145.70:5000
+ http://localhost:5000
+

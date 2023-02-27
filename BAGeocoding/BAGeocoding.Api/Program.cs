@@ -3,6 +3,7 @@ using BAGeocoding.Api.Models;
 using BAGeocoding.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +39,23 @@ builder.Services.AddVersionedApiExplorer(setup =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//if (builder.Environment.IsProduction())
+//{
+//    builder.Services.AddHttpsRedirection(options =>
+//    {
+//        options.RedirectStatusCode = (int)HttpStatusCode.PermanentRedirect;
+//        options.HttpsPort = 5000;
+//    });
+//}
+
 var app = builder.Build();
+if(app.Environment.IsProduction())
+{
+    //app.Urls.Add("http://10.0.20.228:5000");// Windows IP
+    app.Urls.Add("http://192.168.145.70:5000");// WSL IP
+    app.Urls.Add("http://localhost:5000");// 127.0.0.1 IP
+}    
+
 
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
@@ -64,7 +81,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

@@ -1,8 +1,5 @@
-﻿using BAGeocoding.Api.Models;
-using BAGeocoding.Api.Services;
+﻿using BAGeocoding.Api.Services;
 using BAGeocoding.Api.ViewModels;
-using BAGeocoding.Bll;
-using BAGeocoding.Entity.Enum;
 using BAGeocoding.Entity.Public;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,11 +23,11 @@ namespace BAGeocoding.Api.Controllers.V1
         public async Task<List<PBLAddressResult>> AddressByGeo([FromBody] AddressByGeoVm? body)
         {
             var result = new List<PBLAddressResult>();
-            if (RunningParams.ProcessState != EnumProcessState.Success)
-            {
-                return result;
-                //MainProcessing.InitData();
-            }
+            //if (RunningParams.ProcessState != EnumProcessState.Success)
+            //{
+            //    return result;
+            //    //MainProcessing.InitData();
+            //}
             var addresses = await _geoService.AddressByGeoAsync(body?.lng, body?.lat);
             if (addresses?.Count > 0)
             {
@@ -46,10 +43,10 @@ namespace BAGeocoding.Api.Controllers.V1
         public async Task<PBLAddressResult> GeoByAddress([FromBody] GeoByAddressVm? body)
         {
             var result = new PBLAddressResult();
-            if (RunningParams.ProcessState != EnumProcessState.Success)
-            {
-                return result;
-            }
+            //if (RunningParams.ProcessState != EnumProcessState.Success)
+            //{
+            //    return result;
+            //}
             var geo = await _geoService.GeoByAddressAsync(body?.address, "vn");
             if (geo == null) return result;
 
@@ -57,20 +54,20 @@ namespace BAGeocoding.Api.Controllers.V1
             return new PBLAddressResult(geo);
         }
 
-        [HttpPost]
-        [MapToApiVersion("1.0")]
-        [Route("GeoByAddressV2")]
-        public async Task<Result<object>> GeoByAddressV2([FromBody] GeoByAddressVm? body)
-        {
-            return await _geoService.GeoByAddressAsyncV2(body?.address, "vn");
-        }
+        //[HttpPost]
+        //[MapToApiVersion("1.0")]
+        //[Route("GeoByAddressV2")]
+        //public async Task<Result<object>> GeoByAddressV2([FromBody] GeoByAddressVm? body)
+        //{
+        //    return await _geoService.GeoByAddressAsyncV2(body?.address, "vn");
+        //}
 
-        [HttpPost]
-        [MapToApiVersion("1.0")]
-        [Route("AutosuggestAddress")]
-        public async Task<Result<object>> AutosuggestAddress([FromBody] GeoByAddressVm? body)
-        {
-            return await _geoService.AutosuggestAddress(body?.address, "vn",10);
-        }
+        //[HttpPost]
+        //[MapToApiVersion("1.0")]
+        //[Route("AutosuggestAddress")]
+        //public async Task<Result<object>> AutosuggestAddress([FromBody] GeoByAddressVm? body)
+        //{
+        //    return await _geoService.AutosuggestAddress(body?.address, "vn",10);
+        //}
     }
 }

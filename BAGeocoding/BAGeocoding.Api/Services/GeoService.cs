@@ -25,11 +25,23 @@ namespace BAGeocoding.Api.Services
 
         public async Task<List<RPBLAddressResult>> AddressByGeoAsync(string? lngStr, string? latStr)
         {
+            //return await Task.Run(() => MainProcessing.AddressByGeo(lngStr ?? "", latStr ?? ""));
+            if (RunningParams.ProcessState != EnumProcessState.Success)
+            {
+                MainProcessing.InitData();
+                return await Task.Run(() => MainProcessing.AddressByGeo(lngStr ?? "", latStr ?? ""));
+            }
             return await Task.Run(() => MainProcessing.AddressByGeo(lngStr ?? "", latStr ?? ""));
         }
 
         public async Task<RPBLAddressResult> GeoByAddressAsync(string? keyStr, string? lanStr)
         {
+            //return await Task.Run(() => MainProcessing.GeoByAddress(keyStr ?? "", lanStr ?? ""));
+            if (RunningParams.ProcessState != EnumProcessState.Success)
+            {
+                MainProcessing.InitData();
+                return await Task.Run(() => MainProcessing.GeoByAddress(keyStr ?? "", lanStr ?? ""));
+            }
             return await Task.Run(() => MainProcessing.GeoByAddress(keyStr ?? "", lanStr ?? ""));
         }
 

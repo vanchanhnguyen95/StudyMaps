@@ -18,20 +18,20 @@ namespace BAGeocoding.Api
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //var result = false;
-            //while (!result)
-            //{
-            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            //    result = await InitDataAsync();
-            //    _logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
-            //}
-            //var result = false;
-            while (RunningParams.ProcessState != EnumProcessState.Success)
+            var result = false;
+            while (!result)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await InitDataAsync();
+                result = await InitDataAsync();
                 _logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
             }
+            //var result = false;
+            //while (RunningParams.ProcessState != EnumProcessState.Success)
+            //{
+            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            //    await InitDataAsync();
+            //    _logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
+            //}
         }
 
         private void LoadConfig()

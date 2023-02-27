@@ -17,8 +17,10 @@ namespace BAGeocoding.Dal.MapImg
         {
             var pack = new ConventionPack { new CamelCaseElementNameConvention() };
             ConventionRegistry.Register("elementNameConvention", pack, x => true);
-            var client = new MongoClient(Constants.MONGO_CONNECTION_STRING);
-            var database = client.GetDatabase(Constants.MONGO_GEO_DB);
+            //var client = new MongoClient(Constants.MONGO_CONNECTION_STRING);
+            //var database = client.GetDatabase(Constants.MONGO_GEO_DB);
+            var client = new MongoClient("");
+            var database = client.GetDatabase("");
             _collection = database.GetCollection<BAGRequestURLV2>(nameof(BAGRequestURLV2));
         }
 
