@@ -103,8 +103,12 @@ namespace ElasticProject.Data.Service
             try
             {
                 var geo = await _client.SearchAsync<HealthCareModel>(
-                s => s.Index("healthcare").Size(pageSize).Sort(s => s.Descending(SortSpecialField.Score)).Query(q => q.Match(m => m.Field(f => f.keywords).Query(keyword).Fuzziness(Fuzziness.Auto))).PostFilter(
-                    q => q.GeoDistance(
+                s => s.Index("healthcare")
+                    .Size(pageSize)
+                    .Sort(s => s.Descending(SortSpecialField.Score))
+                    .Query(q => q.Match(m => m.Field(f => f.keywords).Query(keyword).Fuzziness(Fuzziness.Auto)))
+                    .PostFilter(
+                     q => q.GeoDistance(
                         g => g
                         .Boost(1.1).Name("named_query")
                         .Field(p => p.geoLocation).DistanceType(type).Location(lat, ln)

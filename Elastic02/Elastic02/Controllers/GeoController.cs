@@ -22,8 +22,8 @@ namespace Elastic02.Controllers
         [Route("GetDataSearchGeo")]
         public async Task<List<string>> GetDataSearchGeo(double lat = 21.006423010707078, double ln = 105.83878960584113, string distance = "30000m", int pageSize = 10, string keyword = null)
         {
-            var response = await _geopointService.GetDataSearchGeo(lat, ln, GeoDistanceType.Arc, distance, pageSize);
-            return response;
+            //var response = await _geopointService.Ge(lat, ln, GeoDistanceType.Arc, distance, pageSize);
+            return new List<string>();
         }
 
         [HttpPost]

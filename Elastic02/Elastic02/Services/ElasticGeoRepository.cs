@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 using System.Runtime.Serialization.Formatters;
 using System.Linq.Expressions;
 using Elastic02.Models;
+using Elastic02.Mapping.Test;
 
 namespace Elastic02.Services
 {
@@ -48,7 +49,7 @@ namespace Elastic02.Services
         public async Task<CreateIndexResponse> CreateIndexGeoAsync()
         {
             var indexResponse = await _elasticClient.Indices.CreateAsync(Indices.Index(_indexName), c => c
-                 .Map<T>(mm => mm.AutoMap())
+                .HaNoiRoadPointMapping()
                 .Settings(s => s
                     .Analysis(a => a
                         .CharFilters(cf => cf
