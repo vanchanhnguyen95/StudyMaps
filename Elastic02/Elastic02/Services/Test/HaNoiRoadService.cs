@@ -209,31 +209,58 @@ namespace Elastic02.Services.Test
                 //    .Sort(s => s.Descending(SortSpecialField.Score))
                 //);
 
-                var geo = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
-                .Size(size)
-                .Query(q => q.Bool(
-                            b => b.Must(
-                            //mu => mu.Match( ma => ma.Field( f => f.name).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)
-                            mu => mu.Match( ma => ma.Field( f => f.keyword).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)
-                                    .AutoGenerateSynonymsPhraseQuery()
-                                    .Boost(1.1)
-                        )
-                      )
-                    )
-                  )
-                .Sort(s => s.Descending(SortSpecialField.Score))
-                );
-
                 //var geo2 = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
                 //.Size(size)
                 //.Query(q => q.Bool(
                 //            b => b.Must(
-                //            mu => mu.Match(ma => ma.Field(f => f.name).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)
+                //            //mu => mu.Match( ma => ma.Field( f => f.name).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)
+                //            mu => mu.Match( ma => ma.Field( f => f.keyword).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)
+                //                    .AutoGenerateSynonymsPhraseQuery()
+                //                    .Boost(1.1)
                 //        )
                 //      )
                 //    )
                 //  )
+                //.Sort(s => s.Descending(SortSpecialField.Score))
                 //);
+
+                //var geo3 = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
+                //.Size(size)
+                //.Query(q => q.Bool(
+                //            b => b.Must( mu => mu.Match(ma =>
+                //                        ma.Field(f => f.keyword).Analyzer("vi_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
+                //                        .AutoGenerateSynonymsPhraseQuery()
+                                        
+                //                )
+                //            )
+                //            //.Must(mu => mu.Match(ma => ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
+                //            //        .AutoGenerateSynonymsPhraseQuery()
+                //        //))
+                //    )
+                //  )
+                //.Sort(s => s.Descending(SortSpecialField.Score))
+                //);
+
+                var geo = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
+               .Size(size)
+               .Query(q => q.Bool(
+                           b => b.Must(mu => mu.Match(ma =>
+                                       ma.Field(f => f.keyword).Analyzer("vi_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
+                                       .AutoGenerateSynonymsPhraseQuery()
+                                      
+
+                                    )
+                                && mu.Match(ma =>
+                                       ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
+                                       .AutoGenerateSynonymsPhraseQuery())
+                            )
+                           
+ 
+                   )
+                 )
+               .Sort(s => s.Descending(SortSpecialField.Score))
+               );
+
 
                 return geo.Documents.ToList();
             }

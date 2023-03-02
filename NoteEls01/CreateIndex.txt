@@ -120,7 +120,74 @@ var indexResponse = await _client.Indices.CreateAsync(Indices.Index(_indexName),
                 .Sort(s => s.Descending(SortSpecialField.Score))
                 ).ConfigureAwait(false);
 
-#5#####				
+#5#####
+{
+    "size": 10,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "name": {
+                            "analyzer": "vi_analyzer",
+                            "query": "truong han sieu hai ba trung",
+                            "fuzziness": "AUTO",
+                            "auto_generate_synonyms_phrase_query": true
+                        }
+                    }
+                },
+                {
+                    "match": {
+                        "keyword": {
+                            "analyzer": "vi_analyzer",
+                            "query":  "truong han sieu hai ba trung",
+                            "auto_generate_synonyms_phrase_query": true
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}	
+
+#6#####3
+{
+    "size": 10,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "keyword": {
+                            "analyzer": "vi_analyzer",
+                            "query": "đường gom",
+                            "fuzziness": "AUTO",
+                            "auto_generate_synonyms_phrase_query": true
+                        }
+                    }
+                },
+                {
+                    "match": {
+                        "name": {
+                            "analyzer": "vi_analyzer",
+                            "query": "đường gom",
+                            "auto_generate_synonyms_phrase_query": true
+                        }
+                    }
+                }
+            ],
+            "filter": {
+                "geo_distance": {
+                    "distance": "1000km",
+                    "location": {
+                        "lat": 21.00231286,
+                        "lon": 105.81889046
+                    }
+                }
+            }
+        }
+    }
+}	
 
 nguyen trai ha dong
 nguyễn trãi hà đông
