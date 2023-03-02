@@ -1,0 +1,109 @@
+#1##
+var indexResponse = await _elasticClient.Indices.CreateAsync(Indices.Index(_indexName),
+            ci =>
+            {
+                ci.Map<T>(mm => mm.AutoMap());
+
+                ci.Settings(s =>
+                {
+                    s.NumberOfReplicas(NumberOfReplicas);
+                    s.NumberOfShards(NumberOfShards);
+                    s.Analysis(an =>
+                        an.Analyzers(az =>
+                        az.Custom("my_vi_analyzer",
+                    ca =>
+                    {
+                        ca.Tokenizer("keyword");
+                        ca.Filters("lowercase"); return ca;
+                    })));
+                    return s;
+                }); return ci;
+            });
+##2##
+var indexResponse = await _elasticClient.Indices.CreateAsync(Indices.Index(_indexName), c => c
+                .Map<T>(mm => mm.AutoMap())
+                .Settings(s => s
+                    .NumberOfReplicas(NumberOfReplicas)
+                    .NumberOfShards(NumberOfShards)
+                    .Analysis(a => a
+                        .CharFilters(cf => cf
+                            .Mapping("programming_language", mca => mca
+                                .Mappings(new[]
+                                {
+                                    "c# => csharp",
+                                    "C# => Csharp"
+                                })
+                            )
+                          )
+                        .TokenFilters(tf => tf
+                            .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
+                            {
+                                PreserveOriginal = true
+                            })
+                            .Synonym("synonym_filter", sf => new SynonymTokenFilter
+                            {
+                                Synonyms = new List<string>()
+                                {"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
+                                    "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
+                                }
+                            })
+                        )
+                        .Analyzers(an => an
+                            .Custom("my_vi_analyzer", ca => ca
+                                .CharFilters("programming_language")
+                                .Tokenizer("vi_tokenizer")
+                                .Filters("synonym_filter", "lowercase", "ascii_folding")
+                            )
+                        )
+                    )
+                )
+            );
+            return indexResponse;
+#3#####
+var indexResponse = await _client.Indices.CreateAsync(Indices.Index(_indexName), c => c
+               .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
+               .Settings(s => s
+                   .NumberOfReplicas(NumberOfReplicas)
+                   .NumberOfShards(NumberOfShards)
+                   .Analysis(a => a
+                       .CharFilters(cf => cf
+                           .Mapping("programming_language", mca => mca
+                               .Mappings(new[]
+                               {
+                                    "c# => csharp",
+                                    "C# => Csharp"
+                               })
+                           )
+                         )
+                       .TokenFilters(tf => tf
+                           .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
+                           {
+                               PreserveOriginal = true
+                           })
+                           .Synonym("synonym_filter", sf => new SynonymTokenFilter
+                           {
+                               Synonyms = new List<string>()
+                               {"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
+                                    "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
+                               }
+                           })
+                       )
+                       .Analyzers(an => an
+                           .Custom("my_keyword_analyzer", ca => ca
+                               .CharFilters("programming_language")
+                               .Tokenizer("keyword")
+                               .Filters("synonym_filter", "lowercase", "ascii_folding"))
+                           .Custom("my_vi_analyzer", ca => ca
+                               .CharFilters("programming_language")
+                               .Tokenizer("vi_tokenizer")
+                               .Filters("synonym_filter", "lowercase", "ascii_folding")
+                           )
+                       )
+                   )
+               )
+           );
+
+                return indexResponse.ApiCall.HttpStatusCode.ToString() ?? "OK";
+
+#4##########
+				

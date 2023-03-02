@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using Elastic02.Utility;
+using Nest;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
@@ -10,9 +11,11 @@ namespace Elastic02.Models.Test
         [Number(Index = true)]
         public float id { get; set; }
 
-        [Text(Index = true, Fielddata = true, Analyzer = "my_vi_analyzer")]
+        //[Text(Index = true, Fielddata = true)]
+        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer")]
         public string? name { get; set; } = string.Empty;
-        [Text(Index = true, Fielddata = true, Analyzer = "my_vi_analyzer")]
+        //[Text(Index = true, Fielddata = true)]
+        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer")]
         public string? extend { get; set; } = string.Empty;
 
         [Number(Index = true)]
@@ -27,6 +30,7 @@ namespace Elastic02.Models.Test
             name = other.name;
             lat = other.lat;
             lng = other.lng;
+            extend= other.extend;
         }
 
     }
@@ -40,16 +44,30 @@ namespace Elastic02.Models.Test
     [ElasticsearchType(IdProperty = nameof(Id)), Description("hanoiroad_point")]
     public class HaNoiRoadPoint : HaNoiRoadPush
     {
-        //[GeoPoint]
+        [GeoPoint]
         public GeoLocation location { get; set; }
+
+        //public string? ename { get; set; } = string.Empty;
+        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer")]
+        public string? keyword { get; set; } = string.Empty;
 
         public HaNoiRoadPoint(HaNoiRoadPush other)
         {
             id = other.id;
             name = other.name;
+            //ename = LatinToAscii.Latin2Ascii(other.name??"");
+            extend = other.extend;
             lat= other.lat;
             lng = other.lng;
             location = new GeoLocation(other.lat, other.lng);
+            if (!string.IsNullOrEmpty(other.extend))
+            {
+                keyword = $"{name} , {other.extend}";
+            }
+            else
+            {
+                keyword = name;
+            }
         }
     }
 

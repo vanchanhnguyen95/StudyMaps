@@ -1,0 +1,35 @@
+Install .net on Ubuntu
+
+sudo apt-get update && sudo apt-get upgrade
+
+sudo apt-get update && \
+  sudo apt-get install -y dotnet-sdk-7.0
+  
+sudo apt-get update && \
+  sudo apt-get install -y aspnetcore-runtime-7.0
+  
+  Mở cổng trên firewall của ubuntu
+ví dụ mở cổng 9200 TCP e gõ ntn:
+sudo ufw allow 9200/tcp
+sudo ufw allow 9200/tcp
+sudo ufw reload
+
+sudo ufw allow 9200/tcp
+sudo ufw status
+
+sudo ufw allow 6000/tcp
+  
+  sudo chmod -R 755 *
+  
+  
+  sudo ufw allow from 10.0.10.146 to any port 5601
+  
+  apt-get install dnsproxy
+  
+  ./plugins install analysis-icu
+  
+  bin\elasticsearch-plugin install file:///C:/path/to/plugin.zip
+  
+  bin\elasticsearch-plugin install file:///C:/chanhnv/Desktop/examp/elasticsearch-7.3.1/plugins/plugin.zip
+  
+  C:\Users\chanhnv\Desktop\examp\elasticsearch-7.3.1\plugins

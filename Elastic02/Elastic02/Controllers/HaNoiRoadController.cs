@@ -24,6 +24,8 @@ namespace Elastic02.Controllers
         public async Task<string> CreateIndex()
         {
             return await _haNoiRoadService.CreateIndex();
+            //await _haNoiGeoService.CreateIndexGeoAsync();
+            //return "OK";
         }
 
         [HttpPost]

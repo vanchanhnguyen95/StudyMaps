@@ -10,6 +10,8 @@ namespace Elastic02.Mapping.Test
             return descriptor.Map<HaNoiRoadPoint>(m => m.Properties(p => p
                 .Keyword(k => k.Name(n => n.id))
                 .Text(t => t.Name(n => n.name))
+                .Text(t => t.Name(n => n.extend))
+                .Text(t => t.Name(n => n.keyword))
                 .Number(t => t.Name(n => n.lat))
                 .Number(t => t.Name(n => n.lng))
                 .GeoPoint(t => t.Name(n => n.location))

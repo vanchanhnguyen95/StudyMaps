@@ -7,8 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 var appSettings = new AppSettings();
 
-//var elasticClient = new ElasticClient(new Uri("http://localhost:9200"));
-var elasticClient = new ElasticClient(new Uri("http://10.0.10.146:9200"));
+//string uri = @"http://localhost:9200";
+string uri = @"http://10.0.10.146:9200";
+
+//if(builder.Build().Environment.IsProduction())
+//{
+//    uri = @"http://10.0.10.146:9200";
+//}    
+
+var elasticClient = new ElasticClient(new Uri(uri));
+//var elasticClient = new ElasticClient(new Uri("http://10.0.10.146:9200"));
 
 builder.Services.AddSingleton(elasticClient);
 builder.Services.AddScoped(typeof(IElasticRepository<>), typeof(ElasticRepository<>));
@@ -30,8 +38,9 @@ var app = builder.Build();
 if (app.Environment.IsProduction())
 {
     //app.Urls.Add("http://10.0.20.109:6000");// Windows IP
-    app.Urls.Add("http://10.1.13.67:6000");// Windows IP
-    //app.Urls.Add("http://192.168.145.70:6000");// WSL IP
+    //app.Urls.Add("http://10.1.13.67:6000");// Windows IP
+    ////app.Urls.Add("http://192.168.145.70:6000");// WSL IP
+    app.Urls.Add("http://10.0.10.146:6000");// Ubuntu IP
     app.Urls.Add("http://localhost:6000");// 127.0.0.1 IP
 }
 

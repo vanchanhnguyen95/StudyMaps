@@ -12,6 +12,9 @@ namespace Elastic02.Services
 {
     public class ElasticGeoRepository<T> : IElasticGeoRepository<T> where T : class
     {
+        public int NumberOfShards { get; set; } = 5;
+        public int NumberOfReplicas { get; set; } = 1;
+
         private readonly ElasticClient _elasticClient;
         private readonly string _indexName;
 
@@ -48,9 +51,33 @@ namespace Elastic02.Services
 
         public async Task<CreateIndexResponse> CreateIndexGeoAsync()
         {
+            //var indexResponse = await _elasticClient.Indices.CreateAsync(Indices.Index(_indexName),
+            //ci =>
+            //{
+            //    ci.Map<T>(mm => mm.AutoMap());
+
+            //    ci.Settings(s =>
+            //    {
+            //        s.NumberOfReplicas(NumberOfReplicas);
+            //        s.NumberOfShards(NumberOfShards);
+            //        s.Analysis(an =>
+            //            an.Analyzers(az =>
+            //            az.Custom("my_vi_analyzer",
+            //        ca =>
+            //        {
+            //            ca.Tokenizer("vi_tokenizer");
+            //            ca.Filters("lowercase"); return ca;
+            //        })));
+            //        return s;
+            //    }); return ci;
+            //});
+            //return indexResponse;
+
             var indexResponse = await _elasticClient.Indices.CreateAsync(Indices.Index(_indexName), c => c
-                .HaNoiRoadPointMapping()
+                .Map<T>(mm => mm.AutoMap())
                 .Settings(s => s
+                    .NumberOfReplicas(NumberOfReplicas)
+                    .NumberOfShards(NumberOfShards)
                     .Analysis(a => a
                         .CharFilters(cf => cf
                             .Mapping("programming_language", mca => mca
@@ -75,6 +102,10 @@ namespace Elastic02.Services
                             })
                         )
                         .Analyzers(an => an
+                            .Custom("my_keyword_analyzer", ca => ca
+                                .CharFilters("programming_language")
+                                .Tokenizer("keyword")
+                                .Filters("synonym_filter","lowercase", "ascii_folding"))
                             .Custom("my_vi_analyzer", ca => ca
                                 .CharFilters("programming_language")
                                 .Tokenizer("vi_tokenizer")
