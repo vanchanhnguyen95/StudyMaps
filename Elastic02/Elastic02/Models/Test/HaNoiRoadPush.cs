@@ -1,8 +1,5 @@
-﻿using Elastic02.Utility;
-using Nest;
+﻿using Nest;
 using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Xml.Linq;
 
 namespace Elastic02.Models.Test
 {
@@ -55,18 +52,17 @@ namespace Elastic02.Models.Test
         {
             id = other.id;
             name = other.name;
-            //ename = LatinToAscii.Latin2Ascii(other.name??"");
             extend = other.extend;
             lat= other.lat;
             lng = other.lng;
             location = new GeoLocation(other.lat, other.lng);
             if (!string.IsNullOrEmpty(other.extend))
             {
-                keyword = $"{name} , {other.extend}";
+                keyword = $"{other.name} , {other.extend}";
             }
             else
             {
-                keyword = name;
+                keyword = other.name;
             }
         }
     }

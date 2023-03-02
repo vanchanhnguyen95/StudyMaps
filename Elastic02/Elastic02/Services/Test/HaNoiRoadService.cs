@@ -213,7 +213,8 @@ namespace Elastic02.Services.Test
                 .Size(size)
                 .Query(q => q.Bool(
                             b => b.Must(
-                            mu => mu.Match( ma => ma.Field( f => f.name).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)    
+                            //mu => mu.Match( ma => ma.Field( f => f.name).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)
+                            mu => mu.Match( ma => ma.Field( f => f.keyword).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)
                                     .AutoGenerateSynonymsPhraseQuery()
                                     .Boost(1.1)
                         )
@@ -221,7 +222,7 @@ namespace Elastic02.Services.Test
                     )
                   )
                 .Sort(s => s.Descending(SortSpecialField.Score))
-                ).ConfigureAwait(false);
+                );
 
                 //var geo2 = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
                 //.Size(size)

@@ -105,5 +105,34 @@ var indexResponse = await _client.Indices.CreateAsync(Indices.Index(_indexName),
 
                 return indexResponse.ApiCall.HttpStatusCode.ToString() ?? "OK";
 
-#4##########
-				
+#4########## đã fix được lỗi tìm khong dau
+ var geo = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
+                .Size(size)
+                .Query(q => q.Bool(
+                            b => b.Must(
+                            mu => mu.Match( ma => ma.Field( f => f.name).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)    
+                                    .AutoGenerateSynonymsPhraseQuery()
+                                    .Boost(1.1)
+                        )
+                      )
+                    )
+                  )
+                .Sort(s => s.Descending(SortSpecialField.Score))
+                ).ConfigureAwait(false);
+
+#5#####				
+
+nguyen trai ha dong
+nguyễn trãi hà đông
+nguyen trai, ha dong
+nguyễn trãi, hà đông
+
+nguyen trai quan ha dong
+nguyễn trãi quận hà đông
+nguyen trai, quan ha dong
+nguyễn trãi, quận hà đông
+
+Em có sửa lại tìm kiếm thêm phần mở rộng nữa nhé anh.
+Tìm "Nguyễn trãi" ra nguyễn trai, các ngách/ngõ + nguyễn trãi
+Tìm "Nguyễn Trãi Hà Đông" ra: Nguyễn Trãi + mở rộng(Q. Hà Đông)
+Em có test: "Nguyễn trãi + phần mở rộng" cũng ra kết quả nhé anh
