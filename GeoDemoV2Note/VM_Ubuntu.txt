@@ -11,11 +11,13 @@ mv elasticsearch-7.3.1 /es
 
 
 10.0.10.146:9200
-
+10.0.10.146
 sudo ufw status
 sudo ufw allow 9200/tcp
 sudo ufw reload
+sudo ufw allow from 10.0.10.146 to any port 9200
 
+http://10.0.10.146:9200/
 
 Chạy elastic
 sudo su

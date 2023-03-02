@@ -9,7 +9,7 @@ http://10.0.20.228:7053/swagger/index.html
 ####  To Publish Web Api
 dotnet publish --configuration Release
 
-
+mv elasticsearch-7.3.1 /es
 ===> Vào thư mục publish
 D:\Publish\GeoDemoV2>
 Kiểm tra thông tin dotnet đã cài chưa, version mấy?
@@ -55,3 +55,11 @@ sudo chmod -R 755 *
  http://192.168.145.70:5000
  http://localhost:5000
 
+VM146
+IP: 10.0.10.146
+Cổng Remote: 13389
+Cổng SSH: 5522
+Tài khoản: kcn
+Mật khẩu: mqBZh*P@
+Tài khoản: root
+Mật khẩu: b5JrXs4FPJp4ftGK#CRnjv%G
