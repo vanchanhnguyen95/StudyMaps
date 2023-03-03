@@ -1,6 +1,7 @@
 ﻿using Elastic02.Models.Test;
 using Nest;
 using System.ComponentModel;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace Elastic02.Services.Test
 {
@@ -135,7 +136,7 @@ namespace Elastic02.Services.Test
                     res = await GetDataByLocation(lat, lng, type, distance, size);
                 }
                 // Tìm kiếm theo từ khóa
-                else if (lat == 0 || lng == 0)
+                else if (lat == 0 && lng == 0)
                 {
                     res = await GetDataByKeyWord(size, keyword);
                 }
@@ -161,21 +162,30 @@ namespace Elastic02.Services.Test
         {
             try
             {
-                var geo = await _client.SearchAsync<HaNoiRoadPoint>(
-                s => s.Index(_indexName)
-                    .Size(size)
-                    .Query(
-                    q => q.GeoDistance(g => g
-                    .Boost(1.1)
-                    .Name("named_query")
-                    .Field(p => p.location)
-                    .DistanceType(type)
-                    .Location(lat, lng)
-                    .Distance(distance)
-                    .ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                //var geo = await _client.SearchAsync<HaNoiRoadPoint>(
+                //s => s.Index(_indexName)
+                //    .Size(size)
+                //    .Query(
+                //    q => q.GeoDistance(g => g
+                //    .Boost(1.1)
+                //    .Name("named_query")
+                //    .Field(p => p.location)
+                //    .DistanceType(type)
+                //    .Location(lat, lng)
+                //    .Distance(distance)
+                //    .ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                //    ))
+                //    .Sort(s => s.Descending(SortSpecialField.Score))
+                //);
+                var geo = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
+                   .Size(size)
+                   .PostFilter(q => q.GeoDistance(
+                        g => g.Boost(1.1).Name("named_query")
+                        .Field(p => p.location).DistanceType(type).Location(lat, lng)
+                        .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
                     ))
-                    .Sort(s => s.Descending(SortSpecialField.Score))
-                );
+                   .Sort(s => s.Descending(SortSpecialField.Score))
+                   );
 
                 return geo.Documents.ToList();
             }
