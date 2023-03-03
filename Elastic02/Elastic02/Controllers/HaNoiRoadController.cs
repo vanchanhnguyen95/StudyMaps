@@ -38,7 +38,14 @@ namespace Elastic02.Controllers
             if (geopointsPush.Any())
                 geopointsPush.ForEach(item => geopoints.Add(new HaNoiRoadPoint(item)));
 
-            return Ok(await _haNoiGeoService.BulkAsync(geopoints));
+            return Ok(await _haNoiRoadService.BulkAsync(geopoints));
+        }
+
+        [HttpPost]
+        [Route("CreateAsyncHaNoiGeo")]
+        public async Task<IActionResult> CreateAsyncHaNoiGeo([FromBody] List<HaNoiRoadPush> geopointsPush)
+        {
+            return Ok(await _haNoiRoadService.CreateAsync(geopointsPush));
         }
 
         [HttpGet]

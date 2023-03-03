@@ -42,8 +42,8 @@ namespace Elastic02.Services
             var existsIndex = await _elasticClient.Indices.ExistsAsync(_indexName);
             if (!existsIndex.Exists)
                await CreateIndexGeoAsync();
-
-            var response = await _elasticClient.BulkAsync(b => b.Index(_indexName).IndexMany(objects));
+            var response = await _elasticClient.IndexManyAsync(objects);
+            //var response = await _elasticClient.BulkAsync(b => b.Index(_indexName).IndexMany(objects));
             if (response.ApiCall.Success)
                 return response.IsValid;
             return false;

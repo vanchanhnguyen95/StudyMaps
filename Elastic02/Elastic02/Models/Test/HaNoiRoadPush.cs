@@ -6,7 +6,7 @@ namespace Elastic02.Models.Test
     public class HaNoiRoadPush
     {
         [Number(Index = true)]
-        public float id { get; set; }
+        public float id { get; set; } = 0;
 
         //[Text(Index = true, Fielddata = true)]
         [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer")]
@@ -16,10 +16,10 @@ namespace Elastic02.Models.Test
         public string? extend { get; set; } = string.Empty;
 
         [Number(Index = true)]
-        public double lng { get; set; }
+        public double lng { get; set; } = 0;
         [Number(Index = true)]
 
-        public double lat { get; set; }
+        public double lat { get; set; } = 0;
 
         public HaNoiRoadPush() { }
         public HaNoiRoadPush(HaNoiRoadPoint other) {
@@ -42,7 +42,8 @@ namespace Elastic02.Models.Test
     public class HaNoiRoadPoint : HaNoiRoadPush
     {
         [GeoPoint]
-        public GeoLocation location { get; set; }
+        //public GeoLocation location { get; set; } = new GeoLocation(1, 1);
+        public string location { get; set; } = string.Empty;
 
         //public string? ename { get; set; } = string.Empty;
         [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer")]
@@ -55,10 +56,12 @@ namespace Elastic02.Models.Test
             extend = other.extend;
             lat= other.lat;
             lng = other.lng;
-            location = new GeoLocation(other.lat, other.lng);
+            //location = new GeoLocation(other.lat, other.lng);
+            location = other.lat.ToString() + "," + other.lng.ToString();
             if (!string.IsNullOrEmpty(other.extend))
             {
-                keyword = $"{other.name} , {other.extend}";
+                //keyword = $"{other.name} , {other.extend}";
+                keyword = other?.name?.ToString() + "," + other?.extend?.ToString();
             }
             else
             {

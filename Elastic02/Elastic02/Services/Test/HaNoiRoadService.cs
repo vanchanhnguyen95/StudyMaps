@@ -73,6 +73,7 @@ namespace Elastic02.Services.Test
 
                 var indexResponse = await _client.Indices.CreateAsync(Indices.Index(_indexName), c => c
                    .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
+                   //.HaNoiRoadPointMapping()
                    .Settings(s => s
                        .NumberOfReplicas(NumberOfReplicas)
                        .NumberOfShards(NumberOfShards)
@@ -91,13 +92,13 @@ namespace Elastic02.Services.Test
                                {
                                    PreserveOriginal = true
                                })
-                               .Synonym("synonym_filter", sf => new SynonymTokenFilter
-                               {
-                                   Synonyms = new List<string>()
-                                   {"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
-                                        "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
-                                   }
-                               })
+                               //.Synonym("synonym_filter", sf => new SynonymTokenFilter
+                               //{
+                               //    Synonyms = new List<string>()
+                               //    {"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
+                               //         "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
+                               //    }
+                               //})
                            )
                            .Analyzers(an => an
                                .Custom("keyword_analyzer", ca => ca
@@ -107,7 +108,8 @@ namespace Elastic02.Services.Test
                                .Custom("vi_analyzer", ca => ca
                                    .CharFilters("programming_language")
                                    .Tokenizer("vi_tokenizer")
-                                   .Filters("synonym_filter", "lowercase", "icu_folding", "ascii_folding")
+                                   .Filters("lowercase", "icu_folding", "ascii_folding")
+                                   //.Filters("synonym_filter","lowercase", "icu_folding", "ascii_folding")
                                )
                            )
                        )
@@ -242,25 +244,17 @@ namespace Elastic02.Services.Test
                 //);
 
                 var geo = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
-               .Size(size)
-               .Query(q => q.Bool(
-                           b => b.Must(mu => mu.Match(ma =>
-                                       ma.Field(f => f.keyword).Analyzer("vi_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
-                                       .AutoGenerateSynonymsPhraseQuery()
-                                      
-
-                                    )
-                                && mu.Match(ma =>
-                                       ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
-                                       .AutoGenerateSynonymsPhraseQuery())
-                            )
-                           
- 
-                   )
-                 )
-               .Sort(s => s.Descending(SortSpecialField.Score))
-               );
-
+                   .Size(size)
+                   .Query(q => q.Bool(
+                        b => b.Must(mu => mu.Match(ma =>
+                        ma.Field(f => f.keyword).Analyzer("vi_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
+                        .AutoGenerateSynonymsPhraseQuery() )
+                        && mu.Match(ma =>
+                        ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
+                        .AutoGenerateSynonymsPhraseQuery() )
+                    )))
+                   .Sort(s => s.Descending(SortSpecialField.Score))
+                   );
 
                 return geo.Documents.ToList();
             }
@@ -289,25 +283,43 @@ namespace Elastic02.Services.Test
                 //    .Sort(s => s.Descending(SortSpecialField.Score))
                 //);
 
+                //var geo2 = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
+                //.Size(size)
+                //.Query(q => q.Bool(
+                //            b => b.Must(
+                //            mu => mu.Match(ma => ma.Field(f => f.name).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)
+                //                    .AutoGenerateSynonymsPhraseQuery()
+                //                    .Boost(1.1)
+                //                    .Name("named_query")
+                //        )
+                //      )
+                //    )
+                //  )
+                //.PostFilter(q => q.GeoDistance(
+                //                g => g.Boost(1.1).Name("named_query")
+                //                .Field(p => p.location).DistanceType(type).Location(lat, lng)
+                //                .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                // ))
+                //.Sort(s => s.Descending(SortSpecialField.Score))
+                //).ConfigureAwait(false);
+
                 var geo = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
-                .Size(size)
-                .Query(q => q.Bool(
-                            b => b.Must(
-                            mu => mu.Match(ma => ma.Field(f => f.name).Query(keyword).Analyzer("vi_analyzer").Fuzziness(Fuzziness.Auto)
-                                    .AutoGenerateSynonymsPhraseQuery()
-                                    .Boost(1.1)
-                                    .Name("named_query")
-                        )
-                      )
-                    )
-                  )
-                .PostFilter(q => q.GeoDistance(
-                                g => g.Boost(1.1).Name("named_query")
-                                .Field(p => p.location).DistanceType(type).Location(lat, lng)
-                                .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
-                 ))
-                .Sort(s => s.Descending(SortSpecialField.Score))
-                ).ConfigureAwait(false);
+                   .Size(size)
+                   .Query(q => q.Bool(
+                        b => b.Must(mu => mu.Match(ma =>
+                        ma.Field(f => f.keyword).Analyzer("vi_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
+                        .AutoGenerateSynonymsPhraseQuery())
+                        && mu.Match(ma =>
+                        ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
+                        .AutoGenerateSynonymsPhraseQuery())
+                    )))
+                   .PostFilter(q => q.GeoDistance(
+                        g => g.Boost(1.1).Name("named_query")
+                        .Field(p => p.location).DistanceType(type).Location(lat, lng)
+                        .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                    ))
+                   .Sort(s => s.Descending(SortSpecialField.Score))
+                   );
 
                 return geo.Documents.ToList();
             }
@@ -317,5 +329,44 @@ namespace Elastic02.Services.Test
             }
         }
 
+        public async Task<bool> BulkAsync(List<HaNoiRoadPoint> haNoiRoads)
+        {
+            try
+            {
+                var existsIndex = await _client.Indices.ExistsAsync(_indexName);
+                if (!existsIndex.Exists)
+                    await CreateIndex();
+                //var response = await _client.IndexManyAsync(haNoiRoads, _indexName);
+                var response = await _client.BulkAsync(q => q.Index(_indexName).IndexMany(haNoiRoads));
+                if (response.ApiCall.Success)
+                    return response.IsValid;
+                return true;
+            }
+            catch
+            { return false; }
+   
+        }
+
+        public async Task<bool> CreateAsync(List<HaNoiRoadPush> haNoiRoads)
+        {
+            try
+            {
+                var existsIndex = await _client.Indices.ExistsAsync(_indexName);
+                if (!existsIndex.Exists)
+                    await CreateIndex();
+
+                foreach (HaNoiRoadPush item in haNoiRoads)
+                {
+                    var response = await _client.CreateAsync(new HaNoiRoadPoint(item), q => q.Index(_indexName));
+                    if (response.ApiCall?.HttpStatusCode == 409)
+                    {
+                        await _client.UpdateAsync<HaNoiRoadPoint>(item.id.ToString(), a => a.Index(_indexName).Doc(new HaNoiRoadPoint(item)));
+                    }
+                }
+                return true;
+            }
+            catch
+            { return false; }
+        }
     }
 }
