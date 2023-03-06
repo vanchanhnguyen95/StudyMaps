@@ -1,6 +1,7 @@
 using Elastic02.Models;
 using Elastic02.Services;
 using Elastic02.Services.Test;
+using Elasticsearch.Net;
 using Nest;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +15,20 @@ string uri = @"http://localhost:9200";//local
 //{
 //    uri = @"http://10.0.10.146:9200";
 //}    
+var pool = new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
+var settings = new ConnectionSettings(pool)
+    .CertificateFingerprint("FINGERPRINT");
+    //.BasicAuthentication("elastic", "password")
+    //.EnableHttpPipelining()
+    //.DisableDirectStreaming()
+    //.EnableApiVersioningHeader();
+    //.EnableHttpPipelining()
+    //.DisableDirectStreaming()
+    //.EnableApiVersioningHeader()
+    //.EnableDebugMode();
 
-var elasticClient = new ElasticClient(new Uri(uri));
+//var elasticClient = new ElasticClient(new Uri(uri));
+var elasticClient = new ElasticClient(settings);
 
 builder.Services.AddSingleton(elasticClient);
 builder.Services.AddScoped(typeof(IElasticRepository<>), typeof(ElasticRepository<>));

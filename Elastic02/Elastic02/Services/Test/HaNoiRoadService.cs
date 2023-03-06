@@ -1,7 +1,6 @@
 ﻿using Elastic02.Models.Test;
 using Nest;
 using System.ComponentModel;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace Elastic02.Services.Test
 {
@@ -11,6 +10,7 @@ namespace Elastic02.Services.Test
         public int NumberOfReplicas { get; set; } = 1;
         private readonly ElasticClient _client;
         private readonly string _indexName;
+        private List<HaNoiRoadPoint> hanoiPointsErr;
 
         public HaNoiRoadService(ElasticClient client)
         {
@@ -31,10 +31,11 @@ namespace Elastic02.Services.Test
             throw new Exception($"{nameof(HaNoiRoadPoint)} description attribute is missing.");
         }
 
-        public async Task<string> CreateIndex()
+        public async Task<string> CreateIndex(string indexName)
         {
             try
             {
+                if (string.IsNullOrEmpty(indexName)) indexName = _indexName;
                 //var indexResponse = await _client.Indices.CreateAsync(Indices.Index(_indexName), c => c
                 // .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
                 //.Settings(s => s
@@ -72,9 +73,8 @@ namespace Elastic02.Services.Test
                 //)
                 //);
 
-                var indexResponse = await _client.Indices.CreateAsync(Indices.Index(_indexName), c => c
+                var indexResponse = await _client.Indices.CreateAsync(Indices.Index(indexName), c => c
                    .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
-                   //.HaNoiRoadPointMapping()
                    .Settings(s => s
                        .NumberOfReplicas(NumberOfReplicas)
                        .NumberOfShards(NumberOfShards)
@@ -185,6 +185,7 @@ namespace Elastic02.Services.Test
                         .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
                     ))
                    .Sort(s => s.Descending(SortSpecialField.Score))
+                   .Scroll(1)
                    );
 
                 return geo.Documents.ToList();
@@ -264,6 +265,7 @@ namespace Elastic02.Services.Test
                         .AutoGenerateSynonymsPhraseQuery() )
                     )))
                    .Sort(s => s.Descending(SortSpecialField.Score))
+                   .Scroll(1)
                    );
 
                 return geo.Documents.ToList();
@@ -329,6 +331,7 @@ namespace Elastic02.Services.Test
                         .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
                     ))
                    .Sort(s => s.Descending(SortSpecialField.Score))
+                   .Scroll(1)
                    );
 
                 return geo.Documents.ToList();
@@ -345,7 +348,7 @@ namespace Elastic02.Services.Test
             {
                 var existsIndex = await _client.Indices.ExistsAsync(_indexName);
                 if (!existsIndex.Exists)
-                    await CreateIndex();
+                    await CreateIndex("");
                 //var response = await _client.IndexManyAsync(haNoiRoads, _indexName);
                 var response = await _client.BulkAsync(q => q.Index(_indexName).IndexMany(haNoiRoads));
                 if (response.ApiCall.Success)
@@ -363,7 +366,7 @@ namespace Elastic02.Services.Test
             {
                 var existsIndex = await _client.Indices.ExistsAsync(_indexName);
                 if (!existsIndex.Exists)
-                    await CreateIndex();
+                    await CreateIndex(_indexName);
 
                 foreach (HaNoiRoadPush item in haNoiRoads)
                 {
@@ -377,6 +380,185 @@ namespace Elastic02.Services.Test
             }
             catch
             { return false; }
+        }
+
+        public async Task<bool> BulkAsync2(ICollection<HaNoiRoadPoint> haNoiRoads)
+        {
+            try
+            {
+                hanoiPointsErr = new List<HaNoiRoadPoint>();
+
+                var existsIndex = await _client.Indices.ExistsAsync("hanoiroad_point_2");
+                if (!existsIndex.Exists)
+                {
+                    var indexResponse = await _client.Indices.CreateAsync(Indices.Index("hanoiroad_point_2"), c => c
+                   .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
+                   .Settings(s => s
+                       .NumberOfReplicas(NumberOfReplicas)
+                       .NumberOfShards(NumberOfShards)
+                       .Analysis(a => a
+                           .CharFilters(cf => cf
+                               .Mapping("programming_language", mca => mca
+                                   .Mappings(new[]
+                                   {
+                                        "c# => csharp",
+                                        "C# => Csharp"
+                                   })
+                               )
+                             )
+                           .TokenFilters(tf => tf
+                               .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
+                               {
+                                   PreserveOriginal = true
+                               })
+                           //.Synonym("synonym_filter", sf => new SynonymTokenFilter
+                           //{
+                           //    Synonyms = new List<string>()
+                           //    {"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
+                           //         "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
+                           //    }
+                           //})
+                           )
+                           .Analyzers(an => an
+                               .Custom("keyword_analyzer", ca => ca
+                                   .CharFilters("programming_language")
+                                   .Tokenizer("keyword")
+                                   .Filters("lowercase"))
+                               .Custom("vi_analyzer", ca => ca
+                                   .CharFilters("programming_language")
+                                   .Tokenizer("vi_tokenizer")
+                                   .Filters("lowercase", "icu_folding", "ascii_folding")
+                               //.Filters("synonym_filter","lowercase", "icu_folding", "ascii_folding")
+                               )
+                           )
+                       )
+                    )
+                );
+                }
+
+                _client.BulkAll(haNoiRoads, b => b
+                .Index("hanoiroad_point_2")
+                // how long to wait between retries
+                .BackOffTime("30s")
+                // how many retries are attempted if a failure occurs
+                .BackOffRetries(2)
+                //// refresh the index once the bulk operation completes
+                .RefreshOnCompleted()
+                // how many concurrent bulk requests to make
+                .MaxDegreeOfParallelism(Environment.ProcessorCount)
+                // number of items per bulk request
+                .Size(haNoiRoads.Count())
+                //.BufferToBulk(async (descriptor, list) =>
+                //{
+                //    // customise the individual operations in the bulk
+                //    // request before it is dispatched
+                //    foreach (var item in list)
+                //    {
+                //        // index each document into either even-index or odd-index
+                //        //descriptor.Index<HaNoiRoadPoint>(bi => bi
+                //        //   .Index("hanoiroad_point_2")
+                //        //   .Document(item)
+                //        //);
+                //        await CreateHaNoiRoadPoint(item);
+                //    }
+                //})
+                .RetryDocumentPredicate( (item, road) =>
+                {
+                    bool hasCreate = CreateHaNoiRoadPoint(road);
+
+                    if(!hasCreate)
+                        hanoiPointsErr.Add(road);
+
+                    // decide if a document should be retried in the event of a failure
+                    return item.Error.Index == "hanoiroad_point_2";
+                })
+                .DroppedDocumentCallback((item, road) =>
+                {
+                    // if a document cannot be indexed this delegate is called
+                    Console.WriteLine($"Unable to index: {item} {road}");
+                    bool hasCreate = CreateHaNoiRoadPoint(road);
+
+                    if (!hasCreate)
+                        hanoiPointsErr.Add(road);
+                })
+                .ContinueAfterDroppedDocuments()
+            )   
+            // Perform the indexing, waiting up to 15 minutes. 
+            // Whilst the BulkAll calls are asynchronous this is a blocking operation
+            .Wait(TimeSpan.FromMinutes(15), async next =>
+            {
+                // do something on each response e.g. write number of batches indexed to console
+                if (hanoiPointsErr.Any())
+                {
+                    foreach (HaNoiRoadPoint item in hanoiPointsErr)
+                    {
+                        var isCreate = await CreateHaNoiRoadPointAsync(item);
+                        if (!isCreate)
+                            hanoiPointsErr.Remove(item);
+                        hanoiPointsErr.Add(item);
+                    }
+                    hanoiPointsErr = null;
+                }    
+
+            });
+
+                if (!hanoiPointsErr.Any())
+                    return true;
+
+                foreach (HaNoiRoadPoint item in hanoiPointsErr)
+                {
+                    var isCreate = await CreateHaNoiRoadPointAsync(item);
+                    if (!isCreate)
+                        hanoiPointsErr.Remove(item);
+                    hanoiPointsErr.Add(item);
+                }
+                hanoiPointsErr = null;
+
+                return true;
+
+            }
+            catch(Exception ex)
+            {
+                //if (hanoiPointsErr.Any())
+                //{
+                //    foreach (HaNoiRoadPoint item in hanoiPointsErr)
+                //    {
+                //        await CreateHaNoiRoadPointAsync(item);
+                //    }
+                //}
+                //hanoiPointsErr = null;
+                return false;
+            }
+        }
+
+        private bool CreateHaNoiRoadPoint(HaNoiRoadPoint roadPoint)
+        {
+            try
+            {
+                var response = _client.Index(new HaNoiRoadPoint(roadPoint), q => q.Index("hanoiroad_point_2"));
+                if (response.ApiCall?.HttpStatusCode == 409)
+                {
+                    _client.Update<HaNoiRoadPoint>(roadPoint.id.ToString(), a => a.Index("hanoiroad_point_2").Doc(new HaNoiRoadPoint(roadPoint)));
+                }
+                return response.IsValid;
+            }
+            catch (Exception ex) { return false; }
+            
+        }
+
+        private async Task<bool> CreateHaNoiRoadPointAsync(HaNoiRoadPoint roadPoint)
+        {
+            try
+            {
+                var response = await _client.IndexAsync(new HaNoiRoadPoint(roadPoint), q => q.Index("hanoiroad_point_2"));
+                if (response.ApiCall?.HttpStatusCode == 409)
+                {
+                    await _client.UpdateAsync<HaNoiRoadPoint>(roadPoint.id.ToString(), a => a.Index("hanoiroad_point_2").Doc(new HaNoiRoadPoint(roadPoint)));
+                }
+                return response.IsValid;
+            }
+            catch (Exception ex) { return false; }
+
         }
     }
 }

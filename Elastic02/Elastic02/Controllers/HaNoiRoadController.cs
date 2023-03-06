@@ -21,9 +21,9 @@ namespace Elastic02.Controllers
 
         [HttpGet]
         [Route("CreateIndex")]
-        public async Task<string> CreateIndex()
+        public async Task<string> CreateIndex(string indexName = null)
         {
-            return await _haNoiRoadService.CreateIndex();
+            return await _haNoiRoadService.CreateIndex(indexName);
             //await _haNoiGeoService.CreateIndexGeoAsync();
             //return "OK";
         }
@@ -39,6 +39,19 @@ namespace Elastic02.Controllers
                 geopointsPush.ForEach(item => geopoints.Add(new HaNoiRoadPoint(item)));
 
             return Ok(await _haNoiRoadService.BulkAsync(geopoints));
+        }
+
+        [HttpPost]
+        [Route("BulkHaNoiGeo2")]
+        public async Task<IActionResult> BulkHaNoiGeo2([FromBody] List<HaNoiRoadPush> geopointsPush)
+        {
+            ICollection<HaNoiRoadPoint> geopoints = new List<HaNoiRoadPoint>();
+
+            // Check xem khởi tạo index chưa, nếu chưa khởi tạo thì phải khởi tạo index mới được
+            if (geopointsPush.Any())
+                geopointsPush.ForEach(item => geopoints.Add(new HaNoiRoadPoint(item)));
+
+            return Ok(await _haNoiRoadService.BulkAsync2(geopoints));
         }
 
         [HttpPost]
