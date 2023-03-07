@@ -7,7 +7,7 @@ namespace Elastic02.Services.Test
     {
         Task<string> CreateIndex(string indexName);
 
-        Task<bool> BulkAsync(List<HaNoiRoadPoint> haNoiRoads);
+        Task<string> BulkAsync(List<HaNoiRoadPoint> haNoiRoads);
         Task<bool> BulkAsync2(ICollection<HaNoiRoadPoint> haNoiRoads);
         Task<bool> CreateAsync(List<HaNoiRoadPush> haNoiRoads);
         // Tìm kiếm theo Tọa độ / Từ Khóa / Tọa độ và từ khóa

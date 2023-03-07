@@ -1,0 +1,3 @@
+Chuyển đổi project BAGeocoding.Dal
+
+Có ý tưởng để tăng tốc độ là mỗi lần request sẽ lưu lại vào mongoDb, nếu có rồi thì ko lưu

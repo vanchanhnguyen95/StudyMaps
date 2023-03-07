@@ -1,0 +1,9 @@
+Note10
+
+// 2. Tìm kiếm vùng
+// 2.1 Tìm kiếm tỉnh
+short provinceID = BAGDecoding.SearchProvinceByName(keySearch.Province);
+if (provinceID < 0)
+	return null;
+// 2.2 Tìm kiếm quận/huyện
+short districtID = BAGDecoding.SearchDistrictByName(keySearch.District, (byte)provinceID);
