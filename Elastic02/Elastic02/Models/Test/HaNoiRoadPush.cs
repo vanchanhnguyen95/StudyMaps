@@ -8,17 +8,16 @@ namespace Elastic02.Models.Test
         [Number(Index = true)]
         public float id { get; set; } = 0;
 
-        //[Text(Index = true, Fielddata = true)]
-        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer")]
+        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
         public string? name { get; set; } = string.Empty;
-        //[Text(Index = true, Fielddata = true)]
-        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer")]
+
+        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
         public string? extend { get; set; } = string.Empty;
 
         [Number(Index = true)]
         public double lng { get; set; } = 0;
-        [Number(Index = true)]
 
+        [Number(Index = true)]
         public double lat { get; set; } = 0;
 
         public HaNoiRoadPush() { }
@@ -42,12 +41,11 @@ namespace Elastic02.Models.Test
     public class HaNoiRoadPoint : HaNoiRoadPush
     {
         [GeoPoint]
-        //public GeoLocation location { get; set; } = new GeoLocation(1, 1);
         public string location { get; set; } = string.Empty;
 
         //public string? ename { get; set; } = string.Empty;
-        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer")]
-        public string? keyword { get; set; } = string.Empty;
+        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
+        public string keywords { get; set; } = string.Empty;
 
         public HaNoiRoadPoint(HaNoiRoadPush other)
         {
@@ -57,15 +55,15 @@ namespace Elastic02.Models.Test
             lat= other.lat;
             lng = other.lng;
             //location = new GeoLocation(other.lat, other.lng);
-            location = other.lat.ToString() + "," + other.lng.ToString();
+            location = other.lat.ToString() + ", " + other.lng.ToString();
             if (!string.IsNullOrEmpty(other.extend))
             {
                 //keyword = $"{other.name} , {other.extend}";
-                keyword = other?.name?.ToString() + "," + other?.extend?.ToString();
+                keywords = other?.name?.ToString() + ", " + other?.extend?.ToString();
             }
             else
             {
-                keyword = other.name;
+                keywords = other.name??"";
             }
         }
     }

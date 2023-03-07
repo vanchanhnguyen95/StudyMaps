@@ -11,7 +11,7 @@ namespace Elastic02.Mapping.Test
                 .Keyword(k => k.Name(n => n.id))
                 .Text(t => t.Name(n => n.name))
                 .Text(t => t.Name(n => n.extend))
-                .Text(t => t.Name(n => n.keyword))
+                .Text(t => t.Name(n => n.keywords))
                 .Number(t => t.Name(n => n.lat))
                 .Number(t => t.Name(n => n.lng))
                 .GeoPoint(t => t.Name(n => n.location))

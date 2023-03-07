@@ -16,10 +16,10 @@ var urls = new Urls();
 builder.Configuration.GetSection("Urls").Bind(urls);
 string uri = elasticSettings.EsEndPoint;
 //var pool = new SingleNodeConnectionPool(new Uri(uri));
-//var pool = new SingleNodeConnectionPool(new Uri("http://10.0.10.146:9200"));
-var pool = new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
-var settings = new ConnectionSettings(pool)
-    .CertificateFingerprint("FINGERPRINT");
+var pool = new SingleNodeConnectionPool(new Uri("http://10.0.10.146:9200"));
+//var pool = new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
+var settings = new ConnectionSettings(pool);
+    //.CertificateFingerprint("FINGERPRINT")
     //.BasicAuthentication("elastic", "password")
     //.EnableHttpPipelining()
     //.DisableDirectStreaming()
@@ -51,9 +51,9 @@ var app = builder.Build();
 if (app.Environment.IsProduction())
 {
     //app.Urls.Add(urls.WindowsIP);// Windows IP
-    app.Urls.Add(urls.WSLIP);// WSL IPhttp://172.20.0.1:6000
+    //app.Urls.Add(urls.WSLIP);// WSL IPhttp://172.20.0.1:6000
     //app.Urls.Add("http://172.20.2.181:6000");// WSL IPhttp://172.20.0.1:6000
-    //app.Urls.Add(urls.UbuntuIP);// Ubuntu IP
+    app.Urls.Add(urls.UbuntuIP);// Ubuntu IP
     app.Urls.Add(urls.LocalIP);// 127.0.0.1 IP
     //app.Urls.Add("http://localhost:6000");// 127.0.0.1 IP
 }

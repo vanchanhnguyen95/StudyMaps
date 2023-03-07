@@ -1,12 +1,6 @@
-﻿using Nest;
+﻿using Elastic02.Models;
+using Nest;
 using System.ComponentModel;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Reflection;
-using System.ComponentModel.Design;
-using System.Runtime.Serialization.Formatters;
-using System.Linq.Expressions;
-using Elastic02.Models;
-using Elastic02.Mapping.Test;
 
 namespace Elastic02.Services
 {

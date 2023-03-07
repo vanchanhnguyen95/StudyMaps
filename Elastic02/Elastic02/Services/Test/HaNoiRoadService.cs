@@ -76,7 +76,51 @@ namespace Elastic02.Services.Test
                 //)
                 //);
 
-                var indexResponse = await _client.Indices.CreateAsync(Indices.Index(indexName), c => c
+                //var indexResponse = await _client.Indices.CreateAsync(Indices.Index(indexName), c => c
+                //   .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
+                //   .Settings(s => s
+                //       .NumberOfReplicas(NumberOfReplicas)
+                //       .NumberOfShards(NumberOfShards)
+                //       .Analysis(a => a
+                //           .CharFilters(cf => cf
+                //               .Mapping("programming_language", mca => mca
+                //                   .Mappings(new[]
+                //                   {
+                //                        "c# => csharp",
+                //                        "C# => Csharp"
+                //                   })
+                //               )
+                //             )
+                //           .TokenFilters(tf => tf
+                //               .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
+                //               {
+                //                   PreserveOriginal = true
+                //               })
+                //           //.Synonym("synonym_filter", sf => new SynonymTokenFilter
+                //           //{
+                //           //    Synonyms = new List<string>()
+                //           //    {"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
+                //           //         "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
+                //           //    }
+                //           //})
+                //           )
+                //           .Analyzers(an => an
+                //               .Custom("keyword_analyzer", ca => ca
+                //                   .CharFilters("programming_language")
+                //                   .Tokenizer("keyword")
+                //                   .Filters("lowercase"))
+                //               .Custom("vi_analyzer_road", ca => ca
+                //                   .CharFilters("programming_language")
+                //                   .Tokenizer("vi_tokenizer")
+                //                   .Filters("lowercase", "icu_folding", "ascii_folding")
+                //                   //.Filters("synonym_filter","lowercase", "icu_folding", "ascii_folding")
+                //               )
+                //           )
+                //       )
+                //    )
+                //);
+
+                    var indexResponse = await _client.Indices.CreateAsync(Indices.Index(indexName), c => c
                    .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
                    .Settings(s => s
                        .NumberOfReplicas(NumberOfReplicas)
@@ -96,24 +140,27 @@ namespace Elastic02.Services.Test
                                {
                                    PreserveOriginal = true
                                })
-                           .Synonym("synonym_filter", sf => new SynonymTokenFilter
-                           {
-                               Synonyms = new List<string>()
-                               {"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
-                                    "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
-                               }
-                           })
+                           //.Synonym("synonym_filter", sf => new SynonymTokenFilter
+                           //{
+                           //    //Synonyms = new List<string>()
+                           //    //{"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
+                           //    //     "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
+                           //    //}
+                           //    //SynonymsPath = pathHaNoiRoad
+                           //    SynonymsPath = "analysis/synonyms_hanoiroad.txt"
+                           //})
                            )
                            .Analyzers(an => an
                                .Custom("keyword_analyzer", ca => ca
                                    .CharFilters("programming_language")
                                    .Tokenizer("keyword")
                                    .Filters("lowercase"))
-                               .Custom("vi_analyzer", ca => ca
+                               .Custom("vi_analyzer_road", ca => ca
                                    .CharFilters("programming_language")
                                    .Tokenizer("vi_tokenizer")
                                    .Filters("lowercase", "icu_folding", "ascii_folding")
-                                   //.Filters("synonym_filter","lowercase", "icu_folding", "ascii_folding")
+                               //.Filters("synonym_filter","lowercase", "icu_folding", "ascii_folding")
+                               //.Filters("synonym_filter","lowercase", "icu_folding", "ascii_folding")
                                )
                            )
                        )
@@ -154,7 +201,7 @@ namespace Elastic02.Services.Test
 
                 return result;
             }
-            catch
+            catch (Exception ex)
             {
                 return null;
             }
@@ -261,11 +308,13 @@ namespace Elastic02.Services.Test
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.keyword).Analyzer("vi_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
-                        .AutoGenerateSynonymsPhraseQuery() )
+                        ma.Field(f => f.keywords).Analyzer("vi_analyzer_road").Query(keyword).Fuzziness(Fuzziness.Auto)
+                        .AutoGenerateSynonymsPhraseQuery() 
+                        )
                         && mu.Match(ma =>
-                        ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
-                        .AutoGenerateSynonymsPhraseQuery() )
+                        ma.Field(f => f.name).Analyzer("vi_analyzer_road").Query(keyword)
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
                     )))
                    .Sort(s => s.Descending(SortSpecialField.Score))
                    .Scroll(1)
@@ -273,7 +322,7 @@ namespace Elastic02.Services.Test
 
                 return geo.Documents.ToList();
             }
-            catch
+            catch (Exception ex)
             {
                 return null;
             }
@@ -322,10 +371,11 @@ namespace Elastic02.Services.Test
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.keyword).Analyzer("vi_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
+                        ma.Field(f => f.keywords).Query(keyword).Fuzziness(Fuzziness.Auto)
                         .AutoGenerateSynonymsPhraseQuery())
                         && mu.Match(ma =>
-                        ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
+                        //ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
+                        ma.Field(f => f.name).Query(keyword)
                         .AutoGenerateSynonymsPhraseQuery())
                     )))
                    .PostFilter(q => q.GeoDistance(
@@ -382,7 +432,7 @@ namespace Elastic02.Services.Test
                  //})
                  .RetryDocumentPredicate((item, road) =>
                  {
-                     bool hasCreate = CreateHaNoiRoadPoint(road);
+                     bool hasCreate = CreateHaNoiRoadPoint(road, _indexName);
 
                      if (!hasCreate)
                          hanoiPointsErr.Add(road);
@@ -394,7 +444,7 @@ namespace Elastic02.Services.Test
                  {
                      // if a document cannot be indexed this delegate is called
                      //Console.WriteLine($"Unable to index: {item} {road}");
-                     bool hasCreate = CreateHaNoiRoadPoint(road);
+                     bool hasCreate = CreateHaNoiRoadPoint(road, _indexName);
 
                      if (!hasCreate)
                          hanoiPointsErr.Add(road);
@@ -410,7 +460,7 @@ namespace Elastic02.Services.Test
                  {
                      foreach (HaNoiRoadPoint item in hanoiPointsErr)
                      {
-                         var isCreate = await CreateHaNoiRoadPointAsync(item);
+                         var isCreate = await CreateHaNoiRoadPointAsync(item, _indexName);
                          if (!isCreate)
                          {
                              hanoiPointsErr.Remove(item);
@@ -432,7 +482,7 @@ namespace Elastic02.Services.Test
                     
                 foreach (HaNoiRoadPoint item in hanoiPointsErr)
                 {
-                    var isCreate = await CreateHaNoiRoadPointAsync(item);
+                    var isCreate = await CreateHaNoiRoadPointAsync(item, _indexName);
 
                     if (!isCreate)
                     {
@@ -476,8 +526,6 @@ namespace Elastic02.Services.Test
         {
             try
             {
-                string pathHaNoiRoad = _configuration.GetSection("SynonymsPath:HaNoiRoad").Value ?? "";
-
                 hanoiPointsErr = new List<HaNoiRoadPoint>();
 
                 var existsIndex = await _client.Indices.ExistsAsync("hanoiroad_point_2");
