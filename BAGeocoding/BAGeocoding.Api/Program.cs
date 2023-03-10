@@ -3,7 +3,6 @@ using BAGeocoding.Api.Models;
 using BAGeocoding.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,7 +51,8 @@ var app = builder.Build();
 if(app.Environment.IsProduction())
 {
     //app.Urls.Add("http://10.0.20.228:5000");// Windows IP
-    app.Urls.Add("http://192.168.145.70:5000");// WSL IP
+    //app.Urls.Add("http://172.19.214.232:5000");// WSL IP
+    app.Urls.Add("http://10.0.10.146:5000");// Ubuntu IP
     app.Urls.Add("http://localhost:5000");// 127.0.0.1 IP
 }    
 
@@ -76,6 +76,11 @@ if (app.Environment.IsDevelopment())
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+if (app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

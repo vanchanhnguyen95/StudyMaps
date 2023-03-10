@@ -62,9 +62,10 @@ namespace BAGeocoding.Utility
 
         //public static string DEFAULT_DIRECTORY_LOGS = @"D:\TEST\BAGeocoding\BAGeocoding.Service\Logs\";
         //public static string DEFAULT_DIRECTORY_DATA = @"D:\TEST\BAGeocoding\BAGeocoding.Service\App_Data\";
-
-        public static string DEFAULT_DIRECTORY_LOGS = @"TEST\BAGeocoding\BAGeocoding.Service\Logs\";
-        public static string DEFAULT_DIRECTORY_DATA = @"TEST\BAGeocoding\BAGeocoding.Service\App_Data\";
+        //public static string DEFAULT_DIRECTORY_LOGS = @"TEST\BAGeocoding\BAGeocoding.Service\Logs\";
+        //public static string DEFAULT_DIRECTORY_DATA = @"TEST\BAGeocoding\BAGeocoding.Service\App_Data\";
+        public static string DEFAULT_DIRECTORY_LOGS = @".\wwwroot\TEST\BAGeocoding\BAGeocoding.Service\Logs\";
+        public static string DEFAULT_DIRECTORY_DATA = @".\wwwroot\TEST\BAGeocoding\BAGeocoding.Service\App_Data\";
 #endif
 
         public static string ROUTER_CERTIFICATE_KEY = "";

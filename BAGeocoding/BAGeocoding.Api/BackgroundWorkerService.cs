@@ -53,9 +53,6 @@ namespace BAGeocoding.Api
             RunningParams.DataSpeed = Convert.ToBoolean(_config.GetSection("ServiceDataSpeed").Get<string>());
 
 #pragma warning disable CS8601 // Possible null reference assignment.
-            RunningParams.GOOGLE_GEOCODE_KEY = _config.GetSection("GoogleKey").Get<string>();
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning disable CS8601 // Possible null reference assignment.
             RunningParams.ProvinceRoadByLevel = _config.GetSection("RoadByLevel").Get<string>();
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning disable CS8601 // Possible null reference assignment.

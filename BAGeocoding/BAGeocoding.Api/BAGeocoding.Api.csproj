@@ -34,42 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092228817292054.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092229531670558.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092229724554808.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092229923425359.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092230130051191.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092230339776004.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092230556269677.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092230768592929.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092230973985556.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638092239399348706.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638094741223798250.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__rg_638130936759235131.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\20220901\Temp\__sm_638092029309968342.ba">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
