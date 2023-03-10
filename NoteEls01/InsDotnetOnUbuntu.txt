@@ -65,6 +65,6 @@ export PATH=${M2_HOME}/bin:${PATH}
 
 sudo cp -a /mnt/d/publish/GeoDemoV2/* /var/www/geodemov2
 sudo chmod -R 755 *
-
+sudo chmod -R 755 *
 .\wwwroot\20220901\\
 "__rg.ba"
