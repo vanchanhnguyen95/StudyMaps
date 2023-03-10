@@ -15,3 +15,5 @@ var bulkAllObservable = client.BulkAll(yourData, b => b
         .OnError((e) => Console.WriteLine(e.Message)));
 
 await bulkAllObservable.WaitAsync();
+
+.\wwwroot\20220901\\

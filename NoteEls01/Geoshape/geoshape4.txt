@@ -1,0 +1,49 @@
+tìm kiếm thông tin gợi ý đối tượng kiểu geoshape dựa vào: tọa độ nhập vào, khoảng cách, từ khóa nhập vào trong elasticsearch 7.3.1
+
+using Elasticsearch.Net;
+using Nest;
+using System;
+
+// Tạo kết nối đến Elasticsearch
+var node = new Uri("http://localhost:9200");
+var settings = new ConnectionSettings(node);
+var client = new ElasticClient(settings);
+
+// Tọa độ và khoảng cách cần tìm kiếm
+var lat = 40.712776;
+var lon = -74.005974;
+var distance = "10km";
+
+// Từ khóa cần tìm kiếm
+var keyword = "coffee";
+
+// Tìm kiếm các đối tượng kiểu geoshape trong Elasticsearch dựa trên tọa độ, khoảng cách và từ khóa nhập vào
+var searchResponse = client.Search<object>(s => s
+    .Query(q => q
+        .Bool(b => b
+            .Must(mu => mu
+                .Match(m => m
+                    .Field("name")
+                    .Query(keyword)
+                )
+            )
+            .Filter(fi => fi
+                .GeoShape(g => g
+                    .Field("location")
+                    .Shape(s => s
+                        .Point(lat, lon)
+                    )
+                    .Distance(distance)
+                )
+            )
+        )
+    )
+);
+
+// In kết quả tìm kiếm
+foreach (var hit in searchResponse.Hits)
+{
+    Console.WriteLine(hit.Id);
+}
+
+Trong ví dụ này, chúng ta tìm kiếm các đối tượng có trường "name" chứa từ khóa keyword, và trường "location" kiểu geoshape gần với tọa độ (lat, lon) trong khoảng cách distance. Đối tượng được trả về sẽ có trường "id" tương ứng được in ra màn hình. Bạn cần thay đổi "name" và "location" thành trường chứa thông tin tương ứng của đối tượng trong Elasticsearch của bạn và sử dụng kiểu đối tượng phù hợp để thay thế cho "object" trong phương thức "client.Search" nếu cần thiết.

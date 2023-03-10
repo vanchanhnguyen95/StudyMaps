@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1600009,
+      "name": "79",
+      "extend": "H. Đan Phương",
+    "shapeid": 1,
+    "coords": [
+      {
+        "latitude": 21.0727181,
+        "longitude": 105.70880727
+      }
+    ]
+  },
+ {
+    id": 1600010,
+      "name": "79",
+      "extend": "H. Hoài Đức",
+    "shapeid": 1,
+    "coords": [
+      {
+        "latitude": 21.07060489,
+        "longitude": 105.70802773
+      }
+    ]
+  }
+]

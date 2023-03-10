@@ -1,0 +1,22 @@
+tìm kiếm thông tin đối tượng kiểu geoshape dựa vào: tọa độ nhập vào, khoảng cách trong elasticsearch 7.3.1 bằng code c#
+
+var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+    .DefaultIndex("your_index_name");
+var client = new ElasticClient(settings);
+
+var searchResponse = client.Search<YourGeoShapeObjectType>(s => s
+    .Query(q => q
+        .GeoDistance(g => g
+            .Field(f => f.Location)
+            .Distance("5km")
+            .Location(new GeoCoordinate(10.123, 106.456))
+            .DistanceType(GeoDistanceType.SloppyArc)
+        )
+    )
+);
+
+Trong đó, YourGeoShapeObjectType là tên của lớp đại diện cho đối tượng kiểu geoshape mà bạn muốn tìm kiếm, location là tên của trường chứa tọa độ kiểu geoshape trong đối tượng đó. Tham số DistanceType xác định phương thức tính toán khoảng cách, trong ví dụ này chúng ta sử dụng phương pháp SloppyArc.
+
+Kết quả tìm kiếm được trả về dưới dạng một đối tượng ISearchResponse<YourGeoShapeObjectType> chứa danh sách các đối tượng phù hợp với tiêu chí tìm kiếm của bạn.
+
+Hy vọng rằng thông tin này sẽ hữu ích đối với bạn trong việc tìm kiếm đối tượng kiểu geoshape trong Elasticsearch bằng code C#.

@@ -1,0 +1,43 @@
+geoshape1
+tìm kiếm thông tin đối tượng kiểu geoshape dựa vào: tọa độ nhập vào, khoảng cách trong elasticsearch 7.3.1 bằng code c#
+
+using Nest;
+using System;
+
+var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+    .DefaultIndex("your_index_name");
+var client = new ElasticClient(settings);
+
+var point = new GeoLocation(40.715, -74.011); // tọa độ nhập vào
+var distance = "1km"; // khoảng cách tìm kiếm
+
+var searchResponse = client.Search<YourDocumentType>(s => s
+    .Query(q => q
+        .GeoShape(g => g
+            .Field(f => f.YourGeoShapeField)
+            .Relation(GeoShapeRelation.Intersects)
+            .Shape(s => s
+                .Circle(c => c
+                    .Coordinates(point)
+                    .Radius(distance)
+                )
+            )
+        )
+    )
+);
+
+foreach (var hit in searchResponse.Hits)
+{
+    Console.WriteLine($"Found document {hit.Id} with score {hit.Score}");
+}
+
+
+Trong đó:
+
+your_index_name là tên của index bạn muốn tìm kiếm.
+YourDocumentType là kiểu dữ liệu của các documents trong index bạn muốn tìm kiếm.
+YourGeoShapeField là tên của trường chứa đối tượng kiểu geoshape mà bạn muốn tìm kiếm.
+40.715 và -74.011 là tọa độ nhập vào.
+1km là khoảng cách tìm kiếm. Bạn có thể sử dụng các đơn vị khác như "miles" hoặc "meters".
+GeoShapeRelation.Intersects chỉ định rằng đối tượng kiểu geoshape cần tìm kiếm phải giao nhau với đối tượng tròn được xác định bởi tọa độ và khoảng cách nhập vào.
+Kết quả của truy vấn Elasticsearch sẽ trả về một danh sách các documents trong index thỏa mãn điều kiện tìm kiếm. Bạn có thể sử dụng các trường của documents này để hiển thị thông tin cho người dùng hoặc thực hiện các xử lý khác.

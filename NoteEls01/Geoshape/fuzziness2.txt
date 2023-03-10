@@ -1,0 +1,65 @@
+tìm kiếm thông tin gợi ý đối tượng kiểu geoshape dựa vào: tọa độ nhập vào, khoảng cách, từ khóa nhập vào trong elasticsearch 7.3.1 sử dụng fuzziness, must. should
+
+using Elasticsearch.Net;
+using Nest;
+using System;
+
+// Tạo kết nối đến Elasticsearch
+var node = new Uri("http://localhost:9200");
+var settings = new ConnectionSettings(node);
+var client = new ElasticClient(settings);
+
+// Tọa độ và khoảng cách cần tìm kiếm
+var lat = 40.712776;
+var lon = -74.005974;
+var distance = "10km";
+
+// Từ khóa cần tìm kiếm và mức độ fuzzy
+var keyword = "restaurant";
+var fuzziness = Fuzziness.Auto;
+
+// Tìm kiếm các đối tượng kiểu geoshape trong Elasticsearch dựa trên tọa độ và khoảng cách,
+// tìm kiếm các từ khóa trong các trường khác nhau và sử dụng must và should để xác định
+// điều kiện tìm kiếm chính xác và gợi ý
+var searchResponse = client.Search<object>(s => s
+    .Query(q => q
+        .Bool(b => b
+            .Must(m => m
+                .MultiMatch(mm => mm
+                    .Fields(f => f
+                        .Field("name^3")
+                        .Field("address")
+                        .Field("description")
+                    )
+                    .Query(keyword)
+                    .Fuzziness(fuzziness)
+                ),
+                m => m
+                .GeoShape(g => g
+                    .Field("location")
+                    .Shape(s => s
+                        .Point(lat, lon)
+                    )
+                    .Distance(distance)
+                )
+            )
+            .Should(sh => sh
+                .MultiMatch(mm => mm
+                    .Fields(f => f
+                        .Field("name^3")
+                        .Field("address")
+                        .Field("description")
+                    )
+                    .Query(keyword)
+                    .Fuzziness(Fuzziness.EditDistance(1))
+                )
+            )
+        )
+    )
+);
+
+// In kết quả tìm kiếm
+foreach (var hit in searchResponse.Hits)
+{
+    Console.WriteLine(hit.Id);
+}

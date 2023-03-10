@@ -1,0 +1,57 @@
+tìm kiếm thông tin gợi ý đối tượng kiểu geoshape dựa vào: tọa độ nhập vào, khoảng cách, từ khóa nhập vào trong elasticsearch 7.3.1 sử dụng fuzziness, must. should
+
+using Elasticsearch.Net;
+using Nest;
+using System;
+
+// Tạo kết nối đến Elasticsearch
+var node = new Uri("http://localhost:9200");
+var settings = new ConnectionSettings(node);
+var client = new ElasticClient(settings);
+
+// Tọa độ và khoảng cách cần tìm kiếm
+var lat = 40.712776;
+var lon = -74.005974;
+var distance = "10km";
+
+// Từ khóa cần tìm kiếm
+var keyword = "restaurant";
+
+// Tìm kiếm các đối tượng kiểu geoshape trong Elasticsearch dựa trên tọa độ và khoảng cách
+// và tìm kiếm các từ khóa trong các trường khác nhau với fuzziness, must và should
+var searchResponse = client.Search<object>(s => s
+    .Query(q => q
+        .Bool(b => b
+            .Must(m => m
+                .GeoShape(g => g
+                    .Field("location")
+                    .Shape(s => s
+                        .Point(lat, lon)
+                    )
+                    .Distance(distance)
+                )
+            )
+            .Should(sh => sh
+                .MultiMatch(mm => mm
+                    .Fields(f => f
+                        .Field("name^3")
+                        .Field("address")
+                        .Field("description")
+                    )
+                    .Query(keyword)
+                    .Fuzziness(Fuzziness.Auto)
+                )
+            )
+        )
+    )
+);
+
+// In kết quả tìm kiếm
+foreach (var hit in searchResponse.Hits)
+{
+    Console.WriteLine(hit.Id);
+}
+
+Trong ví dụ này, chúng ta sử dụng phương thức Bool để kết hợp hai điều kiện tìm kiếm: đối tượng có trường "location" kiểu geoshape gần với tọa độ (lat, lon) trong khoảng cách distance và đối tượng chứa từ khóa keyword trong các trường "name", "address" và "description" với fuzziness. Chúng ta sử dụng must để đảm bảo điều kiện đầu tiên phải được thỏa mãn và should để tìm kiếm các từ khóa với fuzziness và không bắt buộc phải đáp ứng.
+
+Bạn cần thay đổi "location", "name", "address" và "description" thành các trường tương ứng trong Elasticsearch của bạn và sử dụng kiểu đối tượng phù hợp để thay thế cho "object" trong phương thức "client.Search" nếu cần

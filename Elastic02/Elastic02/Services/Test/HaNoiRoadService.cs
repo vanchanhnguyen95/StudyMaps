@@ -44,87 +44,7 @@ namespace Elastic02.Services.Test
             try
             {
                 if (string.IsNullOrEmpty(indexName)) indexName = _indexName;
-                //var indexResponse = await _client.Indices.CreateAsync(Indices.Index(_indexName), c => c
-                // .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
-                //.Settings(s => s
-                //    .Analysis(a => a
-                //        .CharFilters(cf => cf
-                //            .Mapping("programming_language", mca => mca
-                //                .Mappings(new[]
-                //                {
-                //                    "hai ba trung => hai bà trưng",
-                //                    "C# => Csharp"
-                //                })
-                //            )
-                //          )
-                //        .TokenFilters(tf => tf
-                //            .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
-                //            {
-                //                PreserveOriginal = true
-                //            })
-                //            .Synonym("synonym_filter", sf => new SynonymTokenFilter
-                //            {
-                //                Synonyms = new List<string>()
-                //                {"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
-                //                    "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
-                //                }
-                //            })
-                //        )
-                //        .Analyzers(an => an
-                //            .Custom("my_vi_analyzer", ca => ca
-                //                .CharFilters("html_strip","programming_language")
-                //                .Tokenizer("vi_tokenizer")
-                //                .Filters("synonym_filter", "icu_folding", "lowercase", "ascii_folding")
-                //            )
-                //        )
-                //    )
-                //)
-                //);
-
-                //var indexResponse = await _client.Indices.CreateAsync(Indices.Index(indexName), c => c
-                //   .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
-                //   .Settings(s => s
-                //       .NumberOfReplicas(NumberOfReplicas)
-                //       .NumberOfShards(NumberOfShards)
-                //       .Analysis(a => a
-                //           .CharFilters(cf => cf
-                //               .Mapping("programming_language", mca => mca
-                //                   .Mappings(new[]
-                //                   {
-                //                        "c# => csharp",
-                //                        "C# => Csharp"
-                //                   })
-                //               )
-                //             )
-                //           .TokenFilters(tf => tf
-                //               .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
-                //               {
-                //                   PreserveOriginal = true
-                //               })
-                //           //.Synonym("synonym_filter", sf => new SynonymTokenFilter
-                //           //{
-                //           //    Synonyms = new List<string>()
-                //           //    {"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
-                //           //         "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
-                //           //    }
-                //           //})
-                //           )
-                //           .Analyzers(an => an
-                //               .Custom("keyword_analyzer", ca => ca
-                //                   .CharFilters("programming_language")
-                //                   .Tokenizer("keyword")
-                //                   .Filters("lowercase"))
-                //               .Custom("vi_analyzer_road", ca => ca
-                //                   .CharFilters("programming_language")
-                //                   .Tokenizer("vi_tokenizer")
-                //                   .Filters("lowercase", "icu_folding", "ascii_folding")
-                //                   //.Filters("synonym_filter","lowercase", "icu_folding", "ascii_folding")
-                //               )
-                //           )
-                //       )
-                //    )
-                //);
-
+                
                     var indexResponse = await _client.Indices.CreateAsync(Indices.Index(indexName), c => c
                    .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
                    .Settings(s => s
@@ -409,100 +329,44 @@ namespace Elastic02.Services.Test
                 if (!existsIndex.Exists)
                     await CreateIndex(_indexName);
 
-                _client.BulkAll(haNoiRoads, b => b
-                 .Index(_indexName)
-                 // how long to wait between retries
-                 .BackOffTime("30s")
-                 // how many retries are attempted if a failure occurs
-                 .BackOffRetries(2)
-                 //// refresh the index once the bulk operation completes
-                 .RefreshOnCompleted()
-                 // how many concurrent bulk requests to make
-                 .MaxDegreeOfParallelism(Environment.ProcessorCount)
-                 // number of items per bulk request
-                 .Size(haNoiRoads.Count())
-                 //.BufferToBulk(async (descriptor, list) =>
-                 //{
-                 //    // customise the individual operations in the bulk
-                 //    // request before it is dispatched
-                 //    foreach (var item in list)
-                 //    {
-                 //        // index each document into either even-index or odd-index
-                 //        //descriptor.Index<HaNoiRoadPoint>(bi => bi
-                 //        //   .Index("hanoiroad_point_2")
-                 //        //   .Document(item)
-                 //        //);
-                 //        await CreateHaNoiRoadPoint(item);
-                 //    }
-                 //})
-                 .RetryDocumentPredicate((item, road) =>
-                 {
-                     bool hasCreate = CreateHaNoiRoadPoint(road, _indexName);
-
-                     if (!hasCreate)
-                         hanoiPointsErr.Add(road);
-
-                     // decide if a document should be retried in the event of a failure
-                     return item.Error.Index == _indexName;
-                 })
-                 .DroppedDocumentCallback((item, road) =>
-                 {
-                     // if a document cannot be indexed this delegate is called
-                     //Console.WriteLine($"Unable to index: {item} {road}");
-                     bool hasCreate = CreateHaNoiRoadPoint(road, _indexName);
-
-                     if (!hasCreate)
-                         hanoiPointsErr.Add(road);
-                 })
-                 .ContinueAfterDroppedDocuments()
-             )
-             // Perform the indexing, waiting up to 15 minutes. 
-             // Whilst the BulkAll calls are asynchronous this is a blocking operation
-             .Wait(TimeSpan.FromMinutes(15), async next =>
-             {
-                 // do something on each response e.g. write number of batches indexed to console
-                 if (hanoiPointsErr.Any())
-                 {
-                     foreach (HaNoiRoadPoint item in hanoiPointsErr)
-                     {
-                         var isCreate = await CreateHaNoiRoadPointAsync(item, _indexName);
-                         if (!isCreate)
-                         {
-                             hanoiPointsErr.Remove(item);
-                             hanoiPointsErr.Add(item);
-                         } 
-                         
-                         hanoiPointsErr.Remove(item);
-                     }
-                     hanoiPointsErr = null;
-                 }
-
-             });
-
-                if (!hanoiPointsErr.Any())
-                {
-                    hanoiPointsErr = null;
-                    return "Success";
-                }
-                    
-                foreach (HaNoiRoadPoint item in hanoiPointsErr)
-                {
-                    var isCreate = await CreateHaNoiRoadPointAsync(item, _indexName);
-
-                    if (!isCreate)
+                var bulkAllObservable = _client.BulkAll(haNoiRoads, b => b
+                    .Index(_indexName)
+                    // how long to wait between retries
+                    .BackOffTime("30s")
+                    // how many retries are attempted if a failure occurs
+                    .BackOffRetries(2)
+                    // refresh the index once the bulk operation completes
+                    .RefreshOnCompleted()
+                    // how many concurrent bulk requests to make
+                    .MaxDegreeOfParallelism(Environment.ProcessorCount)
+                    // number of items per bulk request
+                    .Size(1000)
+                    // decide if a document should be retried in the event of a failure
+                    //.RetryDocumentPredicate((item, road) =>
+                    //{
+                    //    return item.Error.Index == "even-index" && person.FirstName == "Martijn";
+                    //})
+                    // if a document cannot be indexed this delegate is called
+                    .DroppedDocumentCallback(async (bulkResponseItem, road) =>
                     {
-                        hanoiPointsErr.Remove(item);
-                        hanoiPointsErr.Add(item);
-                    }
+                        bool isCreate = await CreateHaNoiRoadPointAsync(road, _indexName);
+                        while (!isCreate)
+                            isCreate = await CreateHaNoiRoadPointAsync(road, _indexName);
 
-                    hanoiPointsErr.Remove(item);
-                }
-                hanoiPointsErr = null;
+                        //Console.WriteLine($"Unable to index: {bulkResponseItem} {road}");
+                        //Console.WriteLine($"Count error: {i}");
+                    })
+                    .ContinueAfterDroppedDocuments()
+                )
+                .Wait(TimeSpan.FromMinutes(15), next =>
+                {
+                    // do something e.g. write number of pages to console
+                });
 
                 return "Success";
             }
             catch (Exception ex)
-            { return $"Error: {ex.ToString()}"; }
+            { return $"Error: {ex}"; }
         }
 
         public async Task<bool> CreateAsync(List<HaNoiRoadPush> haNoiRoads)
@@ -810,7 +674,7 @@ namespace Elastic02.Services.Test
             {
                 if (string.IsNullOrEmpty(indexName)) indexName = _indexName;
 
-                var response = await _client.IndexAsync(new HaNoiRoadPoint(roadPoint), q => q.Index(indexName));
+                var response = await _client.CreateAsync(new HaNoiRoadPoint(roadPoint), q => q.Index(indexName));
                 if (response.ApiCall?.HttpStatusCode == 409)
                 {
                     await _client.UpdateAsync<HaNoiRoadPoint>(roadPoint.id.ToString(), a => a.Index(indexName).Doc(new HaNoiRoadPoint(roadPoint)));
