@@ -55,6 +55,19 @@ namespace Elastic02.Controllers
         }
 
         [HttpPost]
+        [Route("BulkHaNoiGeo3")]
+        public async Task<IActionResult> BulkHaNoiGeo3([FromBody] List<HaNoiRoadPush> geopointsPush)
+        {
+            ICollection<HaNoiRoadPoint> geopoints = new List<HaNoiRoadPoint>();
+
+            // Check xem khởi tạo index chưa, nếu chưa khởi tạo thì phải khởi tạo index mới được
+            if (geopointsPush.Any())
+                geopointsPush.ForEach(item => geopoints.Add(new HaNoiRoadPoint(item)));
+
+            return Ok(await _haNoiRoadService.BulkAsync3(geopoints));
+        }
+
+        [HttpPost]
         [Route("CreateAsyncHaNoiGeo")]
         public async Task<IActionResult> CreateAsyncHaNoiGeo([FromBody] List<HaNoiRoadPush> geopointsPush)
         {

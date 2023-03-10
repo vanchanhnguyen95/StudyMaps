@@ -1,0 +1,60 @@
+namespace ElasticsearchBulkAllExample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+                .DefaultIndex("my_index");
+
+            var client = new ElasticClient(settings);
+
+            var documents = new List<MyDocument>();
+
+            for (int i = 0; i < 5000000; i++)
+            {
+                documents.Add(new MyDocument
+                {
+                    Id = i,
+                    Name = $"Document {i}"
+                });
+            }
+
+            var observable = client.BulkAll(documents, b => b
+                .Index("my_index")
+                .BackOffRetries(2)
+                .BackOffTime(TimeSpan.FromSeconds(10))
+                .Size(1000)
+                .RefreshOnCompleted(true)
+            );
+
+            var waitHandle = new System.Threading.ManualResetEvent(false);
+            var bulkAllObserver = new BulkAllObserver(
+                onNext: response =>
+                {
+                    Console.WriteLine($"Indexed {response.Items.Count} documents.");
+                },
+                onError: exception =>
+                {
+                    Console.WriteLine($"BulkAll operation failed with exception: {exception.Message}");
+                    waitHandle.Set();
+                },
+                onCompleted: () =>
+                {
+                    Console.WriteLine("BulkAll operation completed.");
+                    waitHandle.Set();
+                }
+            );
+
+            observable.Subscribe(bulkAllObserver);
+
+            waitHandle.WaitOne();
+        }
+    }
+
+    public class MyDocument
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+}

@@ -1,0 +1,17 @@
+var indexName = "your_index_name";
+var typeName = "your_type_name";
+var connectionSettings = new ConnectionSettings(new Uri("http://localhost:9200")).DefaultIndex(indexName);
+var client = new ElasticClient(connectionSettings);
+
+var bulkAllObservable = client.BulkAll(yourData, b => b
+        .Index(indexName)
+        .Type(typeName)
+        .BackOffRetries(2)
+        .BackOffTime(TimeSpan.FromSeconds(10))
+        .RefreshOnCompleted()
+        .MaxDegreeOfParallelism(Environment.ProcessorCount)
+        .Size(1000)
+        .DroppedDocumentCallback(x => Console.WriteLine($"Dropped document {x.Document.Text}"))
+        .OnError((e) => Console.WriteLine(e.Message)));
+
+await bulkAllObservable.WaitAsync();

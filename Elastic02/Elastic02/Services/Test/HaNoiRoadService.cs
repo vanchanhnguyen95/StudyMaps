@@ -1,6 +1,11 @@
 ﻿using Elastic02.Models.Test;
 using Nest;
+using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Reflection.Metadata;
+using System.Runtime.ExceptionServices;
+using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Elastic02.Services.Test
 {
@@ -665,6 +670,110 @@ namespace Elastic02.Services.Test
                 return false;
             }
         }
+
+        public async Task<bool> BulkAsync3(ICollection<HaNoiRoadPoint> haNoiRoads)
+        {
+            try
+            {
+                hanoiPointsErr = new List<HaNoiRoadPoint>();
+
+                var existsIndex = await _client.Indices.ExistsAsync("hanoiroad_point_2");
+                if (!existsIndex.Exists)
+                {
+                    var indexResponse = await _client.Indices.CreateAsync(Indices.Index("hanoiroad_point_2"), c => c
+                   .Map<HaNoiRoadPoint>(mm => mm.AutoMap())
+                   .Settings(s => s
+                       .NumberOfReplicas(NumberOfReplicas)
+                       .NumberOfShards(NumberOfShards)
+                       .Analysis(a => a
+                           .CharFilters(cf => cf
+                               .Mapping("programming_language", mca => mca
+                                   .Mappings(new[]
+                                   {
+                                        "c# => csharp",
+                                        "C# => Csharp"
+                                   })
+                               )
+                             )
+                           .TokenFilters(tf => tf
+                               .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
+                               {
+                                   PreserveOriginal = true
+                               })
+                           //.Synonym("synonym_filter", sf => new SynonymTokenFilter
+                           //{
+                           //    //Synonyms = new List<string>()
+                           //    //{"ha noi, hà nội, Hà Nội, Ha Noi, thủ đô, Thủ Đô, thu do, hn, hanoi",
+                           //    //     "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
+                           //    //}
+                           //    //SynonymsPath = pathHaNoiRoad
+                           //    SynonymsPath = "analysis/synonyms_hanoiroad.txt"
+                           //})
+                           )
+                           .Analyzers(an => an
+                               .Custom("keyword_analyzer", ca => ca
+                                   .CharFilters("programming_language")
+                                   .Tokenizer("keyword")
+                                   .Filters("lowercase"))
+                               .Custom("vi_analyzer_road", ca => ca
+                                   .CharFilters("programming_language")
+                                   .Tokenizer("vi_tokenizer")
+                                   .Filters("lowercase", "icu_folding", "ascii_folding")
+                               //.Filters("synonym_filter","lowercase", "icu_folding", "ascii_folding")
+                               //.Filters("synonym_filter","lowercase", "icu_folding", "ascii_folding")
+                               )
+                           )
+                       )
+                    )
+                );
+                }
+                int i = 0;
+                var bulkAllObservable = _client.BulkAll(haNoiRoads, b => b
+                    .Index("hanoiroad_point_2")
+                    // how long to wait between retries
+                    .BackOffTime("30s")
+                    // how many retries are attempted if a failure occurs
+                    .BackOffRetries(2)
+                    // refresh the index once the bulk operation completes
+                    .RefreshOnCompleted()
+                    // how many concurrent bulk requests to make
+                    .MaxDegreeOfParallelism(Environment.ProcessorCount)
+                    // number of items per bulk request
+                    .Size(1000)
+                    // decide if a document should be retried in the event of a failure
+                    //.RetryDocumentPredicate((item, road) =>
+                    //{
+                    //    return item.Error.Index == "even-index" && person.FirstName == "Martijn";
+                    //})
+                    // if a document cannot be indexed this delegate is called
+                    .DroppedDocumentCallback(async (bulkResponseItem, road) =>
+                    {
+                        i++;
+                        bool isCreate = await CreateHaNoiRoadPointAsync(road, "hanoiroad_point_2");
+                        while (!isCreate)
+                            isCreate = await CreateHaNoiRoadPointAsync(road, "hanoiroad_point_2");
+
+                        //Console.WriteLine($"Unable to index: {bulkResponseItem} {road}");
+                        Console.WriteLine($"Count error: {i}");
+                    })
+                    .ContinueAfterDroppedDocuments()
+                )
+                .Wait(TimeSpan.FromMinutes(15), next =>
+                {
+                    // do something e.g. write number of pages to console
+                })
+                ;
+                i = 0;
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
 
         /// <summary>
         /// Thêm mới dữ liệu đường Hà Nội

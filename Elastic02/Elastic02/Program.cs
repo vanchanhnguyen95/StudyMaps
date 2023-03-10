@@ -2,7 +2,6 @@ using Elastic02.Models;
 using Elastic02.Services;
 using Elastic02.Services.Test;
 using Elasticsearch.Net;
-using Microsoft.Extensions.FileProviders;
 using Nest;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,8 +15,9 @@ var urls = new Urls();
 builder.Configuration.GetSection("Urls").Bind(urls);
 string uri = elasticSettings.EsEndPoint;
 //var pool = new SingleNodeConnectionPool(new Uri(uri));
-var pool = new SingleNodeConnectionPool(new Uri("http://10.0.10.146:9200"));
-//var pool = new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
+//var pool = new SingleNodeConnectionPool(new Uri("http://10.0.10.146:9200"));
+//var pool = new SingleNodeConnectionPool(new Uri("http://elastic:Mz*k3+jzBMPOgZMFhPPB@localhost:9200/"));
+var pool = new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
 var settings = new ConnectionSettings(pool);
     //.CertificateFingerprint("FINGERPRINT")
     //.BasicAuthentication("elastic", "password")
