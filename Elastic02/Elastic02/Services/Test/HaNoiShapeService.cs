@@ -1,6 +1,7 @@
 ﻿using Elastic02.Models.Test;
 using Nest;
 using System.ComponentModel;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace Elastic02.Services.Test
 {
@@ -191,6 +192,219 @@ namespace Elastic02.Services.Test
             }
             catch (Exception ex) { return false; }
 
+        }
+
+        public async Task<List<HaNoiShapePush>> GetDataSuggestion(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword, GeoShapeRelation relation)
+        {
+            try
+            {
+                List<HaNoiShape> res = new List<HaNoiShape>();
+                List<HaNoiShapePush> result = new List<HaNoiShapePush>();
+
+                // Tìm kiếm theo tọa độ
+                if (string.IsNullOrEmpty(keyword))
+                {
+                    res = await GetDataByLocation(lat, lng, type, distance, size, relation);
+                }
+                // Tìm kiếm theo từ khóa
+                else if (lat == 0 && lng == 0)
+                {
+                    res = await GetDataByKeyWord(size, keyword);
+                }
+                // Tìm kiếm theo tọa độ và từ khóa
+                else
+                {
+                    res = await GetDataByLocationKeyWord(lat, lng, type, distance, size, keyword);
+                }
+
+                if (res.Any())
+                    res.ForEach(item => result.Add(new HaNoiShapePush(item)));
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        // Tìm kiếm theo tọa độ
+        private async Task<List<HaNoiShape>> GetDataByLocation(double lat, double lng, GeoDistanceType type, string distance, int size, GeoShapeRelation relation)
+        {
+            try
+            {
+                GeoCoordinate point = new GeoCoordinate(lat, lng);
+
+
+                var geo = await _client.SearchAsync<HaNoiShape>(
+                    s => s.Index(_indexName)
+                   .Size(size)
+                   .PostFilter(q => q.GeoShape(g =>
+                            g.Field(f => f.location)
+                             .Name("named_query").Boost(1.1)
+                                .Shape(s =>
+                                 s.Point(point)
+                            )
+                            .Relation(GeoShapeRelation.Intersects)
+                            .IgnoreUnmapped()
+                       )
+                    )
+                   .Sort(s => s.Descending(SortSpecialField.Score))
+                   .Scroll(1)
+                   );
+
+
+
+                return geo.Documents.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        // Tìm kiếm theo từ khóa
+        private async Task<List<HaNoiShape>> GetDataByKeyWord(int size, string keyword)
+        {
+            try
+            {
+                var geo = await _client.SearchAsync<HaNoiShape>(s => s.Index(_indexName)
+                   .Size(size)
+                   .Query(q => q.Bool(
+                        b => b.Must(mu => mu.Match(ma =>
+                        ma.Field(f => f.keywords).Analyzer("vi_analyzer_road").Query(keyword).Fuzziness(Fuzziness.Auto)
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
+                        && mu.Match(ma =>
+                        ma.Field(f => f.name).Analyzer("vi_analyzer_road").Query(keyword)
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
+                    )))
+                   .Sort(s => s.Descending(SortSpecialField.Score))
+                   .Scroll(1)
+                   );
+
+                return geo.Documents.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        // Tìm kiếm theo tọa độ và từ khóa
+        private async Task<List<HaNoiShape>> GetDataByLocationKeyWord(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword)
+        {
+            try
+            {
+                //var geo = await _client.SearchAsync<HaNoiShape>(s => s.Index(_indexName)
+                //   .Size(size)
+                //   .Query(q => q.Bool(
+                //        b => b.Must(mu => mu.Match(ma =>
+                //        ma.Field(f => f.keywords).Query(keyword).Fuzziness(Fuzziness.Auto)
+                //        .AutoGenerateSynonymsPhraseQuery())
+                //        && mu.Match(ma =>
+                //        //ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
+                //        ma.Field(f => f.name).Query(keyword)
+                //        .AutoGenerateSynonymsPhraseQuery())
+                //    )))
+                //   .PostFilter(q => q.GeoDistance(
+                //        g => g.Boost(1.1).Name("named_query")
+                //        .Field(p => p.location).DistanceType(type).Location(lat, lng)
+                //        .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                //    ))
+                //   .Sort(s => s.Descending(SortSpecialField.Score))
+                //   .Scroll(1)
+                //   );
+
+
+                GeoCoordinate point = new GeoCoordinate(lat, lng);
+                //var geo = _client.Search<HaNoiShape>(s => s
+                //    .Index(_indexName)
+                //    .Size(size)
+                //    .Query(q => q
+                //        .Bool(b => b
+                //            .Must(m => m
+                //                .MultiMatch(mm => mm
+                //                    .Fields(f => f
+                //                        .Field(f => f.name)
+                //                        .Field(f => f.keywords)
+                //                    )
+                //                    .Query(keyword)
+                //                    .Fuzziness(Fuzziness.Auto)
+                //                    .AutoGenerateSynonymsPhraseQuery()
+                //                ),
+                //                m => m
+                //                //.GeoShape(g => g
+                //                //    .Field(f => f.location)
+                //                //    .Relation(GeoShapeRelation.Intersects)
+                //                //    .Shape(s => s.Circle(point, distance)
+                //                //    )
+                //                //)
+                //                .GeoDistance(d => d.Distance(distance).Location(point).DistanceType(GeoDistanceType.Plane))
+                //            )
+                //            //.Should(sh => sh
+                //            //    .MultiMatch(mm => mm
+                //            //        .Fields(f => f
+                //            //            .Field(f => f.name)
+                //            //            .Field(f => f.keywords)
+                //            //        )
+                //            //        .Query(keyword)
+                //            //        .Fuzziness(Fuzziness.EditDistance(1))
+                //            //        .AutoGenerateSynonymsPhraseQuery()
+                //            //    )
+                //            //)
+                //        )
+                //    )
+                //    //.PostFilter(q => q.GeoDistance(
+                //    //    g => g.Boost(1.1).Name("named_query")
+                //    //    .Field(p => p.location).DistanceType(type).Location(lat, lng)
+                //    //    .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                //    //))
+                //    .Sort(s => s.Descending(SortSpecialField.Score))
+                //    .Scroll(1)
+
+                //);
+
+                var geo = _client.Search<HaNoiShape>(s => s
+                 .Index(_indexName)
+                 .Size(size)
+                .Query(q => q
+                    .Bool(b => b
+                        .Must(mu => mu
+                            .Match(m => m
+                                .Field(f => f.keywords)
+                                .Query(keyword)
+                                .Fuzziness(Fuzziness.Auto)
+                                .AutoGenerateSynonymsPhraseQuery()
+                            ) &&
+                            mu.Match(ma =>
+                             ma.Field(f => f.name).Query(keyword)
+                            .AutoGenerateSynonymsPhraseQuery()
+                            )
+                        )
+                        .Filter(fi => fi
+                             //.GeoShape(s => s.Field(f => f.location).Shape(s => s.Envelope(point, point)))
+                            .GeoShape(g => g
+                                .Field(f => f.location)
+                                .Relation(GeoShapeRelation.Intersects)
+                                .Shape(s => s.Circle(point, distance)
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+
+
+
+                return geo.Documents.ToList();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using Nest;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Drawing;
 using System.Reflection.Metadata;
 using System.Runtime.ExceptionServices;
 using System.Xml.Linq;
@@ -155,9 +156,15 @@ namespace Elastic02.Services.Test
                 var geo = await _client.SearchAsync<HaNoiRoadPoint>(s => s.Index(_indexName)
                    .Size(size)
                    .PostFilter(q => q.GeoDistance(
-                        g => g.Boost(1.1).Name("named_query")
-                        .Field(p => p.location).DistanceType(type).Location(lat, lng)
-                        .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                        g => g
+                        .Distance(distance)
+                        .DistanceType(type)
+                        .Location(lat, lng)
+                        .ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                        .IgnoreUnmapped()
+                        .Boost(1.1)
+                        .Name("named_query")
+                        .Field(p => p.location)
                     ))
                    .Sort(s => s.Descending(SortSpecialField.Score))
                    .Scroll(1)
