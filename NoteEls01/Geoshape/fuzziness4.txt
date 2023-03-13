@@ -1,8 +1,8 @@
 [
   {
     "id": 1600009,
-      "name": "79",
-      "extend": "H. Đan Phương",
+    "name": "79",
+    "extend": "H. Đan Phương",
     "shapeid": 1,
     "coords": [
       {
@@ -12,14 +12,58 @@
     ]
   },
  {
-    id": 1600010,
-      "name": "79",
-      "extend": "H. Hoài Đức",
+    "id": 1600010,
+    "name": "79",
+    "extend": "H. Hoài Đức",
     "shapeid": 1,
     "coords": [
       {
         "latitude": 21.07060489,
         "longitude": 105.70802773
+      }
+    ]
+  },
+  {
+    "id": 1600011,
+    "name": "79",
+    "extend": "H. Hoài Đức",
+    "shapeid": 2,
+    "coords": [
+      {
+        "latitude": 10.86305495,
+        "longitude": 106.61028043
+      },
+	  {
+        "latitude": 10.86321359,
+        "longitude": 106.60989083
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "79",
+    "extend": "H. Hoài Đức",
+    "shapeid": 3,
+    "coords": [
+      {
+        "latitude": 0.0,
+        "longitude": 100.0
+      },
+	  {
+        "latitude": 0.0,
+        "longitude": 101.0
+      },
+	  {
+        "latitude": 1.0,
+        "longitude": 101.0
+      },
+	  {
+        "latitude": 1.0,
+        "longitude": 100.0
+      },
+	  {
+        "latitude": 0.0,
+        "longitude": 100.0
       }
     ]
   }

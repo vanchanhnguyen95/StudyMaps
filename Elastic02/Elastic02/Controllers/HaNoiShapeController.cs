@@ -20,7 +20,7 @@ namespace Elastic02.Controllers
 
         [HttpPost]
         [Route("Bulk")]
-        public async Task<IActionResult> Bulk([FromBody] List<HaNoiShapePush> haNoiShapePush)
+        public async Task<IActionResult> Bulk([FromBody] List<HaNoiShapePush> haNoiShapePush = null)
         {
             List<HaNoiShape> haNoiShapes = new List<HaNoiShape>();
 

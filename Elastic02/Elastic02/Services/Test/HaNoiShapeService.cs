@@ -60,9 +60,19 @@ namespace Elastic02.Services.Test
                         // if a document cannot be indexed this delegate is called
                         .DroppedDocumentCallback(async (bulkResponseItem, road) =>
                         {
-                            bool isCreate = await CreateHaNoiAsync(road, _indexName);
-                            while (!isCreate)
-                                isCreate = await CreateHaNoiAsync(road, _indexName);
+                            if(road.id == 1000001 || road.id == 1000002)
+                                Console.WriteLine($"Count error: {road.id}");
+
+                            bool isCreate = true;
+
+                            isCreate = await CreateHaNoiAsync(road, _indexName);
+                            while (isCreate == false)
+                            {
+                                Console.WriteLine($"Create: {road.id}");
+                                //isCreate = await CreateHaNoiAsync(road, _indexName);
+                                isCreate = await IndexHaNoiAsync(road, _indexName);
+                            }    
+                                
 
                             //Console.WriteLine($"Unable to index: {bulkResponseItem} {road}");
                             //Console.WriteLine($"Count error: {i}");
@@ -150,6 +160,29 @@ namespace Elastic02.Services.Test
                 if (string.IsNullOrEmpty(indexName)) indexName = _indexName;
 
                 var response = await _client.CreateAsync(new HaNoiShape(item), q => q.Index(indexName));
+                if (response.ApiCall?.HttpStatusCode == 409)
+                {
+                    await _client.UpdateAsync<HaNoiShape>(item.id.ToString(), a => a.Index(indexName).Doc(new HaNoiShape(item)));
+                }
+                return response.IsValid;
+            }
+            catch (Exception ex) { return false; }
+
+        }
+
+        /// <summary>
+        /// Thêm mới dữ liệu đường Hà Nội
+        /// </summary>
+        /// <param name="roadPoint"></param>
+        /// <param name="indexName"></param>
+        /// <returns></returns>
+        private async Task<bool> IndexHaNoiAsync(HaNoiShape item, string indexName = null)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(indexName)) indexName = _indexName;
+
+                var response = await _client.IndexAsync(new HaNoiShape(item), q => q.Index(indexName));
                 if (response.ApiCall?.HttpStatusCode == 409)
                 {
                     await _client.UpdateAsync<HaNoiShape>(item.id.ToString(), a => a.Index(indexName).Doc(new HaNoiShape(item)));
