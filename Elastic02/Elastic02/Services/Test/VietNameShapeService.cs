@@ -1,5 +1,6 @@
 ﻿using Elastic02.Models.Test;
 using Nest;
+using NetTopologySuite.Operation.Relate;
 using System.ComponentModel;
 
 namespace Elastic02.Services.Test
@@ -341,7 +342,7 @@ namespace Elastic02.Services.Test
                 var geo = _client.Search<VietNamShape>(s => s
                  .Index(_indexName)
                  .Size(size)
-                .Query(q => q
+                    .Query(q => q
                     .Bool(b => b
                         .Must(mu => mu
                             .Match(m => m
@@ -360,12 +361,22 @@ namespace Elastic02.Services.Test
                             .GeoShape(g => g
                                 .Field(f => f.location)
                                 .Relation(GeoShapeRelation.Intersects)
-                                .Shape(s => s.Circle(point, distance)
-                                )
+                                .Shape(s => s.Point(point)
+                                ).Relation(GeoShapeRelation.Intersects).IgnoreUnmapped()
                             )
                         )
                     )
-                )
+                ).Sort(s => s.Descending(SortSpecialField.Score))
+                //.PostFilter(q => q.GeoShape(g =>
+                //        g.Field(f => f.location)
+                //            .Name("named_query").Boost(1.1)
+                //            .Shape(s =>
+                //                s.Point(point)
+                //        )
+                //        .Relation(GeoShapeRelation.Intersects)
+                //        .IgnoreUnmapped()
+                //    )
+                //)
             );
 
                 return geo.Documents.ToList();

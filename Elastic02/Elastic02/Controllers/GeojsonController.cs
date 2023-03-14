@@ -73,7 +73,6 @@ namespace Elastic02.Controllers
             return await _vnShapeService.GetDataSuggestion(lat, lng, GeoDistanceType.Arc, distance, size, keyword, relation);
         }
 
-
         private VietNamShape GetNamShape(IFeature feature, string type = "P", int i = 1)
         {
             // Đối tượng địa lý được lưu trữ trong biến "feature"
@@ -89,22 +88,71 @@ namespace Elastic02.Controllers
                 //item.id = Convert.ToInt32((feature.Attributes["gid"].ToString()) ?? "0");
                 item.id = i;
                 item.typename = "Tỉnh";
-                item.name = feature.Attributes["ten_tinh"].ToString();
+                item.name = feature.Attributes["ten_tinh"].ToString() ?? "";
                 item.keywords = feature.Attributes["ten_tinh"].ToString() ?? "";
             } else if(type == "D")//District
             {
-                //item.id = Convert.ToInt32((feature.Attributes["OBJECTID"].ToString()) ?? "0");
                 item.id = i;
                 item.typename = @"Huyện";
                 item.name = feature.Attributes["District"].ToString();
-                item.keywords = feature.Attributes["District"].ToString() + ", " + feature.Attributes["Province"].ToString();
+                item.keywords = feature.Attributes["District"].ToString() ?? "" + ", " + feature.Attributes["Province"].ToString() ?? "";
             } else if (type == "T")//Traffic
             {
-                //item.id = Convert.ToInt32((feature.Attributes["gid"].ToString()) ?? "0");
                 item.id = i;
                 item.typename = @"Đường giao thông";
-                item.name = feature.Attributes["ten"].ToString();
+                item.name = feature.Attributes["ten"].ToString() ?? "";
                 item.keywords = feature.Attributes["ten"].ToString() ?? "";
+            }
+            else if (type == "H")//harbor
+            {
+                item.id = i;
+                item.typename = @"Bến cảng";
+
+                var na = feature.Attributes["Name"];
+                string nastrin = string.Empty;
+                if(na != null)
+                {
+                    nastrin = na.ToString()?? "";
+                }
+
+                item.name = nastrin;
+                item.keywords = nastrin;
+            }
+            else if (type == "A")//airport
+            {
+                item.id = i;
+                item.typename = @"Cảng hàng không";
+                item.name = feature.Attributes["Name"].ToString() ?? "";
+                item.keywords = feature.Attributes["Name"].ToString() ?? "" + ", " + feature.Attributes["City"].ToString() ?? "";
+            }
+            else if (type == "TS")//train station
+            {
+                item.id = i;
+                item.typename = @"Ga đường sắt";
+                item.name = feature.Attributes["Ten_Ga"].ToString() ?? "";
+                item.keywords = feature.Attributes["Ten_Ga"].ToString() ?? "";
+            }
+            else if (type == "NP")//National Parks
+            {
+                item.id = i;
+                item.typename = @"Vườn Quốc gia";
+                item.name = feature.Attributes["Ten"].ToString() ?? ""; ;
+                item.keywords = feature.Attributes["Ten"].ToString() ?? "";
+            }
+            //hydropower_2020
+            else if (type == "HD")//hydropower
+            {
+                item.id = i;
+                item.typename = @"Thủy điện";
+                item.name = feature.Attributes["Vietnamese"].ToString() ?? ""; ;
+                item.keywords = feature.Attributes["Vietnamese"].ToString() ?? "";
+            }
+            else if (type == "AG")//atm_rice_covid-19
+            {
+                item.id = i;
+                item.typename = @"ATM Gạo";
+                item.name = feature.Attributes["Name_VI"].ToString() ?? ""; ;
+                item.keywords = feature.Attributes["Name_VI"].ToString() ?? "";
             }
 
             return item;
