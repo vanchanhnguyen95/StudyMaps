@@ -13,13 +13,6 @@ namespace Elastic02.Services.Test
         private readonly string _indexName;
         private readonly IConfiguration _configuration;
 
-        public HaNoiShapeService(ElasticClient client, IConfiguration configuration)
-        {
-            _client = client;
-            _indexName = GetIndexName();
-            _configuration = configuration;
-        }
-
         private string GetIndexName()
         {
             var type = typeof(HaNoiShape);
@@ -31,6 +24,13 @@ namespace Elastic02.Services.Test
                 return customAttributes[0].Description;
 
             throw new Exception($"{nameof(HaNoiShape)} description attribute is missing.");
+        }
+
+        public HaNoiShapeService(ElasticClient client, IConfiguration configuration)
+        {
+            _client = client;
+            _indexName = GetIndexName();
+            _configuration = configuration;
         }
 
         public async Task<string> BulkAsync(List<HaNoiShape> haNoiRoads)
@@ -235,6 +235,43 @@ namespace Elastic02.Services.Test
             {
                 GeoCoordinate point = new GeoCoordinate(lat, lng);
 
+                var geoP = _client.Search<HaNoiShape>(s => s
+                .Index(_indexName)
+                .Size(size)
+                   .Query(q => q
+                       .Bool(b => b
+                           .Filter(fi => fi
+                               //.GeoShape(s => s.Field(f => f.location).Shape(s => s.Envelope(point, point)))
+                               .GeoShape(g => g
+                                   .Field(f => f.location)
+                                   .Boost(1.1)
+                                   .Name("named_query")
+                                   .Relation(GeoShapeRelation.Within)
+                                   .IndexedShape(idx => 
+                                   idx.Index(_indexName).Path(f => f.location)
+                                   )
+                                   .Shape(s => s.Point(point))
+                               )
+                           )
+                       )
+                   )
+               );
+
+                var geoFilter = await _client.SearchAsync<HaNoiShape>(s => s.Index(_indexName)
+                  .Size(size)
+                  .PostFilter(q => q.GeoDistance(
+                       g => g
+                       .Distance(distance)
+                       .DistanceType(type)
+                       .Location(lat, lng)
+                       .ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                       .IgnoreUnmapped()
+                       .Boost(1.1)
+                       .Name("named_query")
+                       .Field(p => p.location)
+                   ))
+                  .Sort(s => s.Descending(SortSpecialField.Score))
+                  );
 
                 var geo = await _client.SearchAsync<HaNoiShape>(
                     s => s.Index(_indexName)
@@ -252,6 +289,39 @@ namespace Elastic02.Services.Test
                    .Sort(s => s.Descending(SortSpecialField.Score))
                    .Scroll(1)
                    );
+
+                var geoEnvelope = await _client.SearchAsync<HaNoiShape>(
+                    s => s.Index(_indexName)
+                   .Size(size)
+                   .PostFilter(q => q.GeoShape(g =>
+                            g.Field(f => f.location)
+                             .Name("named_query").Boost(1.1)
+                                .Shape(s =>
+                                 s.Envelope(point, point)
+                            )
+                            .Relation(GeoShapeRelation.Within)
+                            .IgnoreUnmapped()
+                       )
+                    )
+                   .Sort(s => s.Descending(SortSpecialField.Score))
+                   .Scroll(1)
+                   );
+
+                //var geoCricle = await _client.SearchAsync<HaNoiShape>(
+                //    s => s.Index(_indexName)
+                //   .Size(size)
+                //   .PostFilter(q => q.GeoShape(g =>
+                //            g.Field(f => f.location)
+                //             .Name("named_query").Boost(1.1)
+                //                .Shape(s =>
+                //                 s.Circle(point, "100m")
+                //            )
+                //            .Relation(GeoShapeRelation.Intersects)
+                //            .IgnoreUnmapped()
+                //       )
+                //    )
+                //   .Sort(s => s.Descending(SortSpecialField.Score))
+                //   );
 
 
 
@@ -396,8 +466,6 @@ namespace Elastic02.Services.Test
                     )
                 )
             );
-
-
 
                 return geo.Documents.ToList();
             }
