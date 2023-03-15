@@ -26,7 +26,7 @@ namespace Elastic02.Models.Test
     {
         // Tinh
         public string? name { get; set; }
-        public int? gid { get; set; }
+        public float? gid { get; set; }
         public string? code { get; set; }
         public string? ten_tinh { get; set; }
 
@@ -65,7 +65,7 @@ namespace Elastic02.Models.Test
     public class VietNamShape
     {
         [Number(Index = true)]
-        public int? id { get; set; } = 0;
+        public float? id { get; set; } = 0;
 
         [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
         public string? name { get; set; } = string.Empty;
@@ -89,7 +89,86 @@ namespace Elastic02.Models.Test
             location = orther.location;
             keywords = orther.keywords;
         }
+
+        public VietNamShape(HaNoiShape orther)
+        {
+            id = orther.id;
+            name = orther.name;
+            typename = @"Đường Hà Nội";
+            location = orther.location;
+            keywords = orther.keywords;
+        }
+
+        public VietNamShape(HaNoiShapePush orther)
+        {
+            id = orther.id;
+            name = orther.name;
+            typename = @"Đường Hà Nội";
+            //keywords = orther.keywords;
+
+            if (!string.IsNullOrEmpty(orther.extend))
+            {
+                keywords = orther?.name?.ToString() + ", " + orther?.extend?.ToString();
+            }
+            else
+            {
+                keywords = orther.name ?? "";
+            }
+
+            if (orther?.shapeid == 1)//Điểm
+            {
+                double[] arrayCoords = new double[] { (orther?.lng ?? 0), (orther?.lat ?? 0) };
+                string loc = string.Join(" ", arrayCoords);
+
+                location = $"POINT ( {loc} )";
+            }
+            else if (orther?.shapeid == 2)//Đường
+            {
+                List<string> lsyLine = new List<string>();
+                string lineString = string.Empty;
+                for (int i = 0; i < orther?.coords?.Count; i++)
+                {
+                    double[] arrayCoords = new double[] { orther.coords[i].lng, orther.coords[i].lat };
+                    string loc = string.Join(" ", arrayCoords);
+                    lsyLine.Add(loc);
+                }
+
+                lineString = string.Join(",", lsyLine);
+                location = $"LINESTRING  (  {lineString}  )";
+            }
+            else if (orther?.shapeid == 3)// Vùng
+            {
+                List<string> lsyLine = new List<string>();
+                string lineString = string.Empty;
+                for (int i = 0; i < orther?.coords?.Count; i++)
+                {
+                    double[] arrayCoords = new double[] { orther.coords[i].lng, orther.coords[i].lat };
+                    string loc = string.Join(" ", arrayCoords);
+                    lsyLine.Add(loc);
+                }
+
+                lineString = string.Join(",", lsyLine);
+                location = "POLYGON  ((" + lineString + "))";
+            }
+
+        }
     }
 
-    
+    public class VietNamResponse
+    {
+        public string? name { get; set; } = string.Empty;
+        [GeoShape]
+        public string? location { get; set; } = string.Empty;
+        public string? typename { get; set; } = string.Empty;
+
+        public VietNamResponse(VietNamShape orther)
+        {
+            name    = orther.name;
+            location = orther.location;
+            typename = orther.typename;
+        }
+
+    }
+
+
 }

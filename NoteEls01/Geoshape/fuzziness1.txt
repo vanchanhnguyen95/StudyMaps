@@ -55,3 +55,5 @@ foreach (var hit in searchResponse.Hits)
 Trong ví dụ này, chúng ta sử dụng phương thức Bool để kết hợp hai điều kiện tìm kiếm: đối tượng có trường "location" kiểu geoshape gần với tọa độ (lat, lon) trong khoảng cách distance và đối tượng chứa từ khóa keyword trong các trường "name", "address" và "description" với fuzziness. Chúng ta sử dụng must để đảm bảo điều kiện đầu tiên phải được thỏa mãn và should để tìm kiếm các từ khóa với fuzziness và không bắt buộc phải đáp ứng.
 
 Bạn cần thay đổi "location", "name", "address" và "description" thành các trường tương ứng trong Elasticsearch của bạn và sử dụng kiểu đối tượng phù hợp để thay thế cho "object" trong phương thức "client.Search" nếu cần
+
+{"BulkAll halted after failed product check"}

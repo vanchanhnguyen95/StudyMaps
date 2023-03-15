@@ -1,4 +1,5 @@
 ﻿using Elastic02.Models.Test;
+using Elasticsearch.Net;
 using Nest;
 using System.ComponentModel;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
@@ -362,7 +363,6 @@ namespace Elastic02.Services.Test
             }
         }
 
-
         // Tìm kiếm theo tọa độ và từ khóa
         private async Task<List<HaNoiShape>> GetDataByLocationKeyWord(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword)
         {
@@ -472,6 +472,39 @@ namespace Elastic02.Services.Test
             catch
             {
                 return null;
+            }
+        }
+
+        public async Task<List<HaNoiShape>> GetAll(int size = 20000)
+        {
+            try
+            {
+                var geo = await _client.SearchAsync<HaNoiShape>(s => s.Index(_indexName)
+                .From(0)
+                   .Size(size)
+                   .MatchAll()
+                   .SearchType(SearchType.QueryThenFetch)
+                   //.Scroll("5m")
+                   //.Query(q => q.Bool(
+                   //     b => b.Must(mu => mu.Match(ma =>
+                   //     ma.Field(f => f.keywords).Analyzer("vi_analyzer_road").Query(keyword).Fuzziness(Fuzziness.Auto)
+                   //     .AutoGenerateSynonymsPhraseQuery()
+                   //     )
+                   //     && mu.Match(ma =>
+                   //     ma.Field(f => f.name).Analyzer("vi_analyzer_road").Query(keyword)
+                   //     .AutoGenerateSynonymsPhraseQuery()
+                   //     )
+                   // )))
+                   //.Sort(s => s.Descending(SortSpecialField.Score))
+                   .Sort(s => s.Ascending(f => f.id))
+                   //.Scroll(1)
+                   );
+
+                return geo.Documents.ToList();
+            }
+            catch
+            {
+                return new List<HaNoiShape>();
             }
         }
     }

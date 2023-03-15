@@ -1,5 +1,6 @@
 ﻿using Elastic02.Models.Test;
 using Nest;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Operation.Relate;
 using System.ComponentModel;
 
@@ -339,7 +340,33 @@ namespace Elastic02.Services.Test
 
                 //);
 
-                var geo = _client.Search<VietNamShape>(s => s
+
+                var geo = await _client.SearchAsync<VietNamShape>(s => s.Index(_indexName)
+                   .Size(size)
+                   .Query(q => q.Bool(
+                        b => b.Must(mu => mu.Match(ma =>
+                        ma.Field(f => f.keywords).Analyzer("vi_analyzer_road").Query(keyword).Fuzziness(Fuzziness.Auto)
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
+                        && mu.Match(ma =>
+                        ma.Field(f => f.name).Analyzer("vi_analyzer_road").Query(keyword)
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
+                    ).Filter(fi => fi
+                            //.GeoShape(s => s.Field(f => f.location).Shape(s => s.Envelope(point, point)))
+                            .GeoShape(g => g
+                                .Field(f => f.location)
+                                .Relation(GeoShapeRelation.Intersects)
+                                .Shape(s => s.Point(point)
+                                ).Relation(GeoShapeRelation.Intersects).IgnoreUnmapped()
+                            )
+                            )
+                    ))
+                   .Sort(s => s.Descending(SortSpecialField.Score))
+                   .Scroll(1)
+                   );
+
+                var geo2 = _client.Search<VietNamShape>(s => s
                  .Index(_indexName)
                  .Size(size)
                     .Query(q => q
@@ -377,7 +404,118 @@ namespace Elastic02.Services.Test
                 //        .IgnoreUnmapped()
                 //    )
                 //)
+                );
+
+                var geo3 = await _client.SearchAsync<VietNamShape>(s => s.Index(_indexName)
+                   .Size(size)
+                   .Query(q => q.Bool(
+                        b => b.Must(mu => mu.Match(ma =>
+                        ma.Field(f => f.keywords).Query(keyword).Fuzziness(Fuzziness.Auto)
+                        .AutoGenerateSynonymsPhraseQuery())
+                        && mu.Match(ma =>
+                        //ma.Field(f => f.name).Analyzer("vi_analyzer").Query(keyword)
+                        ma.Field(f => f.name).Query(keyword)
+                        .AutoGenerateSynonymsPhraseQuery())
+                    )))
+                   .PostFilter(q => q.GeoDistance(
+                        g => g.Boost(1.1).Name("named_query")
+                        .Field(p => p.location).DistanceType(type).Location(lat, lng)
+                        .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                    ))
+                   .Sort(s => s.Descending(SortSpecialField.Score))
+                   .Scroll(1)
+                   );
+
+                var geoGeometry = _client.Search<VietNamShape>(s => s
+                 .Index(_indexName)
+                 .Size(size)
+                .Query(q => q
+                    .Bool(b => b
+                        .Must(mu => mu
+                            .Match(m => m
+                                .Field(f => f.keywords)
+                                .Query(keyword)
+                                .Fuzziness(Fuzziness.Auto)
+                                .AutoGenerateSynonymsPhraseQuery()
+                            ) &&
+                            mu.Match(ma =>
+                             ma.Field(f => f.name).Query(keyword)
+                            .AutoGenerateSynonymsPhraseQuery()
+                            )
+                        ).Should(
+                            sh => sh.GeoShape(
+                                g => g.Field(f=>f.location)
+                                .Relation(GeoShapeRelation.Intersects)
+                                .Shape(s => s.Point(point)
+                            )
+                        ))
+                        //.Filter(fi => fi
+                        //    //.GeoShape(s => s.Field(f => f.location).Shape(s => s.Envelope(point, point)))
+                        //    .GeoShape(g => g
+                        //        .Field(f => f.location)
+                        //        .Relation(GeoShapeRelation.Intersects)
+                        //        .Shape(s => s.Point(point)
+                        //        )
+                        //    )
+                        //)
+                    )
+                )
             );
+
+                //var searchResponse = await _client.SearchAsync<VietNamShape>(s => s.Index(_indexName)
+                //   .Size(size)
+                //   .Query(q => q.Bool(
+                //        b => b.Must(mu => mu.Match(ma =>
+                //        ma.Field(f => f.keywords).Analyzer("vi_analyzer_road").Query(keyword).Fuzziness(Fuzziness.Auto)
+                //        .AutoGenerateSynonymsPhraseQuery()
+                //        )
+                //        && mu.Match(ma =>
+                //        ma.Field(f => f.name).Analyzer("vi_analyzer_road").Query(keyword)
+                //        .AutoGenerateSynonymsPhraseQuery()
+                //        )
+                //    ).Filter(fi => fi
+                //            //.GeoShape(s => s.Field(f => f.location).Shape(s => s.Envelope(point, point)))
+                //            .GeoShape(g => g
+                //                .Field(f => f.location)
+                //                .Relation(GeoShapeRelation.Intersects)
+                //                .Shape(s => s.Point(point)
+                //                ).Relation(GeoShapeRelation.Intersects).IgnoreUnmapped()
+                //            )
+                //            && q
+                //                .GeoDistance(d => d
+                //                    .Field(f => f.location)
+                //                    .Distance(distance) // Khoảng cách tối đa là 5 km
+                //                    .Location(lat,lng)
+                //                )
+                //            )
+                //    ))
+                //   .Sort(s => s.Descending(SortSpecialField.Score))
+                //   .Scroll(1)
+                //   );
+                var searchResponse = _client.Search<VietNamShape>(s => s
+                .Index(_indexName)
+                 .Size(size)
+                .Query(q => q
+                    .GeoShape(g => g
+                        .Field(f => f.location)
+                        .Relation(GeoShapeRelation.Intersects)
+                        .Shape(s=>s.Point(point))
+                    )
+                    //&& q
+                    //.GeoDistance(d => d
+                    //    .Field(f => f.location)
+                    //    .Distance("5km") // Khoảng cách tối đa là 5 km
+                    //    .Location(lat,lng)
+                    //) 
+                    //&& q
+                    //.Match(m => m
+                    //    .Field(f => f.MyTextField)
+                    //    .Query("my search query")
+                    //)
+                )
+            );
+
+
 
                 return geo.Documents.ToList();
             }
