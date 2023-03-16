@@ -28,8 +28,8 @@ namespace Elastic02.Controllers
             var jsonData = System.IO.File.ReadAllText(path);
             var roadPushs = JsonConvert.DeserializeObject<List<RoadNamePush>>(jsonData);
 
-            //return Ok(await _roadNameService.BulkAsync(roadPushs));
-            return Ok(await _roadNameService.BulkAsyncMultiProvince(roadPushs ?? new List<RoadNamePush>()));
+            return Ok(await _roadNameService.BulkAsync(roadPushs));
+            //return Ok(await _roadNameService.BulkAsyncMultiProvince(roadPushs ?? new List<RoadNamePush>()));
         }
 
         [HttpGet]

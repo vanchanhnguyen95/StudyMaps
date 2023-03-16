@@ -392,7 +392,7 @@ namespace Elastic02.Services.Test
                 await CreateIndex(_indexName);
 
             if (roadPushs.Any())
-                roadPushs.ForEach(item => roads.Add(new RoadName(item)));
+                roadPushs.ForEach(item => roads.Add(new RoadName(item,"p")));
 
             var bulkAllObservable = _client.BulkAll(roads, b => b
                 .Index(_indexName)
@@ -419,7 +419,8 @@ namespace Elastic02.Services.Test
                     while (isCreate == false)
                     {
                         isCreate = await IndexAsync(road, _indexName);
-                        Console.WriteLine($"{road.RoadName}");
+                        Console.OutputEncoding = Encoding.UTF8;
+                        Console.WriteLine($"{road.ProvinceID} - {road.RoadName}");
                     }
                 })
                 .Timeout(Environment.ProcessorCount)
@@ -846,7 +847,7 @@ namespace Elastic02.Services.Test
                 }
                 return response.IsValid;
             }
-            catch (Exception ex) { return false; }
+            catch { return false; }
 
         }
 
