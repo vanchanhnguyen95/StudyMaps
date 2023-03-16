@@ -392,7 +392,7 @@ namespace Elastic02.Services.Test
                 await CreateIndex(_indexName);
 
             if (roadPushs.Any())
-                roadPushs.ForEach(item => roads.Add(new RoadName(item,"p")));
+                roadPushs.ForEach(item => roads.Add(new RoadName(item)));
 
             var bulkAllObservable = _client.BulkAll(roads, b => b
                 .Index(_indexName)
@@ -405,7 +405,7 @@ namespace Elastic02.Services.Test
                 // how many concurrent bulk requests to make
                 .MaxDegreeOfParallelism(Environment.ProcessorCount)
                 // number of items per bulk request
-                .Size(20000)
+                .Size(1000)
                 // decide if a document should be retried in the event of a failure
                 //.RetryDocumentPredicate((item, road) =>
                 //{
@@ -627,11 +627,11 @@ namespace Elastic02.Services.Test
                     ))
                    .Sort(s => s.Descending(SortSpecialField.Score).Ascending(f => f.NameExt)
                             .GeoDistance(
-                                        d => d.Field(f => f.Location).Order(SortOrder.Ascending).Points(new GeoLocation(lat,lng))
+                                        d => d.Field(f => f.Location).Order(SortOrder.Ascending).Points(new GeoLocation(lat, lng))
                                         .Unit(DistanceUnit.Meters).Mode(SortMode.Min)
                                         )
                    )
-                   //.Scroll(1)
+                   .Scroll(1)
                    );
 
                 return geo.Documents.ToList();
@@ -854,13 +854,10 @@ namespace Elastic02.Services.Test
         private async Task<int> GetProvinceId(double lat = 0, double lng = 0, string keyword = null)
         {
             List<VietNamShape> lst;
-                lst = await _vnShapeService.GetDataSuggestion(lat, lng, GeoDistanceType.Arc, "50km", 1, null, GeoShapeRelation.Intersects);
-
-            //if (!string.IsNullOrEmpty(keyword))
-            //    lst = await  _vnShapeService.GetDataSuggestion(lat, lng, GeoDistanceType.Arc, "50km",1, keyword, GeoShapeRelation.Intersects);
+                lst = await _vnShapeService.GetDataSuggestion(lat, lng, GeoDistanceType.Arc, "50km", 5, null, GeoShapeRelation.Intersects);
 
             if (lst.Any())
-                return lst[0].provinceid;
+                return lst.Where(x => x.provinceid > 0).Select(x => x.provinceid).FirstOrDefault();
 
             return 16;//Hà Nội
         }

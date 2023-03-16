@@ -71,6 +71,9 @@ namespace Elastic02.Models.Test
         public int provinceid { get; set; } = 0;
 
         [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
+        public string? province { get; set; }
+
+        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
         public string? name { get; set; } = string.Empty;
 
         [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
@@ -88,6 +91,7 @@ namespace Elastic02.Models.Test
         public VietNamShape(VietNamShape orther) {
             id = orther.id;
             provinceid = orther.provinceid;
+            province = orther.province;
             name = orther.name;
             typename = orther.typename;
             location = orther.location;
@@ -168,12 +172,15 @@ namespace Elastic02.Models.Test
         public string? typename { get; set; } = string.Empty;
         public int? provinceid { get; set; } = 0;
 
+        public string? province { get; set; } = string.Empty;
+      
         public VietNamResponse(VietNamShape orther)
         {
             name    = orther.name;
             location = orther.location;
             typename = orther.typename;
             provinceid = orther.provinceid;
+            province = orther.province;
         }
 
     }

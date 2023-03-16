@@ -33,9 +33,9 @@ namespace Elastic02.Controllers
             //paths.Add(@"D:\GeoJson\airport.geojson");
             //paths.Add(@"D:\GeoJson\atm_rice_covid-19.geojson");
             paths.Add(@"D:\GeoJson\diaphantinh.geojson");
-            //paths.Add(@"D:\GeoJson\district.geojson");
+            paths.Add(@"D:\GeoJson\district.geojson");
             //paths.Add(@"D:\GeoJson\ga.geojson");
-            //paths.Add(@"D:\GeoJson\giaothong.geojson");
+            paths.Add(@"D:\GeoJson\giaothong.geojson");
             //paths.Add(@"D:\GeoJson\harborgeojson.geojson");
             //paths.Add(@"D:\GeoJson\hydropower_2020.geojson");
             //paths.Add(@"D:\GeoJson\khu-bao-ton-quoc-gia.geojson");
@@ -160,6 +160,7 @@ namespace Elastic02.Controllers
             } else if(type == "D")//District
             {
                 item.id = i;
+                item.province = feature.Attributes["Province"].ToString();
                 item.typename = @"Huyện";
                 item.name = feature.Attributes["District"].ToString();
                 item.keywords = feature.Attributes["District"].ToString() ?? "" + ", " + feature.Attributes["Province"].ToString() ?? "";
