@@ -65,7 +65,10 @@ namespace Elastic02.Models.Test
     public class VietNamShape
     {
         [Number(Index = true)]
-        public float? id { get; set; } = 0;
+        public int? id { get; set; } = 0;
+
+        [Number(Index = true)]
+        public int provinceid { get; set; } = 0;
 
         [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
         public string? name { get; set; } = string.Empty;
@@ -84,6 +87,7 @@ namespace Elastic02.Models.Test
 
         public VietNamShape(VietNamShape orther) {
             id = orther.id;
+            provinceid = orther.provinceid;
             name = orther.name;
             typename = orther.typename;
             location = orther.location;
@@ -93,6 +97,7 @@ namespace Elastic02.Models.Test
         public VietNamShape(HaNoiShape orther)
         {
             id = orther.id;
+            provinceid = 16;
             name = orther.name;
             typename = @"Đường Hà Nội";
             location = orther.location;
@@ -102,6 +107,7 @@ namespace Elastic02.Models.Test
         public VietNamShape(HaNoiShapePush orther)
         {
             id = orther.id;
+            provinceid = 16;
             name = orther.name;
             typename = @"Đường Hà Nội";
             //keywords = orther.keywords;
@@ -160,12 +166,14 @@ namespace Elastic02.Models.Test
         [GeoShape]
         public string? location { get; set; } = string.Empty;
         public string? typename { get; set; } = string.Empty;
+        public int? provinceid { get; set; } = 0;
 
         public VietNamResponse(VietNamShape orther)
         {
             name    = orther.name;
             location = orther.location;
             typename = orther.typename;
+            provinceid = orther.provinceid;
         }
 
     }

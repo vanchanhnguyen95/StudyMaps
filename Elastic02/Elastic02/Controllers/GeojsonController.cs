@@ -30,16 +30,16 @@ namespace Elastic02.Controllers
         public async Task<IActionResult> PostMultiFile2([FromBody] List<HaNoiShapePush> haNoiShapePush = null)
         {
             List<string> paths = new List<string>();
-            paths.Add(@"D:\GeoJson\airport.geojson");
-            paths.Add(@"D:\GeoJson\atm_rice_covid-19.geojson");
+            //paths.Add(@"D:\GeoJson\airport.geojson");
+            //paths.Add(@"D:\GeoJson\atm_rice_covid-19.geojson");
             paths.Add(@"D:\GeoJson\diaphantinh.geojson");
-            paths.Add(@"D:\GeoJson\district.geojson");
-            paths.Add(@"D:\GeoJson\ga.geojson");
-            paths.Add(@"D:\GeoJson\giaothong.geojson");
-            paths.Add(@"D:\GeoJson\harborgeojson.geojson");
+            //paths.Add(@"D:\GeoJson\district.geojson");
+            //paths.Add(@"D:\GeoJson\ga.geojson");
+            //paths.Add(@"D:\GeoJson\giaothong.geojson");
+            //paths.Add(@"D:\GeoJson\harborgeojson.geojson");
             //paths.Add(@"D:\GeoJson\hydropower_2020.geojson");
-            paths.Add(@"D:\GeoJson\khu-bao-ton-quoc-gia.geojson");
-            paths.Add(@"D:\GeoJson\sanbay.geojson");
+            //paths.Add(@"D:\GeoJson\khu-bao-ton-quoc-gia.geojson");
+            //paths.Add(@"D:\GeoJson\sanbay.geojson");
 
             //if (!files.Any()) return BadRequest("Invalid file");
 
@@ -154,6 +154,7 @@ namespace Elastic02.Controllers
                 //item.id = Convert.ToInt32((feature.Attributes["gid"].ToString()) ?? "0");
                 item.id = i;
                 item.typename = "Tỉnh";
+                item.provinceid = Convert.ToInt32((feature.Attributes["provinceid"].ToString()) ?? "0"); ;
                 item.name = feature.Attributes["ten_tinh"].ToString() ?? "";
                 item.keywords = feature.Attributes["ten_tinh"].ToString() ?? "";
             } else if(type == "D")//District

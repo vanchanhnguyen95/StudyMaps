@@ -43,6 +43,7 @@ builder.Services.AddScoped(typeof(IElasticGeoRepository<>), typeof(ElasticGeoRep
 builder.Services.AddScoped(typeof(IHaNoiRoadService), typeof(HaNoiRoadService));
 builder.Services.AddScoped(typeof(IHaNoiShapeService), typeof(HaNoiShapeService));
 builder.Services.AddScoped(typeof(IVietNamShapeService), typeof(VietNameShapeService));
+builder.Services.AddScoped(typeof(IRoadNameService), typeof(RoadNameService));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

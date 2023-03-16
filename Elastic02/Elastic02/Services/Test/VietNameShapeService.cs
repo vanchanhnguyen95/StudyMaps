@@ -515,9 +515,7 @@ namespace Elastic02.Services.Test
                 )
             );
 
-
-
-                return geo.Documents.ToList();
+            return geo.Documents.ToList();
             }
             catch
             {

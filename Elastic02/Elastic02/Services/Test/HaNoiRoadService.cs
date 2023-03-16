@@ -96,7 +96,6 @@ namespace Elastic02.Services.Test
                 return indexResponse.ApiCall.HttpStatusCode.ToString() ?? "OK";
             }
             catch (Exception ex) { return ex.ToString(); }
-
         }
 
         public async Task<List<HaNoiRoadPush>> GetDataSuggestion(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword)

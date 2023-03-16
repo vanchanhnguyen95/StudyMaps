@@ -44,7 +44,7 @@ namespace Elastic02.Models.Test
             Location = other.Lat.ToString() + ", " + other.Lng.ToString();
             if (!string.IsNullOrEmpty(other.NameExt))
             {
-                Keywords = other?.RoadName?.ToString() + ", " + other?.NameExt?.ToString();
+                Keywords = other?.RoadName?.ToString() + " " + other?.NameExt?.ToString();
             }
             else
             {

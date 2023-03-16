@@ -26,7 +26,7 @@ namespace Elastic02.Models.Test
     public class HaNoiShapePush
     {
         [Number(Index = true)]
-        public float? id { get; set; } = 0;
+        public int? id { get; set; } = 0;
 
         [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
         public string? name { get; set; } = string.Empty;
