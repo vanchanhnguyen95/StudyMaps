@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using Elastic02.Utility;
+using Nest;
 using System.ComponentModel;
 
 namespace Elastic02.Models.Test
@@ -11,14 +12,20 @@ namespace Elastic02.Models.Test
         [Number(Index = true)]
         public int ProvinceID { get; set; } = 0;
 
-        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
+        //[Text(Index = true, Fielddata = true, Analyzer = "my_combined_analyzer")]
+        [Text(Index = true, Fielddata = true)]
         public string? RoadName { get; set; } = string.Empty;
 
-        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
+        [Text(Index = true, Fielddata = true)]
         public string? NameExt { get; set; } = string.Empty;
 
-        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
+        [Text(Index = true, Fielddata = true)]
         public string? Address { get; set; } = string.Empty;
+
+        [Text(Index = true, Fielddata = true)]
+        public string? AddressLower { get; set; } = string.Empty;
+
+        
 
         [Number(Index = true)]
         public decimal Lng { get; set; } = 0;
@@ -27,14 +34,18 @@ namespace Elastic02.Models.Test
         public decimal Lat { get; set; } = 0;
     }
 
-    [ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-full")]
+    [ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-combined")]
     public class RoadName : RoadNamePush
     {
-        [GeoPoint]
-        public string Location { get; set; } = string.Empty;
+        //[GeoPoint]
+        //[Number(Index = true)]
+        //public string Location { get; set; } = string.Empty;
 
-        [Text(Index = true, Fielddata = true, Analyzer = "vi_analyzer_road")]
+        //[Text(Index = true, Fielddata = true, Analyzer = "my_combined_analyzer")]
+        [Text(Index = true, Fielddata = true)]
         public string Keywords { get; set; } = string.Empty;
+
+        public string? KeywordsAscii { get; set; } = string.Empty;
         public RoadName(RoadNamePush other)
         {
             RoadID = other.RoadID;
@@ -42,31 +53,34 @@ namespace Elastic02.Models.Test
             RoadName = other.RoadName;
             NameExt = other.NameExt;
             Address = other.Address;
+            AddressLower = other.Address.ToLower();
             Lng = other.Lng;
             Lat = other.Lat;
 
-            Location = other.Lat.ToString() + ", " + other.Lng.ToString();
+            //Location = other.Lat.ToString() + ", " + other.Lng.ToString();
             if (!string.IsNullOrEmpty(other.NameExt))
             {
-                Keywords = other?.RoadName?.ToString() + " , " + other?.NameExt?.ToString();
+                Keywords = other?.RoadName?.ToString().ToLower() + " , " + other?.NameExt?.ToString().ToLower();
             }
             else
             {
-                //Keywords = other.RoadName ?? "";
-                Keywords = other.RoadName + " , ";
+                Keywords = other?.RoadName?.ToString().ToLower() ?? "";
+                //Keywords = other.RoadName + " , ";
             }
 
             if (!string.IsNullOrEmpty(other?.Address))
             {
-                Keywords += " , " + other?.Address?.ToString();
+                Keywords += " , " + other?.Address?.ToString().ToLower();
             }else
             {
                 Keywords += " , ";
-            }    
+            }
             //else
             //{
             //    Keywords += other?.Address ?? "";
             //}
+
+            KeywordsAscii = LatinToAscii.Latin2Ascii(Keywords);
         }
 
         public RoadName(RoadNamePush other, string type= "p")
@@ -75,28 +89,33 @@ namespace Elastic02.Models.Test
             ProvinceID = other.ProvinceID;
             RoadName = other.RoadName;
             NameExt = other.NameExt;
+            Address = other.Address;
+            AddressLower = other?.Address?.ToLower();
             Lng = other.Lng;
             Lat = other.Lat;
 
-            Location = other.Lat.ToString() + ", " + other.Lng.ToString();
+            //Location = other.Lat.ToString() + ", " + other.Lng.ToString();
             if (!string.IsNullOrEmpty(other.NameExt))
             {
-                Keywords = other?.RoadName?.ToString() + " , " + other?.NameExt?.ToString();
+                Keywords = other?.RoadName?.ToString().ToLower() + " , " + other?.NameExt?.ToString().ToLower();
             }
             else
             {
-                //Keywords = other.RoadName ?? "";
-                Keywords = other.RoadName + " , ";
+                Keywords = other?.RoadName?.ToString().ToLower() ?? "";
+                //Keywords = other.RoadName + " , ";
             }
 
             if (!string.IsNullOrEmpty(other?.Address))
             {
-                Keywords += " , " + other?.Address?.ToString();
+                Keywords += " , " + other?.Address?.ToString().ToLower();
             }
             else
             {
                 Keywords += " , ";
             }
+
+            KeywordsAscii = LatinToAscii.Latin2Ascii(Keywords);
+
             //else
             //{
             //    Keywords += other?.Address ?? "";

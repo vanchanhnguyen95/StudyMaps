@@ -1,9 +1,11 @@
 ﻿using Elastic02.Models.Test;
 using Elastic02.Services.Test;
+using Elastic02.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace Elastic02.Controllers
 {
@@ -51,6 +53,11 @@ namespace Elastic02.Controllers
         public async Task<IActionResult> GetDataSuggestion(double lat = 0, double lng = 0, string distance = "100km", int size = 5, string keyword = null, GeoShapeRelation relation = GeoShapeRelation.Intersects, int provinceID = -1)
         {
             //double lat = 21.006423010707078, double lng = 105.83878960584113, string distance = "30000m", int pageSize = 10, string keyWord = null
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                keyword = LatinToAscii.Latin2Ascii(keyword.ToLower());
+            } 
+
             if (provinceID < 0)
                 return Ok(await _roadNameService.GetDataSuggestion(lat, lng, GeoDistanceType.Arc, distance, size, keyword, relation));
 
