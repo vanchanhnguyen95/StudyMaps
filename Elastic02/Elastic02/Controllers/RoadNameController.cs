@@ -21,12 +21,26 @@ namespace Elastic02.Controllers
         [HttpPost]
         [Route("BulkAsync")]
         //public async Task<IActionResult> BulkAsync([FromBody] List<RoadNamePush> roadPushs)
-        public async Task<IActionResult> BulkAsync(string path = @"D:\Project\Els01\Db\RoadName.json")
+        public async Task<IActionResult> BulkAsync(string path = @"D:\Project\Els01\Db\pastedText.json")
         {
-            if(string.IsNullOrEmpty(path)) path = @"D:\Project\Els01\Db\RoadName.json";
+            if(string.IsNullOrEmpty(path)) path = @"D:\Project\Els01\Db\pastedText.json";
             //string path = @"D:\Project\Els01\Db\RoadName.json";
             var jsonData = System.IO.File.ReadAllText(path);
             var roadPushs = JsonConvert.DeserializeObject<List<RoadNamePush>>(jsonData);
+
+            return Ok(await _roadNameService.BulkAsync(roadPushs));
+            //return Ok(await _roadNameService.BulkAsyncMultiProvince(roadPushs ?? new List<RoadNamePush>()));
+        }
+
+
+        [HttpPost]
+        [Route("BulkAsyncFromData")]
+        public async Task<IActionResult> BulkAsyncFromData([FromBody] List<RoadNamePush> roadPushs)
+        {
+            //if (string.IsNullOrEmpty(path)) path = @"D:\Project\Els01\Db\pastedText.json";
+            ////string path = @"D:\Project\Els01\Db\RoadName.json";
+            //var jsonData = System.IO.File.ReadAllText(path);
+            //var roadPushs = JsonConvert.DeserializeObject<List<RoadNamePush>>(jsonData);
 
             return Ok(await _roadNameService.BulkAsync(roadPushs));
             //return Ok(await _roadNameService.BulkAsyncMultiProvince(roadPushs ?? new List<RoadNamePush>()));

@@ -491,12 +491,12 @@ namespace Elastic02.Services.Test
             }
         }
 
-        public async Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword, GeoShapeRelation relation)
+        public async Task<List<RoadName>> GetDataSuggestion(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword, GeoShapeRelation relation)
         {
             try
             {
                 List<RoadName> res = new List<RoadName>();
-                List<RoadNamePush> result = new List<RoadNamePush>();
+                //List<RoadNamePush> result = new List<RoadNamePush>();
 
                 // Tìm kiếm theo tọa độ
                 if (string.IsNullOrEmpty(keyword))
@@ -516,10 +516,11 @@ namespace Elastic02.Services.Test
                     res = await GetDataByLocationKeyWord(lat, lng, type, distance, size, keyword, provinceid);
                 }
 
-                if (res.Any())
-                    res.ForEach(item => result.Add(new RoadName(item)));
+                //if (res.Any())
+                //    res.ForEach(item => result.Add(new RoadName(item)));
 
-                return result;
+                //return result;
+                return res;
             }
             catch (Exception ex)
             {
@@ -805,7 +806,7 @@ namespace Elastic02.Services.Test
                            .Custom("vi_analyzer_road", ca => ca
                                .CharFilters("programming_language")
                                .Tokenizer("vi_tokenizer")
-                               .Filters("lowercase", "icu_folding", "ascii_folding")
+                               .Filters("icu_folding", "lowercase", "stop", "ascii_folding")
                            )
                        )
                    )
