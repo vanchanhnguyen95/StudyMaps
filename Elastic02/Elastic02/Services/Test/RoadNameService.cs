@@ -386,16 +386,15 @@ namespace Elastic02.Services.Test
         {
             List<RoadName> roads = new List<RoadName>();
 
+            if (!roadPushs.Any())
+                return "Success - No data to bulk insert";
+            
+            roadPushs.ForEach(item => roads.Add(new RoadName(item)));
+
             //Check xem khởi tạo index chưa, nếu chưa khởi tạo thì phải khởi tạo index mới được
             var existsIndex = await _client.Indices.ExistsAsync(_indexName);
             if (!existsIndex.Exists)
-            {
-                var createindex = await CreateIndex(_indexName);
-            }
-
-
-            if (roadPushs.Any())
-                roadPushs.ForEach(item => roads.Add(new RoadName(item)));
+                await CreateIndex(_indexName);
 
             var bulkAllObservable = _client.BulkAll(roads, b => b
                 .Index(_indexName)
@@ -494,12 +493,12 @@ namespace Elastic02.Services.Test
             }
         }
 
-        public async Task<List<RoadName>> GetDataSuggestion(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword, GeoShapeRelation relation)
+        public async Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword, GeoShapeRelation relation)
         {
             try
             {
                 List<RoadName> res = new List<RoadName>();
-                //List<RoadNamePush> result = new List<RoadNamePush>();
+                List<RoadNamePush> result = new List<RoadNamePush>();
 
                 res = await GetDataByKeyWord(size, keyword);
 
@@ -521,11 +520,11 @@ namespace Elastic02.Services.Test
                 //    res = await GetDataByLocationKeyWord(lat, lng, type, distance, size, keyword, provinceid);
                 //}
 
-                //if (res.Any())
-                //    res.ForEach(item => result.Add(new RoadName(item)));
+                if (res.Any())
+                    res.ForEach(item => result.Add(new RoadName(item)));
 
-                //return result;
-                return res;
+                return result;
+                //return res;
             }
             catch (Exception ex)
             {
@@ -656,8 +655,6 @@ namespace Elastic02.Services.Test
         {
             try
             {
-
-
                 var geo = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
                    .Size(size)
                    .Query(q => q.Bool(
@@ -672,7 +669,7 @@ namespace Elastic02.Services.Test
                         //)
                     )))
                    .Sort(s => s.Descending(SortSpecialField.Score))
-                   //.Scroll(1)
+                   .Scroll(1)
                    );
 
                 return geo.Documents.ToList();

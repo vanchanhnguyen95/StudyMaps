@@ -22,11 +22,6 @@ namespace Elastic02.Models.Test
         [Text(Index = true, Fielddata = true)]
         public string? Address { get; set; } = string.Empty;
 
-        [Text(Index = true, Fielddata = true)]
-        public string? AddressLower { get; set; } = string.Empty;
-
-        
-
         [Number(Index = true)]
         public decimal Lng { get; set; } = 0;
 
@@ -40,6 +35,9 @@ namespace Elastic02.Models.Test
         //[GeoPoint]
         //[Number(Index = true)]
         //public string Location { get; set; } = string.Empty;
+
+        [Text(Index = true, Fielddata = true)]
+        public string? AddressLower { get; set; } = string.Empty;
 
         //[Text(Index = true, Fielddata = true, Analyzer = "my_combined_analyzer")]
         [Text(Index = true, Fielddata = true)]
