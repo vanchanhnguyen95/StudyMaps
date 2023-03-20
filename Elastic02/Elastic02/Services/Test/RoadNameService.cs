@@ -500,25 +500,25 @@ namespace Elastic02.Services.Test
                 List<RoadName> res = new List<RoadName>();
                 List<RoadNamePush> result = new List<RoadNamePush>();
 
-                res = await GetDataByKeyWord(size, keyword);
+                //res = await GetDataByKeyWord(size, keyword);
 
-                //// Tìm kiếm theo tọa độ
-                //if (string.IsNullOrEmpty(keyword))
-                //{
-                //    int provinceid = await GetProvinceId(lat, lng, null);
-                //    res = await GetDataByLocation(lat, lng, type, distance, size, provinceid);
-                //}
-                //// Tìm kiếm theo từ khóa
-                //else if (lat == 0 && lng == 0)
-                //{
-                //    res = await GetDataByKeyWord(size, keyword);
-                //}
-                //// Tìm kiếm theo tọa độ và từ khóa
-                //else
-                //{
-                //    int provinceid = await GetProvinceId(lat, lng, keyword);
-                //    res = await GetDataByLocationKeyWord(lat, lng, type, distance, size, keyword, provinceid);
-                //}
+                //Tìm kiếm theo tọa độ
+                if (string.IsNullOrEmpty(keyword))
+                {
+                    int provinceid = await GetProvinceId(lat, lng, null);
+                    res = await GetDataByLocation(lat, lng, type, distance, size, provinceid);
+                }
+                // Tìm kiếm theo từ khóa
+                else if (lat == 0 && lng == 0)
+                {
+                    res = await GetDataByKeyWord(size, keyword);
+                }
+                // Tìm kiếm theo tọa độ và từ khóa
+                else
+                {
+                    int provinceid = await GetProvinceId(lat, lng, null);
+                    res = await GetDataByLocationKeyWord(lat, lng, type, distance, size, keyword, provinceid);
+                }
 
                 if (res.Any())
                     res.ForEach(item => result.Add(new RoadName(item)));
@@ -629,12 +629,12 @@ namespace Elastic02.Services.Test
                         .IgnoreUnmapped()
                         .Boost(1.1)
                         .Name("named_query")
-                        //.Field(p => p.Location)
+                        .Field(p => p.Location)
                     ))
                    .Sort(s => s.Descending(SortSpecialField.Score).Ascending(f => f.NameExt)
                             .GeoDistance(
                                         d => d
-                                        //.Field(f => f.Location)
+                                        .Field(f => f.Location)
                                         .Order(SortOrder.Ascending).Points(new GeoLocation(lat, lng))
                                         .Unit(DistanceUnit.Meters).Mode(SortMode.Min)
                                         )
@@ -669,7 +669,7 @@ namespace Elastic02.Services.Test
                         //)
                     )))
                    .Sort(s => s.Descending(SortSpecialField.Score))
-                   .Scroll(1)
+                   //.Scroll(1)
                    );
 
                 return geo.Documents.ToList();
@@ -701,7 +701,7 @@ namespace Elastic02.Services.Test
                     )))
                    .Sort(s => s.Descending(SortSpecialField.Score).Ascending(f => f.NameExt)
                    )
-                   //.Scroll(1)
+                   .Scroll(1)
                    );
 
                 return geo.Documents.ToList();
@@ -753,19 +753,19 @@ namespace Elastic02.Services.Test
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.Keywords).Query(keyword).Fuzziness(Fuzziness.Auto)
+                        ma.Field(f => f.KeywordsAscii).Query(keyword).Analyzer("vn_analyzer").Fuzziness(Fuzziness.Auto)
                         .AutoGenerateSynonymsPhraseQuery())
-                        && mu.Match(ma =>
-                        ma.Field(f => f.RoadName).Query(keyword)
-                        .AutoGenerateSynonymsPhraseQuery()
-                        )
+                        //&& mu.Match(ma =>
+                        //ma.Field(f => f.RoadName).Query(keyword)
+                        //.AutoGenerateSynonymsPhraseQuery()
+                        //)
                         && mu.Match(ma =>
                         ma.Field(f => f.ProvinceID).Query(provinceID.ToString()))
 
                     )))
                    .PostFilter(q => q.GeoDistance(
                         g => g.Boost(1.1).Name("named_query")
-                        //.Field(p => p.Location)
+                        .Field(p => p.Location)
                         .DistanceType(type).Location(lat, lng)
                         .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
                     ))
