@@ -667,10 +667,10 @@ namespace Elastic02.Services.Test
                         ma.Field(f => f.KeywordsAscii).Analyzer("vn_analyzer").Query(keywordAscii).Fuzziness(Fuzziness.Auto)
                         .AutoGenerateSynonymsPhraseQuery()
                         )
-                        && mu.Match(ma =>
-                        ma.Field(f => f.RoadName).Analyzer("vn_analyzer").Query(keyword)
-                        .AutoGenerateSynonymsPhraseQuery()
-                        )
+                        //&& mu.Match(ma =>
+                        //ma.Field(f => f.RoadName).Analyzer("vn_analyzer").Query(keyword)
+                        //.AutoGenerateSynonymsPhraseQuery()
+                        //)
                         //&& mu.Match(ma =>
                         //ma.Field(f => f.ProvinceID).Query(provinceID.ToString())
                         //)
@@ -727,11 +727,16 @@ namespace Elastic02.Services.Test
         {
             try
             {
+                string keywordAscii = string.Empty;
+
+                if (!string.IsNullOrEmpty(keyword))
+                    keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
+
                 var geo = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.KeywordsAscii).Query(keyword).Analyzer("vn_analyzer").Fuzziness(Fuzziness.Auto)
+                        ma.Field(f => f.KeywordsAscii).Query(keywordAscii).Analyzer("vn_analyzer").Fuzziness(Fuzziness.Auto)
                         .AutoGenerateSynonymsPhraseQuery())
                         //&& mu.Match(ma =>
                         //ma.Field(f => f.RoadName).Query(keyword)
