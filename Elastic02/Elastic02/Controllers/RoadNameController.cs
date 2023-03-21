@@ -49,13 +49,13 @@ namespace Elastic02.Controllers
 
         [HttpGet]
         [Route("GetDataSuggestion")]
-        public async Task<IActionResult> GetDataSuggestion(double lat = 0, double lng = 0, string distance = "100km", int size = 5, string keyword = null, GeoShapeRelation relation = GeoShapeRelation.Intersects)
+        public async Task<IActionResult> GetDataSuggestion(double lat = 0, double lng = 0, string distance = "100km", int size = 5, string keyword = null)
         {
             //double lat = 21.006423010707078, double lng = 105.83878960584113, string distance = "30000m", int pageSize = 10, string keyWord = null
             if (!string.IsNullOrEmpty(keyword))
                 keyword = LatinToAscii.Latin2Ascii(keyword.ToLower());
 
-            return Ok(await _roadNameService.GetDataSuggestion(lat, lng, GeoDistanceType.Arc, distance, size, keyword, relation));
+            return Ok(await _roadNameService.GetDataSuggestion(lat, lng, distance, size, keyword));
 
             
         }

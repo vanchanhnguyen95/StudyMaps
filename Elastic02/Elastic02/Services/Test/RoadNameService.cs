@@ -392,9 +392,7 @@ namespace Elastic02.Services.Test
             roadPushs.ForEach(item => roads.Add(new RoadName(item)));
 
             //Check xem khởi tạo index chưa, nếu chưa khởi tạo thì phải khởi tạo index mới được
-            var existsIndex = await _client.Indices.ExistsAsync(_indexName);
-            if (!existsIndex.Exists)
-                await CreateIndex(_indexName);
+             await CreateIndex(_indexName);
 
             var bulkAllObservable = _client.BulkAll(roads, b => b
                 .Index(_indexName)
@@ -417,9 +415,11 @@ namespace Elastic02.Services.Test
                 .DroppedDocumentCallback(async (bulkResponseItem, road) =>
                 {
                     bool isCreate = true;
-                    isCreate = await CreateAsync(road, _indexName);
+                    //isCreate = await CreateAsync(road, _indexName);
+                    isCreate = await IndexAsync(road, _indexName);
                     while (isCreate == false)
                     {
+                        //isCreate = await IndexAsync(road, _indexName);
                         isCreate = await IndexAsync(road, _indexName);
                         Console.OutputEncoding = Encoding.UTF8;
                         Console.WriteLine($"{road.ProvinceID} - {road.RoadName}");
@@ -444,9 +444,7 @@ namespace Elastic02.Services.Test
                     return "Success - No data bulk";
 
                 // Check xem khởi tạo index chưa, nếu chưa khởi tạo thì phải khởi tạo index mới được
-                var existsIndex = await _client.Indices.ExistsAsync(indexName);
-                if (!existsIndex.Exists)
-                    await CreateIndex(indexName);
+                await CreateIndex(indexName);
 
                 var bulkAllObservable = _client.BulkAll(roads, b => b
                     .Index(indexName)
@@ -506,7 +504,7 @@ namespace Elastic02.Services.Test
                 if (string.IsNullOrEmpty(keyword))
                 {
                     int provinceid = await GetProvinceId(lat, lng, null);
-                    res = await GetDataByLocation(lat, lng, type, distance, size, provinceid);
+                    res = await GetDataByLocation(lat, lng, distance, size, provinceid);
                 }
                 // Tìm kiếm theo từ khóa
                 else if (lat == 0 && lng == 0)
@@ -517,7 +515,7 @@ namespace Elastic02.Services.Test
                 else
                 {
                     int provinceid = await GetProvinceId(lat, lng, null);
-                    res = await GetDataByLocationKeyWord(lat, lng, type, distance, size, keyword, provinceid);
+                    res = await GetDataByLocationKeyWord(lat, lng, distance, size, keyword, provinceid);
                 }
 
                 if (res.Any())
@@ -531,7 +529,7 @@ namespace Elastic02.Services.Test
                 return null;
             }
         }
-        public async Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword, GeoShapeRelation relation, int provinceID)
+        public async Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, string distance, int size, string keyword)
         {
             List<RoadName> res = new List<RoadName>();
             List<RoadNamePush> result = new List<RoadNamePush>();
@@ -544,7 +542,7 @@ namespace Elastic02.Services.Test
             // Tìm kiếm theo tọa độ
             if (string.IsNullOrEmpty(keyword))
             {
-                res = await GetDataByLocation(lat, lng, type, distance, size, provinceid);
+                res = await GetDataByLocation(lat, lng, distance, size, provinceid);
             }
             // Tìm kiếm theo từ khóa
             else if (lat == 0 && lng == 0)
@@ -554,7 +552,7 @@ namespace Elastic02.Services.Test
             // Tìm kiếm theo tọa độ và từ khóa
             else
             {
-                res = await GetDataByLocationKeyWord(lat, lng, type, distance, size, keyword, provinceid);
+                res = await GetDataByLocationKeyWord(lat, lng, distance, size, keyword, provinceid);
             }
 
             if (res.Any())
@@ -564,7 +562,7 @@ namespace Elastic02.Services.Test
         }
 
         // Tìm kiếm theo tọa độ
-        private async Task<List<RoadName>> GetDataByLocation(double lat, double lng, GeoDistanceType type, string distance, int size)
+        private async Task<List<RoadName>> GetDataByLocation(double lat, double lng, string distance, int size)
         {
             try
             {
@@ -587,7 +585,7 @@ namespace Elastic02.Services.Test
                    .PostFilter(q => q.GeoDistance(
                         g => g
                         .Distance(distance)
-                        .DistanceType(type)
+                        .DistanceType(GeoDistanceType.Arc)
                         .Location(lat, lng)
                         .ValidationMethod(GeoValidationMethod.IgnoreMalformed)
                         .IgnoreUnmapped()
@@ -608,7 +606,7 @@ namespace Elastic02.Services.Test
             }
         }
 
-        private async Task<List<RoadName>> GetDataByLocation(double lat, double lng, GeoDistanceType type, string distance, int size, int provinceID)
+        private async Task<List<RoadName>> GetDataByLocation(double lat, double lng, string distance, int size, int provinceID)
         {
             try
             {
@@ -623,7 +621,7 @@ namespace Elastic02.Services.Test
                    .PostFilter(q => q.GeoDistance(
                         g => g
                         .Distance(distance)
-                        .DistanceType(type)
+                        .DistanceType(GeoDistanceType.Arc)
                         .Location(lat, lng)
                         .ValidationMethod(GeoValidationMethod.IgnoreMalformed)
                         .IgnoreUnmapped()
@@ -688,13 +686,13 @@ namespace Elastic02.Services.Test
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.Keywords).Analyzer("vi_analyzer_road").Query(keyword).Fuzziness(Fuzziness.Auto)
+                        ma.Field(f => f.Keywords).Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
                         .AutoGenerateSynonymsPhraseQuery()
                         )
-                        && mu.Match(ma =>
-                        ma.Field(f => f.RoadName).Analyzer("vi_analyzer_road").Query(keyword)
-                        .AutoGenerateSynonymsPhraseQuery()
-                        )
+                        //&& mu.Match(ma =>
+                        //ma.Field(f => f.RoadName).Analyzer("vn_analyzer").Query(keyword)
+                        //.AutoGenerateSynonymsPhraseQuery()
+                        //)
                         && mu.Match(ma =>
                         ma.Field(f => f.ProvinceID).Query(provinceID.ToString())
                         )
@@ -713,7 +711,7 @@ namespace Elastic02.Services.Test
         }
 
         // Tìm kiếm theo tọa độ và từ khóa
-        private async Task<List<RoadName>> GetDataByLocationKeyWord(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword)
+        private async Task<List<RoadName>> GetDataByLocationKeyWord(double lat, double lng, string distance, int size, string keyword)
         {
             try
             {
@@ -721,16 +719,16 @@ namespace Elastic02.Services.Test
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.Keywords).Query(keyword).Fuzziness(Fuzziness.Auto)
+                        ma.Field(f => f.KeywordsAscii).Query(keyword).Fuzziness(Fuzziness.Auto)
                         .AutoGenerateSynonymsPhraseQuery())
-                        && mu.Match(ma =>
-                        ma.Field(f => f.RoadName).Query(keyword)
-                        .AutoGenerateSynonymsPhraseQuery())
+                        //&& mu.Match(ma =>
+                        //ma.Field(f => f.RoadName).Query(keyword)
+                        //.AutoGenerateSynonymsPhraseQuery())
                     )))
                    .PostFilter(q => q.GeoDistance(
                         g => g.Boost(1.1).Name("named_query")
-                        //.Field(p => p.Location)
-                        .DistanceType(type).Location(lat, lng)
+                        .Field(p => p.Location)
+                        .DistanceType(GeoDistanceType.Arc).Location(lat, lng)
                         .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
                     ))
                    .Sort(s => s.Descending(SortSpecialField.Score))
@@ -745,7 +743,7 @@ namespace Elastic02.Services.Test
             }
         }
 
-        private async Task<List<RoadName>> GetDataByLocationKeyWord(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword, int provinceID)
+        private async Task<List<RoadName>> GetDataByLocationKeyWord(double lat, double lng, string distance, int size, string keyword, int provinceID)
         {
             try
             {
@@ -766,7 +764,7 @@ namespace Elastic02.Services.Test
                    .PostFilter(q => q.GeoDistance(
                         g => g.Boost(1.1).Name("named_query")
                         .Field(p => p.Location)
-                        .DistanceType(type).Location(lat, lng)
+                        .DistanceType(GeoDistanceType.Arc).Location(lat, lng)
                         .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
                     ))
                    .Sort(s => s.Descending(SortSpecialField.Score))
@@ -786,6 +784,8 @@ namespace Elastic02.Services.Test
             try
             {
                 if (string.IsNullOrEmpty(indexName)) indexName = _indexName;
+
+                await _client.Indices.DeleteAsync(Indices.Index(indexName));
 
                 var indexResponse = await _client.Indices.CreateAsync(Indices.Index(indexName), c => c
                .Map<RoadName>(mm => mm.AutoMap())
@@ -819,9 +819,9 @@ namespace Elastic02.Services.Test
                            .Synonym("synonym_address", sf => new SynonymTokenFilter
                            {
                                Synonyms = new List<string>()
-                                { "ha noi, hà nội, Hà Nội, Ha Noi, hn, hanoi, tp. ha noi, thành phố ha noi",
-                                    "tphcm,tp.hcm,tp hồ chí minh,sài gòn,saigon"
-                                }
+                               { "ha noi, hà nội, Hà Nội, Ha Noi, hn, hanoi, tp. ha noi, thành phố ha noi",
+                                    "tphcm,tp.hcm,tp hồ chí minh,sài gòn, saigon"
+                               }
                            })
                        )
                        .Analyzers(an => an
@@ -849,66 +849,6 @@ namespace Elastic02.Services.Test
                                .Tokenizer("vi_tokenizer")
                                .Filters("synonym_address","lowercase", "ascii_folding")
                            )
-                       )
-                   )
-                )
-            );
-
-                return indexResponse.ApiCall.HttpStatusCode.ToString() ?? "OK";
-            }
-            catch (Exception ex) { return ex.ToString(); }
-        }
-
-        public async Task<string> CreateIndex2(string indexName)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(indexName)) indexName = _indexName;
-
-                var indexResponse = await _client.Indices.CreateAsync(Indices.Index(indexName), c => c
-               .Map<RoadName>(mm => mm.AutoMap())
-               .Settings(s => s
-                   .NumberOfReplicas(NumberOfReplicas)
-                   .NumberOfShards(NumberOfShards)
-                   .Analysis(a => a
-                        .Tokenizers(t => t.Keyword("my_keyword", k => k
-                                .BufferSize(1024)
-                            )
-                        )
-                       .CharFilters(cf => cf
-                           .Mapping("programming_language", mca => mca
-                               .Mappings(new[]
-                               {
-                                        "c# => csharp",
-                                        "C# => Csharp"
-                               })
-                           )
-                         )
-                       .TokenFilters(tf => tf
-                           .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
-                           {
-                               PreserveOriginal = true
-                           })
-                       )
-                       .Analyzers(an => an
-                           .Custom("my_analyzer", ca => ca
-                                .CharFilters("programming_language")
-                                .Tokenizer("standard")
-                                .Filters("lowercase")
-                            )
-                            .Custom("vi_analyzer", ca => ca
-                                .CharFilters("programming_language")
-                                .Tokenizer("vi_tokenizer")
-                                .Filters("lowercase", "icu_folding", "ascii_folding")
-                            )
-                            .Custom("my_keyword_analyzer", ca => ca
-                                .Tokenizer("keyword")
-                                .Filters("lowercase")
-                            )
-                            .Custom("my_combined_analyzer", ca => ca
-                                .Tokenizer("standard")
-                                .Filters("lowercase", "my_keyword_analyzer", "vi_analyzer")
-                            )
                        )
                    )
                 )
