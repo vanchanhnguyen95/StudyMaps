@@ -1,11 +1,11 @@
 ﻿using Elastic02.Models.Test;
 using Elastic02.Services.Test;
-using Elastic02.Utility;
+using log4net;
+using log4net.Config;
+using log4net.Core;
 using Microsoft.AspNetCore.Mvc;
-using Nest;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
+using System.Reflection;
 
 namespace Elastic02.Controllers
 {
@@ -14,10 +14,13 @@ namespace Elastic02.Controllers
     public class RoadNameController : ControllerBase
     {
         private readonly IRoadNameService _roadNameService;
+        private readonly ILogService _logService;
+        //private readonly ILogger<RoadNameController> _logger;
 
-        public RoadNameController(IRoadNameService roadNameService)
+        public RoadNameController(IRoadNameService roadNameService, ILogService logService)
         {
             _roadNameService = roadNameService;
+            _logService = logService;
         }
 
         [HttpPost]
@@ -25,7 +28,8 @@ namespace Elastic02.Controllers
         //public async Task<IActionResult> BulkAsync([FromBody] List<RoadNamePush> roadPushs)
         public async Task<IActionResult> BulkAsync(string path = @"D:\Project\Els01\Db\pastedText.json")
         {
-            if(string.IsNullOrEmpty(path)) path = @"D:\Project\Els01\Db\pastedText.json";
+
+            if (string.IsNullOrEmpty(path)) path = @"D:\Project\Els01\Db\pastedText.json";
             //string path = @"D:\Project\Els01\Db\RoadName.json";
             var jsonData = System.IO.File.ReadAllText(path);
             var roadPushs = JsonConvert.DeserializeObject<List<RoadNamePush>>(jsonData);
@@ -54,7 +58,7 @@ namespace Elastic02.Controllers
             //double lat = 21.006423010707078, double lng = 105.83878960584113, string distance = "30000m", int pageSize = 10, string keyWord = null
             //if (!string.IsNullOrEmpty(keyword))
             //    keyword = LatinToAscii.Latin2Ascii(keyword.ToLower());
-
+            _logService.WriteLog("GetDataSuggestion", Services.Test.LogLevel.Debug);
             return Ok(await _roadNameService.GetDataSuggestion(lat, lng, distance, size, keyword));
 
             
