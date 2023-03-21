@@ -13,7 +13,8 @@ namespace Elastic02.Services.Test
         private readonly ElasticClient _client;
         private readonly string _indexName;
         private readonly IConfiguration _configuration;
-        IVietNamShapeService _vnShapeService;
+        private readonly IVietNamShapeService _vnShapeService;
+        private readonly ILogService _logService;
 
         private string GetIndexName()
         {
@@ -28,12 +29,13 @@ namespace Elastic02.Services.Test
             throw new Exception($"{nameof(RoadName)} description attribute is missing.");
         }
 
-        public RoadNameService(ElasticClient client, IConfiguration configuration, IVietNamShapeService vnShapeService)
+        public RoadNameService(ElasticClient client, IConfiguration configuration, IVietNamShapeService vnShapeService, ILogService logService)
         {
             _client = client;
             _indexName = GetIndexName();
             _configuration = configuration;
             _vnShapeService = vnShapeService;
+            _logService = logService;
         }
 
         public async Task<string> BulkAsyncMultiProvince(List<RoadNamePush> roadPushs)
@@ -384,56 +386,66 @@ namespace Elastic02.Services.Test
 
         public async Task<string> BulkAsync(List<RoadNamePush> roadPushs)
         {
-            List<RoadName> roads = new List<RoadName>();
-
-            if (!roadPushs.Any())
-                return "Success - No data to bulk insert";
-
-            roadPushs.ForEach(item => roads.Add(new RoadName(item)));
-
-            //Check xem khởi tạo index chưa, nếu chưa khởi tạo thì phải khởi tạo index mới được
-            await CreateIndex(_indexName);
-
-            var bulkAllObservable = _client.BulkAll(roads, b => b
-                .Index(_indexName)
-                // how long to wait between retries
-                .BackOffTime("30s")
-                // how many retries are attempted if a failure occurs
-                .BackOffRetries(2)
-                // refresh the index once the bulk operation completes
-                .RefreshOnCompleted()
-                // how many concurrent bulk requests to make
-                .MaxDegreeOfParallelism(Environment.ProcessorCount)
-                // number of items per bulk request
-                .Size(10000)
-                // decide if a document should be retried in the event of a failure
-                //.RetryDocumentPredicate((item, road) =>
-                //{
-                //    return item.Error.Index == "even-index" && person.FirstName == "Martijn";
-                //})
-                // if a document cannot be indexed this delegate is called
-                .DroppedDocumentCallback(async (bulkResponseItem, road) =>
-                {
-                    bool isCreate = true;
-                    //isCreate = await CreateAsync(road, _indexName);
-                    isCreate = await IndexAsync(road, _indexName);
-                    while (isCreate == false)
-                    {
-                        //isCreate = await IndexAsync(road, _indexName);
-                        isCreate = await IndexAsync(road, _indexName);
-                        Console.OutputEncoding = Encoding.UTF8;
-                        Console.WriteLine($"{road.ProvinceID} - {road.RoadName}");
-                    }
-                })
-                .Timeout(Environment.ProcessorCount)
-                .ContinueAfterDroppedDocuments()
-            )
-            .Wait(TimeSpan.FromMinutes(15), next =>
+            try
             {
-                // do something e.g. write number of pages to console
-            });
+                _logService.WriteLog($"BulkAsync Start", LogLevel.Info);
+                List<RoadName> roads = new List<RoadName>();
 
-            return "Success";
+                if (!roadPushs.Any())
+                    return "Success - No data to bulk insert";
+
+                roadPushs.ForEach(item => roads.Add(new RoadName(item)));
+
+                //Check xem khởi tạo index chưa, nếu chưa khởi tạo thì phải khởi tạo index mới được
+                await CreateIndex(_indexName);
+
+                var bulkAllObservable = _client.BulkAll(roads, b => b
+                    .Index(_indexName)
+                    // how long to wait between retries
+                    .BackOffTime("30s")
+                    // how many retries are attempted if a failure occurs
+                    .BackOffRetries(2)
+                    // refresh the index once the bulk operation completes
+                    .RefreshOnCompleted()
+                    // how many concurrent bulk requests to make
+                    .MaxDegreeOfParallelism(Environment.ProcessorCount)
+                    // number of items per bulk request
+                    .Size(10000)
+                    // decide if a document should be retried in the event of a failure
+                    //.RetryDocumentPredicate((item, road) =>
+                    //{
+                    //    return item.Error.Index == "even-index" && person.FirstName == "Martijn";
+                    //})
+                    // if a document cannot be indexed this delegate is called
+                    .DroppedDocumentCallback(async (bulkResponseItem, road) =>
+                    {
+                        bool isCreate = true;
+                        //isCreate = await CreateAsync(road, _indexName);
+                        isCreate = await IndexAsync(road, _indexName);
+                        while (isCreate == false)
+                        {
+                            //isCreate = await IndexAsync(road, _indexName);
+                            isCreate = await IndexAsync(road, _indexName);
+                            _logService.WriteLog($"BulkAsync Err, road: {road.RoadID} - {road.RoadName}", LogLevel.Error);
+                            //Console.OutputEncoding = Encoding.UTF8;
+                            //Console.WriteLine($"{road.ProvinceID} - {road.RoadName}");
+                        }
+                    })
+                    .Timeout(Environment.ProcessorCount)
+                    .ContinueAfterDroppedDocuments()
+                )
+                .Wait(TimeSpan.FromMinutes(15), next =>
+                {
+                    // do something e.g. write number of pages to console
+                });
+                _logService.WriteLog($"BulkAsync End", LogLevel.Info);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                _logService.WriteLog($"BulkAsync - {ex.ToString()}", LogLevel.Error);
+                return "Bulk False";
+            }
         }
 
         public async Task<string> BulkAsyncByProvince(List<RoadName> roads, string indexName = null)
@@ -471,8 +483,8 @@ namespace Elastic02.Services.Test
                         while (isCreate == false)
                         {
                             isCreate = await IndexAsync(road, indexName);
-                            Console.OutputEncoding = Encoding.UTF8;
-                            Console.WriteLine($"{road.RoadName}");
+                            //Console.OutputEncoding = Encoding.UTF8;
+                            //Console.WriteLine($"{road.RoadName}");
                         }
                     })
                     .Timeout(Environment.ProcessorCount)
@@ -487,6 +499,7 @@ namespace Elastic02.Services.Test
             }
             catch (Exception ex)
             {
+                _logService.WriteLog($"BulkAsync - {ex.ToString()}", LogLevel.Error);
                 return ex.ToString();
             }
         }
@@ -531,34 +544,46 @@ namespace Elastic02.Services.Test
         }
         public async Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, string distance, int size, string keyword)
         {
-            List<RoadName> res = new List<RoadName>();
-            List<RoadNamePush> result = new List<RoadNamePush>();
-
-            int provinceid = 16;
-
-            if (lat != 0 && lng != 0)
-                provinceid = await GetProvinceId(lat, lng, null);
-
-            // Tìm kiếm theo tọa độ
-            if (string.IsNullOrEmpty(keyword))
+            try
             {
-                res = await GetDataByLocation(lat, lng, distance, size, provinceid);
-            }
-            // Tìm kiếm theo từ khóa
-            else if (lat == 0 && lng == 0)
-            {
-                res = await GetDataByKeyWord(size, keyword);
-            }
-            // Tìm kiếm theo tọa độ và từ khóa
-            else
-            {
-                res = await GetDataByLocationKeyWord(lat, lng, distance, size, keyword, provinceid);
-            }
+                _logService.WriteLog($"GetDataSuggestion Start - keyword: {keyword}", LogLevel.Info);
 
-            if (res.Any())
-                res.ForEach(item => result.Add(new RoadName(item)));
+                List<RoadName> res = new List<RoadName>();
+                List<RoadNamePush> result = new List<RoadNamePush>();
 
-            return result;
+                int provinceid = 16;
+
+                if (lat != 0 && lng != 0)
+                    provinceid = await GetProvinceId(lat, lng, null);
+
+                // Tìm kiếm theo tọa độ
+                if (string.IsNullOrEmpty(keyword))
+                {
+                    res = await GetDataByLocation(lat, lng, distance, size, provinceid);
+                }
+                // Tìm kiếm theo từ khóa
+                else if (lat == 0 && lng == 0)
+                {
+                    res = await GetDataByKeyWord(size, keyword);
+                }
+                // Tìm kiếm theo tọa độ và từ khóa
+                else
+                {
+                    res = await GetDataByLocationKeyWord(lat, lng, distance, size, keyword, provinceid);
+                }
+
+                if (res.Any())
+                    res.ForEach(item => result.Add(new RoadName(item)));
+
+                _logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
+                return result;
+
+            }
+            catch(Exception ex)
+            {
+                _logService.WriteLog($"GetDataSuggestion - keyword: {keyword} Err - {ex}", LogLevel.Error);
+                return new List<RoadNamePush>();
+            }
         }
 
         // Tìm kiếm theo tọa độ
@@ -650,7 +675,6 @@ namespace Elastic02.Services.Test
         }
 
         // Tìm kiếm theo từ khóa
-
         private async Task<List<RoadName>> GetDataByKeyWord(int size, string keyword)
         {
             try

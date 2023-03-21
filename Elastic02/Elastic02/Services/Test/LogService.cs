@@ -3,6 +3,7 @@ using log4net;
 using System.Reflection;
 using log4net.Repository.Hierarchy;
 using log4net.Core;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace Elastic02.Services.Test
 {
@@ -13,8 +14,10 @@ namespace Elastic02.Services.Test
         public LogService()
         {
             log4net.Config.XmlConfigurator.Configure();
+            //log4net.Config.XmlConfigurator.Configure(new System.IO.FileInfo("log4net.config"));
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+            //log4net.GlobalContext.Properties["logFolder"] = @".\wwwroot\logs\";
             myLog4net = LogManager.GetLogger(typeof(LoggerManager));
         }
 
