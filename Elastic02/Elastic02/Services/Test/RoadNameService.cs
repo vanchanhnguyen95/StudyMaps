@@ -679,6 +679,7 @@ namespace Elastic02.Services.Test
         {
             try
             {
+
                 string keywordAscii = string.Empty;
 
                 if (!string.IsNullOrEmpty(keyword))
@@ -692,13 +693,17 @@ namespace Elastic02.Services.Test
                         .AutoGenerateSynonymsPhraseQuery()
                         )
                         //&& mu.Match(ma =>
-                        //ma.Field(f => f.RoadName).Analyzer("vn_analyzer").Query(keyword)
+                        //ma.Field(f => f.Keywords).Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
                         //.AutoGenerateSynonymsPhraseQuery()
                         //)
                         //&& mu.Match(ma =>
                         //ma.Field(f => f.ProvinceID).Query(provinceID.ToString())
                         //)
-                    )))
+                    )
+                    //    .Should(sh => sh.Match(ma => ma.Field(f => f.Keywords).Analyzer("vn_analyzer").Query(keywordAscii).Fuzziness(Fuzziness.Auto).AutoGenerateSynonymsPhraseQuery()
+                    //))
+                        )
+                   )
                    .MinScore(5.0)
                    .Sort(s => s.Descending(SortSpecialField.Score)
                    )
