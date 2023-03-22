@@ -546,7 +546,7 @@ namespace Elastic02.Services.Test
         {
             try
             {
-                _logService.WriteLog($"GetDataSuggestion Start - keyword: {keyword}", LogLevel.Info);
+                //_logService.WriteLog($"GetDataSuggestion Start - keyword: {keyword}", LogLevel.Info);
 
                 List<RoadName> res = new List<RoadName>();
                 List<RoadNamePush> result = new List<RoadNamePush>();
@@ -575,7 +575,7 @@ namespace Elastic02.Services.Test
                 if (res.Any())
                     res.ForEach(item => result.Add(new RoadName(item)));
 
-                _logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
+                //_logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
                 return result;
 
             }

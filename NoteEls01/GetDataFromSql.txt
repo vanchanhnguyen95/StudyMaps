@@ -1,0 +1,20 @@
+SELECT	DRN.*, PRV.VName AS [Address]
+	FROM	[DTS.RoadName] DRN
+			INNER JOIN [CTL.Province] PRV
+			ON	DRN.ProvinceID = PRV.ProvinceID
+
+
+SELECT	DRN.RoadID RoadID,
+	DRN.ProvinceID ProvinceID,
+	DRN.RoadName RoadName,
+	DRN.NameExt NameExt,
+	DRN.Lng Lng,
+	DRN.Lat Lat,
+	PRV.VName AS [Address]
+	FROM	[DTS.RoadName] DRN
+			INNER JOIN [CTL.Province] PRV
+			ON	DRN.ProvinceID = PRV.ProvinceID
+where DRN.NameExt != ''
+and DRN.RoadName = N'Hai Bà Trưng'
+
+and DRN.ProvinceID = 16
