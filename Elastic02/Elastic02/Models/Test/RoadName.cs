@@ -53,13 +53,13 @@ namespace Elastic02.Models.Test
             RoadName = other.RoadName;
             NameExt = other.NameExt;
             Address = other.Address;
-            AddressLower = other.Address.ToLower();
-            Lng = other.Lng;
-            Lat = other.Lat;
+            AddressLower = other?.Address?.ToLower();
+            Lng = other?.Lng ?? 0;
+            Lat = other?.Lat ?? 0;
 
             //Location = other.Lat.ToString() + ", " + other.Lng.ToString();
             Location = new GeoLocation((double)Lat, (double)Lng);
-            if (!string.IsNullOrEmpty(other.NameExt))
+            if (!string.IsNullOrEmpty(other?.NameExt))
             {
                 Keywords = other?.RoadName?.ToString().ToLower() + " , " + other?.NameExt?.ToString().ToLower();
             }

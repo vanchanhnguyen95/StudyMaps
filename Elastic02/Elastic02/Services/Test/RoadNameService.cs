@@ -679,7 +679,6 @@ namespace Elastic02.Services.Test
         {
             try
             {
-
                 string keywordAscii = string.Empty;
 
                 if (!string.IsNullOrEmpty(keyword))
@@ -689,28 +688,53 @@ namespace Elastic02.Services.Test
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.KeywordsAscii).Analyzer("vn_analyzer").Query(keywordAscii).Fuzziness(Fuzziness.Auto)
+                        ma.Field(f => f.KeywordsAscii).Name("named_query").Analyzer("vn_analyzer").Query(keywordAscii).Fuzziness(Fuzziness.EditDistance(0))
                         .AutoGenerateSynonymsPhraseQuery()
                         )
-                        //&& mu.Match(ma =>
-                        //ma.Field(f => f.Keywords).Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
-                        //.AutoGenerateSynonymsPhraseQuery()
-                        //)
-                        //&& mu.Match(ma =>
-                        //ma.Field(f => f.ProvinceID).Query(provinceID.ToString())
-                        //)
+                        && mu.Match(ma =>
+                        ma.Field(f => f.Keywords).Name("named_query").Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.EditDistance(1))
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
                     )
-                    //    .Should(sh => sh.Match(ma => ma.Field(f => f.Keywords).Analyzer("vn_analyzer").Query(keywordAscii).Fuzziness(Fuzziness.Auto).AutoGenerateSynonymsPhraseQuery()
-                    //))
+                        //.Should(sh => sh
+                        //.Match(ma => ma.Field(f => f.RoadName)
+                        //.Analyzer("vn_analyzer").Query(keyword)
+                        //.Fuzziness(Fuzziness.EditDistance(1)).AutoGenerateSynonymsPhraseQuery()
+                        //    ))
                         )
                    )
                    .MinScore(5.0)
                    .Sort(s => s.Descending(SortSpecialField.Score)
                    )
-                   .Scroll(1)
+                   //.Scroll(1)
+                   );
+                bool isValid = true;
+                isValid = geo.IsValid;
+                if(isValid)    
+                    return geo.Documents.ToList();
+
+                var geoAgain = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
+                   .Size(size)
+                   .Query(q => q.Bool(
+                        b => b.Must(mu => mu.Match(ma =>
+                        ma.Field(f => f.KeywordsAscii).Name("named_query").Analyzer("vn_analyzer").Query(keywordAscii).Fuzziness(Fuzziness.EditDistance(0))
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
+                        && mu.Match(ma =>
+                        ma.Field(f => f.Keywords).Name("named_query").Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.EditDistance(1))
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
+                    )
+                        )
+                   )
+                   .MinScore(5.0)
+                   .Sort(s => s.Descending(SortSpecialField.Score)
+                   )
+                   //.Scroll(1)
                    );
 
-                return geo.Documents.ToList();
+                return geoAgain.Documents.ToList();
+
             }
             catch (Exception ex)
             {
@@ -727,7 +751,7 @@ namespace Elastic02.Services.Test
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.KeywordsAscii).Query(keyword).Analyzer("vn_analyzer").Fuzziness(Fuzziness.Auto)
+                        ma.Field(f => f.KeywordsAscii).Name("named_query").Query(keyword).Analyzer("vn_analyzer").Fuzziness(Fuzziness.Auto)
                         .AutoGenerateSynonymsPhraseQuery())
                         && mu.Match(ma =>
                         ma.Field(f => f.RoadName).Query(keyword)
@@ -765,7 +789,7 @@ namespace Elastic02.Services.Test
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.KeywordsAscii).Query(keywordAscii).Analyzer("vn_analyzer").Fuzziness(Fuzziness.Auto)
+                        ma.Field(f => f.KeywordsAscii).Name("named_query").Query(keywordAscii).Analyzer("vn_analyzer").Fuzziness(Fuzziness.Auto)
                         .AutoGenerateSynonymsPhraseQuery())
                         //&& mu.Match(ma =>
                         //ma.Field(f => f.RoadName).Query(keyword)
@@ -783,7 +807,7 @@ namespace Elastic02.Services.Test
                     ))
                    .MinScore(5.0)
                    .Sort(s => s.Descending(SortSpecialField.Score))
-                   .Scroll(1)
+                   //.Scroll(1)
                    );
 
                 return geo.Documents.ToList();
