@@ -14,7 +14,6 @@ namespace Elastic02.Models.Test
         [Number(Index = true)]
         public int ProvinceID { get; set; } = 0;
 
-        //[Text(Index = true, Fielddata = true, Analyzer = "my_combined_analyzer")]
         [Text(Index = true, Fielddata = true)]
         public string? RoadName { get; set; } = string.Empty;
 
@@ -31,7 +30,6 @@ namespace Elastic02.Models.Test
         public decimal Lat { get; set; } = 0;
     }
 
-    //[ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-point")]
     [ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-location")]
     public class RoadName : RoadNamePush
     {
@@ -41,7 +39,6 @@ namespace Elastic02.Models.Test
         [Text(Index = true, Fielddata = true)]
         public string? AddressLower { get; set; } = string.Empty;
 
-        //[Text(Index = true, Fielddata = true, Analyzer = "my_combined_analyzer")]
         [Text(Index = true, Fielddata = true)]
         public string Keywords { get; set; } = string.Empty;
 

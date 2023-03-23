@@ -723,10 +723,9 @@ namespace Elastic02.Services.Test
                         && mu.Match(ma =>
                         ma.Field(f => f.Keywords).Name("named_query").Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.EditDistance(1))
                         .AutoGenerateSynonymsPhraseQuery()
-                        )
-                    )
-                        )
-                   )
+                            )
+                            )
+                        ))
                    .MinScore(5.0)
                    .Sort(s => s.Descending(SortSpecialField.Score)
                    )
