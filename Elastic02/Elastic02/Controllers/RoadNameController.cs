@@ -31,9 +31,8 @@ namespace Elastic02.Controllers
             var jsonData = System.IO.File.ReadAllText(path);
             var roadPushs = JsonConvert.DeserializeObject<List<RoadNamePush>>(jsonData);
 
-            return Ok(await _roadNameService.BulkAsync(roadPushs));
+            return Ok(await _roadNameService.BulkAsync(roadPushs?? new List<RoadNamePush>()));
         }
-
 
         [HttpPost]
         [Route("BulkAsyncFromData")]
@@ -54,8 +53,6 @@ namespace Elastic02.Controllers
         {
             //double lat = 21.006423010707078, double lng = 105.83878960584113, string distance = "30000m", int pageSize = 10, string keyWord = null
             return Ok(await _roadNameService.GetDataSuggestion(lat, lng, distance, size, keyword));
-
-            
         }
     }
 }

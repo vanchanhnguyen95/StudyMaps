@@ -687,7 +687,8 @@ namespace Elastic02.Services.Test
                 var geo = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
                    .Size(size)
                    .Query(q => q.Bool(
-                        b => b.Must(mu => mu.Match(ma =>
+                        b => b.Must(mu =>
+                        mu.Match(ma =>
                         ma.Field(f => f.KeywordsAscii).Name("named_query").Analyzer("vn_analyzer").Query(keywordAscii).Fuzziness(Fuzziness.EditDistance(0))
                         .AutoGenerateSynonymsPhraseQuery()
                         )
@@ -695,13 +696,16 @@ namespace Elastic02.Services.Test
                         ma.Field(f => f.Keywords).Name("named_query").Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.EditDistance(1))
                         .AutoGenerateSynonymsPhraseQuery()
                         )
+
+                       )
+
                     )
-                        //.Should(sh => sh
-                        //.Match(ma => ma.Field(f => f.RoadName)
-                        //.Analyzer("vn_analyzer").Query(keyword)
-                        //.Fuzziness(Fuzziness.EditDistance(1)).AutoGenerateSynonymsPhraseQuery()
-                        //    ))
-                        )
+                    //    .Should(sh => sh
+                    //    .Match(ma => ma.Field(f => f.RoadName)
+                    //    .Name("named_query").Analyzer("vn_analyzer").Query(keyword)
+                    //    //.Fuzziness(Fuzziness.EditDistance(1)).AutoGenerateSynonymsPhraseQuery()
+                    //    //    )
+                    //    )))
                    )
                    .MinScore(5.0)
                    .Sort(s => s.Descending(SortSpecialField.Score)
