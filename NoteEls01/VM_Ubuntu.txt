@@ -60,3 +60,5 @@ sudo ufw allow 9200/tcp
 sudo ufw status
 
 sudo ufw allow 6000/tcp
+
+Text tìm kiếm sẽ là tổ hợp của RoadName, NameExt, [Address] (Tên tỉnh)

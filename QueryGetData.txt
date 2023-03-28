@@ -1,0 +1,35 @@
+Dựng dịch vụ elasticsearch index dữ liệu bản đồ với các dịch vụ,
+đối tượng dữ liệu của anhpt đã viết.
+
+Text tìm kiếm sẽ là tổ hợp của RoadName, NameExt, [Address] (Tên tỉnh)
+
+AutoComplete - Tìm kiếm nhanh theo từ khóa (gợi ý nhanh địa điểm, địa chỉ theo từ khóa)
+http://10.0.10.146:6000/api/RoadName/GetDataSuggestion?size=10&keyWord=nguyen trai ha dong ha noi
+&lng=105.7868533&lat=21.03045875&distance=300km
+
+Dữ liệu trả về
+nguyen trai ha dong ha noi
+
+    {
+        "roadID": 1619897,
+        "provinceID": 16,
+        "roadName": "Nguyễn Trãi",
+        "nameExt": "Q. Hà Đông",
+        "address": "TP. Hà Nội",
+        "lng": 105.77930601,
+        "lat": 20.97263381
+    },
+	
+Text tìm kiếm sẽ là tổ hợp của RoadName, NameExt, [Address] (Tên tỉnh)
+
+nguyễn trãi hà đông hà nội
+
+SELECT	DRN.RoadID RoadID,
+	DRN.ProvinceID ProvinceID,
+	DRN.RoadName RoadName,
+	DRN.NameExt  NameExt,
+	PRV.[VName] AS [Address],
+	DRN.Lat Lat, DRN.Lng Lng
+	FROM	[DTS.RoadName] DRN
+			INNER JOIN [CTL.Province] PRV
+			ON	DRN.ProvinceID = PRV.ProvinceID

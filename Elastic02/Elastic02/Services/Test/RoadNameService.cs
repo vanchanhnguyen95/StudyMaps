@@ -1,7 +1,10 @@
 ﻿using Elastic02.Models.Test;
 using Elastic02.Utility;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Nest;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 
 namespace Elastic02.Services.Test
@@ -674,8 +677,102 @@ namespace Elastic02.Services.Test
             }
         }
 
-        // Tìm kiếm theo từ khóa
+        private Job ConvertDoc(IHit<Job> hit)
+        {
+            Job u = new Job();
+
+            try
+            {
+                u = hit.Source;
+                u.JobId = hit.Id;
+            }
+            catch
+            {
+            }
+            return u;
+        }
         private async Task<List<RoadName>> GetDataByKeyWord(int size, string keyword)
+        {
+            try
+            {
+                string? keywordAscii = string.Empty;
+                keyword = keyword.ToLower();
+
+                if (!string.IsNullOrEmpty(keyword))
+                    keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
+
+                List<Job> lst = new List<Job>();
+
+                string[] fields = null;
+                var searchRequest = new SearchRequest<RoadName>(_indexName);
+                searchRequest.From = 0;
+                searchRequest.Size = size;
+                searchRequest.TrackTotalHits = true;
+
+                List<QueryContainer> must = new List<QueryContainer>();
+                TermQuery termQuery = new TermQuery() { };
+
+                var queryContainerList = new List<QueryContainer>();
+
+                var matchQuery1 = new MatchQuery
+                {
+                    Field = Infer.Field<RoadName>(f => f.Keywords),
+                    Query = keyword,
+                    Fuzziness = Fuzziness.EditDistance(0),
+                    Analyzer = "vn_analyzer"
+                };
+
+                var matchQuery2 = new MatchQuery
+                {
+                    Field = Infer.Field<RoadName>(f => f.KeywordsAscii),
+                    Query = keywordAscii,
+                    Fuzziness = Fuzziness.EditDistance(1),
+                    Analyzer = "vn_analyzer"
+                };
+
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    must.Add(new QueryStringQuery() { Fields = new string[]
+                    { 
+                        Infer.Field<RoadName>(f => f.Keywords).ToString()
+                        , Infer.Field<RoadName>(f => f.RoadName).ToString() 
+                        , Infer.Field<RoadName>(f => f.NameExt).ToString() 
+                        , Infer.Field<RoadName>(f => f.Address).ToString() 
+                        , Infer.Field<RoadName>(f => f.KeywordsAscii).ToString() 
+                    }
+                    , Query = keyword });
+                }
+
+                must.Add(
+                       new TermQuery() { Field = Infer.Field<RoadName>(f => f.Keywords).ToString(), Value = keyword }
+                       || new TermQuery() { Field = Infer.Field<RoadName>(f => f.RoadName).ToString(), Value = keyword }
+                       || new TermQuery() { Field = Infer.Field<RoadName>(f => f.NameExt).ToString(), Value = keyword }
+                       || new TermQuery() { Field = Infer.Field<RoadName>(f => f.Address).ToString(), Value = keyword }
+                       //|| new TermsQuery() { Field = Infer.Field<RoadName>(f => f.KeywordsAscii).ToString(), Terms = keywordAscii }
+                       || new TermQuery() { Field = Infer.Field<RoadName>(f => f.KeywordsAscii).ToString(), Value = keywordAscii }
+                       );
+
+                queryContainerList.Add(
+                    (matchQuery1 && matchQuery2)
+                );
+
+                var boolQuery = new BoolQuery { Must = queryContainerList };
+
+                searchRequest.Query = boolQuery;
+
+                var searchResponse = await _client.SearchAsync<RoadName>(searchRequest);
+                if (searchResponse.IsValid)
+                    return searchResponse.Documents.ToList();
+
+                return new List<RoadName>();
+            }
+            catch
+            { return new List<RoadName>(); }
+        }
+
+
+        // Tìm kiếm theo từ khóa
+        private async Task<List<RoadName>> GetDataByKeyWord2(int size, string keyword)
         {
             try
             {
@@ -683,6 +780,85 @@ namespace Elastic02.Services.Test
 
                 if (!string.IsNullOrEmpty(keyword))
                     keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
+
+                List<Job> lst = new List<Job>();
+
+                string[] fields = null;
+                var searchRequest = new SearchRequest<RoadName>(_indexName);
+                searchRequest.From = 0;
+                searchRequest.Size = size;
+                searchRequest.TrackTotalHits = true;
+
+                List<QueryContainer> must = new List<QueryContainer>();
+                TermQuery termQuery = new TermQuery() { };
+
+                var queryContainerList = new List<QueryContainer>();
+
+                var matchQuery1 = new MatchQuery
+                {
+                    Field = Infer.Field<RoadName>(f => f.Keywords),
+                    Query =keyword,
+                    //Fuzziness = Fuzziness.Auto,
+                    Fuzziness = Fuzziness.EditDistance(0),
+                    Analyzer = "vn_analyzer"
+                };
+                //queryContainerList.Add(matchQuery1);
+
+                var matchQuery2 = new MatchQuery
+                {
+                    Field = Infer.Field<RoadName>(f => f.KeywordsAscii),
+                    Query = keywordAscii,
+                    //Fuzziness = Fuzziness.Auto,
+                    Fuzziness = Fuzziness.EditDistance(1),
+                    Analyzer = "vn_analyzer",
+                    Boost = 1.1
+                };
+                queryContainerList.Add(
+                    (matchQuery1 && matchQuery2)
+                    
+                    
+                );
+
+
+                var boolQuery = new BoolQuery { Must = queryContainerList, Boost = 1.1 };
+
+                searchRequest.Query = boolQuery;
+                searchRequest.Analyzer = "vn_analyzer";
+
+                var searchResponse = await _client.SearchAsync<RoadName>(searchRequest);
+
+                List<ISort> sort = new List<ISort>();
+
+                SearchRequest req = new SearchRequest(_indexName);
+                req.Query = new QueryContainer(new BoolQuery() { Must = must });
+                req.From = 0;
+                req.Size = size;
+                //req.Fields = size;
+
+                if (fields != null)
+                    req.Source = new SourceFilter() { Includes = fields };
+
+                //if (fields != null)
+                //    req.Source = new SourceFilter() { Includes = fields };
+                req.TrackTotalHits = true;
+                req.MinScore = 5.0;
+                req.Sort.OrderDescending();
+                var res = await _client.SearchAsync<Job>(req);
+                if (res.IsValid)
+                {
+                    //total_recs = res.Total;
+                    lst = res.Hits.Select(x => ConvertDoc(x)).ToList();
+                }
+
+                
+
+
+
+
+                //string keywordAscii = string.Empty;
+
+                //if (!string.IsNullOrEmpty(keyword))
+                //    keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
 
                 var geo = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
                    .Size(size)
@@ -696,9 +872,7 @@ namespace Elastic02.Services.Test
                         ma.Field(f => f.Keywords).Name("named_query").Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.EditDistance(1))
                         .AutoGenerateSynonymsPhraseQuery()
                         )
-
-                       )
-
+                        )
                     )
                     //    .Should(sh => sh
                     //    .Match(ma => ma.Field(f => f.RoadName)
