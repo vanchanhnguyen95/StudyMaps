@@ -12,5 +12,7 @@ namespace Elastic02.Services.Test
         Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, string distance, int size, string keyword );
         //Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, GeoDistanceType type, string distance, int size, string keyword);
 
+        Task<List<RoadName>> GetRouting(GeoLocation poingStart, GeoLocation pointEnd,int size);
+
     }
 }

@@ -1,11 +1,8 @@
 ﻿using Elastic02.Models.Test;
 using Elastic02.Services.Test;
-using log4net;
-using log4net.Config;
-using log4net.Core;
 using Microsoft.AspNetCore.Mvc;
+using Nest;
 using Newtonsoft.Json;
-using System.Reflection;
 
 namespace Elastic02.Controllers
 {
@@ -53,6 +50,19 @@ namespace Elastic02.Controllers
         {
             //double lat = 21.006423010707078, double lng = 105.83878960584113, string distance = "30000m", int pageSize = 10, string keyWord = null
             return Ok(await _roadNameService.GetDataSuggestion(lat, lng, distance, size, keyword));
+        }
+
+        [HttpGet]
+        [Route("GetRouting")]
+        public async Task<IActionResult> GetRouting(double latStart = 0, double lngStart = 0, double latEnd = 0, double lngEnd = 0, int size = 10)
+        {
+            //poingStart = new GeoLocation(20.97263381, 105.77930601);
+            //pointEnd = new GeoLocation(20.99874272, 105.81312923);
+
+            GeoLocation poingStart = new GeoLocation(latStart, lngStart);
+            GeoLocation pointEnd = new GeoLocation(latEnd, lngEnd);
+
+            return Ok(await _roadNameService.GetRouting(poingStart, pointEnd, size));
         }
     }
 }

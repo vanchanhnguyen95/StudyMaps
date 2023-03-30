@@ -14,16 +14,13 @@ namespace Elastic02.Models.Test
         [Number(Index = true)]
         public int ProvinceID { get; set; } = 0;
 
-        //[Text(Index = true, Fielddata = true)]
-        [Keyword(Index = true)]
+        [Text(Index = true, Fielddata = true)]
         public string? RoadName { get; set; } = string.Empty;
 
-        //[Text(Index = true, Fielddata = true)]
-        [Keyword(Index = true)]
+        [Text(Index = true, Fielddata = true)]
         public string? NameExt { get; set; } = string.Empty;
 
-        //[Text(Index = true, Fielddata = true)]
-        [Keyword(Index = true)]
+        [Text(Index = true, Fielddata = true)]
         public string? Address { get; set; } = string.Empty;
 
         [Number(Index = true)]
@@ -33,21 +30,19 @@ namespace Elastic02.Models.Test
         public decimal Lat { get; set; } = 0;
     }
 
-    [ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-keyword"),]
+    [ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-location"),]
     public class RoadName : RoadNamePush
     {
         [GeoPoint]
         public GeoLocation Location { get; set; }
 
-        //[Text(Index = true, Fielddata = true)]
-        [Keyword(Index = true)]
+        [Text(Index = true, Fielddata = true)]
         public string? AddressLower { get; set; } = string.Empty;
 
-        //[Text(Index = true, Fielddata = true)]
-        [Keyword(Index = true)]
+        [Text(Index = true, Fielddata = true)]
         public string Keywords { get; set; } = string.Empty;
 
-        [Keyword(Index = true)]
+        [Text(Index = true, Fielddata = true)]
         public string? KeywordsAscii { get; set; } = string.Empty;
 
         public RoadName(RoadNamePush other)
