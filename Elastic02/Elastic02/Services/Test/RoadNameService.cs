@@ -692,7 +692,7 @@ namespace Elastic02.Services.Test
             }
             return u;
         }
-        private async Task<List<RoadName>> GetDataByKeyWord2(int size, string keyword)
+        private async Task<List<RoadName>> GetDataByKeyWord(int size, string keyword)
         {
             try
             {
@@ -784,11 +784,12 @@ namespace Elastic02.Services.Test
                 };
 
                 var boolQuery = new BoolQuery {
+                    IsStrict = true,
                     Must = queryContainerList,
                     Boost = 1.1
                 };
 
-                
+
                 //var bo = new BoolQueryDescriptor<RoadName>() { };
 
                 searchRequest.Sort = sort;
@@ -797,82 +798,11 @@ namespace Elastic02.Services.Test
                 searchRequest.TrackTotalHits = true;
                 searchRequest.Query = boolQuery;
 
-                var searchResponse = await _client.SearchAsync<RoadName>(searchRequest);
+               var searchResponse = await _client.SearchAsync<RoadName>(searchRequest);
                 if (searchResponse.IsValid)
                     return searchResponse.Documents.ToList();
 
-                //var searchRequest3 = new SearchRequest<RoadName>(_indexName)
-                //{
-                //    Query = new BoolQuery
-                //    {
-                //        Must = new List<QueryContainer>
-                //        {
-                //           new MatchQuery
-                //           {
-                //                Boost = 2.0,
-                //                Operator = Operator.Or,
-                //                Fuzziness = Fuzziness.EditDistance(0),
-                //                PrefixLength = 3,
-                //                MinimumShouldMatch = 1,
-                //                Lenient = true,
-                //                ZeroTermsQuery = ZeroTermsQuery.None,
-                //                AutoGenerateSynonymsPhraseQuery = true,
-                //                Name = "named_query",
-                //                Analyzer = "vn_analyzer",
-                //                CutoffFrequency = 0.001,
-                //                Field = Infer.Field<RoadName>(f => f.Keywords),
-                //                Query = keyword
-                //            },
-                //            new MatchQuery {
-                //                Boost = 2.0,
-                //                Operator = Operator.Or,
-                //                Fuzziness = Fuzziness.EditDistance(1),
-                //                PrefixLength = 3,
-                //                MinimumShouldMatch = 1,
-                //                Lenient = true,
-                //                ZeroTermsQuery = ZeroTermsQuery.None,
-                //                AutoGenerateSynonymsPhraseQuery = true,
-                //                Name = "named_query",
-                //                Analyzer = "vn_analyzer",
-                //                CutoffFrequency = 0.001,
-                //                Field = Infer.Field<RoadName>(f => f.KeywordsAscii),
-                //                Query = keywordAscii
-                //            }
-                //            //new MatchQuery { Field = "your_field_2", Query = "your_condition" }
-                //        },
-                //        Should = new List<QueryContainer>
-                //        {
-                //           new MatchQuery {
-                //                Boost = 2.0,
-                //                //Operator = Operator.And,
-                //                Fuzziness = Fuzziness.EditDistance(1),
-                //                //PrefixLength = 3,
-                //                //MinimumShouldMatch = 1,
-                //                //Lenient = true,
-                //                ZeroTermsQuery = ZeroTermsQuery.None,
-                //                AutoGenerateSynonymsPhraseQuery = true,
-                //                Name = "named_query",
-                //                Analyzer = "vn_analyzer",
-                //                //CutoffFrequency = 0.001,
-                //                Field = Infer.Field<RoadName>(f => f.KeywordsAscii),
-                //                Query = keywordAscii
-
-                //            },
-                //        },
-                //       Boost = 1.0
-                //    }
-                //};
-
-                //searchRequest3.Sort = sort;
-                //searchRequest3.From = 0;
-                //searchRequest3.Size = size;
-                //searchRequest3.TrackTotalHits = true;
-                ////searchRequest3.Query = boolQuery;
-
-                //var searchResponse3 = await _client.SearchAsync<RoadName>(searchRequest3);
-
-                //if (searchResponse3.IsValid)
-                //    return searchResponse3.Documents.ToList();
+                
 
                 return new List<RoadName>();
             }
@@ -882,7 +812,7 @@ namespace Elastic02.Services.Test
 
 
         // Tìm kiếm theo từ khóa
-        private async Task<List<RoadName>> GetDataByKeyWord(int size, string keyword)
+        private async Task<List<RoadName>> GetDataByKeyWord2(int size, string keyword)
         {
             try
             {
@@ -1164,7 +1094,7 @@ namespace Elastic02.Services.Test
                 //);
 
                 var searchResponse = await _client.SearchAsync<RoadName>(s => s
-                    //.Size(size)
+                    .Size(100)
                     .Index(_indexName)
                     .Sort(sort => sort
                         .GeoDistance(gd => gd.DistanceType(GeoDistanceType.Arc)

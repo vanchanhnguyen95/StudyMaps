@@ -65,7 +65,38 @@ export PATH=${M2_HOME}/bin:${PATH}
 
 sudo cp -a /mnt/d/publish/GeoDemoV2/* /var/www/geodemov2
 
-
+"Data Source=NC-CHANHNV\\MSSQLSERVER2;Initial Catalog=Identity;Persist Security Info=True;User ID=sa;Password=1"
+"Server=NC-CHANHNV\\MSSQLSERVER2;Database=Identity;Trusted_Connection=True;MultipleActiveResultSets=true"
+ "mongodb://localhost:27017/?retryWrites=true&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000"
+https://localhost:5002/swagger/index.html
 sudo chmod -R 755 *
 .\wwwroot\20220901\\
 "__rg.ba"
+
+  Email = "admin@demo.com",
+                Id = Guid.NewGuid().ToString(),
+                LastName = "Account",
+                FirstName = "Demo",
+                PhoneNumber = "1234567890",
+                UserName = "admin@demo.com",
+                NormalizedEmail = "ADMIN@DEMO.COM",
+                NormalizedUserName = "ADMIN@DEMO.COM",
+                SecurityStamp = Guid.NewGuid().ToString("D"),
+            };
+			
+			admin@demo.com/ Admin@123$
+			
+			********
+Nhập client ID: exam_api_swaggerui
+đăng nhập: admin / Admin@123$
+
+"Data Source=NC-CHANHNV\\MSSQLSERVER2;Initial Catalog=IdentityServer4Admin;Persist Security Info=True;User ID=sa;Password=1"
+
+* Lệnh Xóa db
+USE master;
+GO
+
+ALTER DATABASE zap SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+GO
+DROP DATABASE zap;
+GO
