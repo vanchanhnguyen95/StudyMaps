@@ -1,6 +1,5 @@
+using Elastic02;
 using Elastic02.Models;
-using Elastic02.Services;
-using Elastic02.Services.Test;
 using Elasticsearch.Net;
 using Nest;
 
@@ -33,18 +32,7 @@ var elasticClient = new ElasticClient(settings);
 
 // Add services to the container.
 builder.Services.AddSingleton(elasticClient);
-
-builder.Services.AddScoped(typeof(IElasticRepository<>), typeof(ElasticRepository<>));
-
-builder.Services.AddScoped(typeof(IElasticService<>), typeof(ElasticService<>));
-
-builder.Services.AddScoped(typeof(IElasticGeoRepository<>), typeof(ElasticGeoRepository<>));
-//builder.Services.AddScoped(typeof(IGeoService), typeof(GeoService));
-builder.Services.AddScoped(typeof(IHaNoiRoadService), typeof(HaNoiRoadService));
-builder.Services.AddScoped(typeof(IHaNoiShapeService), typeof(HaNoiShapeService));
-builder.Services.AddScoped(typeof(IVietNamShapeService), typeof(VietNameShapeService));
-builder.Services.AddScoped(typeof(IRoadNameService), typeof(RoadNameService));
-builder.Services.AddScoped(typeof(ILogService), typeof(LogService));
+builder.Services.RegisterService();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
