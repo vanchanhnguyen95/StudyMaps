@@ -1,12 +1,8 @@
 ﻿using Elastic02.Models.Test;
 using Elastic02.Utility;
-using Elasticsearch.Net;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Nest;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 
 namespace Elastic02.Services.Test
 {
@@ -40,352 +36,6 @@ namespace Elastic02.Services.Test
             _configuration = configuration;
             _vnShapeService = vnShapeService;
             _logService = logService;
-        }
-
-        public async Task<string> BulkAsyncMultiProvince(List<RoadNamePush> roadPushs)
-        {
-            try
-            {
-                if (!roadPushs.Any())
-                    return "Success - No data bulk";
-
-                List<RoadName> roads = new List<RoadName>();
-                List<RoadName> roadHaGiang = new List<RoadName>();//1
-                List<RoadName> roadCaoBang = new List<RoadName>();
-                List<RoadName> roadLaiChau = new List<RoadName>();
-                List<RoadName> roadLaoCai = new List<RoadName>();
-                List<RoadName> roadTuyenQuang = new List<RoadName>();
-                List<RoadName> roadBacKan = new List<RoadName>();
-                List<RoadName> roadLangSon = new List<RoadName>();
-                List<RoadName> roadDienBien = new List<RoadName>();
-                List<RoadName> roadYenBai = new List<RoadName>();
-                List<RoadName> roadThaiNguyen = new List<RoadName>();//10
-
-                List<RoadName> roadSonLa = new List<RoadName>();//11
-                List<RoadName> roadPhuTho = new List<RoadName>();
-                List<RoadName> roadVinhPhuc = new List<RoadName>();
-                List<RoadName> roadBacGiang = new List<RoadName>();
-                List<RoadName> roadQuangNinh = new List<RoadName>();
-                List<RoadName> roadHaNoi = new List<RoadName>();
-                List<RoadName> roadBacNinh = new List<RoadName>();
-                List<RoadName> roadHungYen = new List<RoadName>();
-                List<RoadName> roadHaiDuong = new List<RoadName>();
-                List<RoadName> roadHaiPhong = new List<RoadName>();//20
-
-                List<RoadName> roadHoaBinh = new List<RoadName>();//21
-                List<RoadName> roadHaNam = new List<RoadName>();
-                List<RoadName> roadThaiBinh = new List<RoadName>();
-                List<RoadName> roadNinhBinh = new List<RoadName>();
-                List<RoadName> roadNamDinh = new List<RoadName>();
-                List<RoadName> roadThanhHoa = new List<RoadName>();
-                List<RoadName> roadNgheAn = new List<RoadName>();
-                List<RoadName> roadHaTinh = new List<RoadName>();
-                List<RoadName> roadQuangBinh = new List<RoadName>();
-                List<RoadName> roadQuangTri = new List<RoadName>();//30
-
-                List<RoadName> roadThuaThienHue = new List<RoadName>();//31
-                List<RoadName> roadDaNang = new List<RoadName>();
-                List<RoadName> roadQuangNam = new List<RoadName>();
-                List<RoadName> roadKonTum = new List<RoadName>();
-                List<RoadName> roadQuangNgai = new List<RoadName>();
-                List<RoadName> roadGiaLai = new List<RoadName>();
-                List<RoadName> roadBinhDinh = new List<RoadName>();
-                List<RoadName> roadPhuYen = new List<RoadName>();
-                List<RoadName> roadDaklak = new List<RoadName>();
-                List<RoadName> roadKhanhHoa = new List<RoadName>();//40
-
-                List<RoadName> roadDakNong = new List<RoadName>();//41
-                List<RoadName> roadBinhPhuoc = new List<RoadName>();
-                List<RoadName> roadLamDong = new List<RoadName>();
-                List<RoadName> roadNinhThuan = new List<RoadName>();
-                List<RoadName> roadTayNinh = new List<RoadName>();
-                List<RoadName> roadBinhDuong = new List<RoadName>();
-                List<RoadName> roadDongNai = new List<RoadName>();
-                List<RoadName> roadBinhThuan = new List<RoadName>();
-                List<RoadName> roadLongAn = new List<RoadName>();
-                List<RoadName> roadHoChiMinh = new List<RoadName>();//50
-
-                List<RoadName> roadVungTau = new List<RoadName>();//51
-                List<RoadName> roadAnGiang = new List<RoadName>();
-                List<RoadName> roadDongThap = new List<RoadName>();
-                List<RoadName> roadTienGiang = new List<RoadName>();
-                List<RoadName> roadKienGiang = new List<RoadName>();
-                List<RoadName> roadCanTho = new List<RoadName>();
-                List<RoadName> roadVinhLong = new List<RoadName>();
-                List<RoadName> roadBenTre = new List<RoadName>();
-                List<RoadName> roadHauGiang = new List<RoadName>();
-                List<RoadName> roadSocTrang = new List<RoadName>();//60
-                List<RoadName> roadTraVinh = new List<RoadName>();
-                List<RoadName> roadBacLieu = new List<RoadName>();
-                List<RoadName> roadCaMau = new List<RoadName>();
-
-                // Phân chia dữ liệu từng tỉnh
-                foreach (var road in roadPushs)
-                {
-                    switch (road.ProvinceID)
-                    {
-                        case 1:
-                            roadHaGiang.Add(new RoadName(road));
-                            break;
-                        case 2:
-                            roadCaoBang.Add(new RoadName(road));
-                            break;
-                        case 3:
-                            roadLaiChau.Add(new RoadName(road));
-                            break;
-                        case 4:
-                            roadLaoCai.Add(new RoadName(road));
-                            break;
-                        case 5:
-                            roadTuyenQuang.Add(new RoadName(road));
-                            break;
-                        case 6:
-                            roadBacKan.Add(new RoadName(road));
-                            break;
-                        case 7:
-                            roadLangSon.Add(new RoadName(road));
-                            break;
-                        case 8:
-                            roadDienBien.Add(new RoadName(road));
-                            break;
-                        case 9:
-                            roadYenBai.Add(new RoadName(road));
-                            break;
-                        case 10:
-                            roadThaiNguyen.Add(new RoadName(road));
-                            break;
-                        case 11:
-                            roadSonLa.Add(new RoadName(road));
-                            break;
-                        case 12:
-                            roadPhuTho.Add(new RoadName(road));
-                            break;
-                        case 13:
-                            roadVinhPhuc.Add(new RoadName(road));
-                            break;
-                        case 14:
-                            roadBacGiang.Add(new RoadName(road));
-                            break;
-                        case 15:
-                            roadQuangNinh.Add(new RoadName(road));
-                            break;
-                        case 16:
-                            roadHaNoi.Add(new RoadName(road));
-                            break;
-                        case 17:
-                            roadBacNinh.Add(new RoadName(road));
-                            break;
-                        case 18:
-                            roadHungYen.Add(new RoadName(road));
-                            break;
-                        case 19:
-                            roadHaiDuong.Add(new RoadName(road));
-                            break;
-                        case 20:
-                            roadHaiPhong.Add(new RoadName(road));
-                            break;
-
-                        case 21:
-                            roadHoaBinh.Add(new RoadName(road));
-                            break;
-                        case 22:
-                            roadHaNam.Add(new RoadName(road));
-                            break;
-                        case 23:
-                            roadThaiBinh.Add(new RoadName(road));
-                            break;
-                        case 24:
-                            roadNinhBinh.Add(new RoadName(road));
-                            break;
-                        case 25:
-                            roadNamDinh.Add(new RoadName(road));
-                            break;
-                        case 26:
-                            roadThanhHoa.Add(new RoadName(road));
-                            break;
-                        case 27:
-                            roadNgheAn.Add(new RoadName(road));
-                            break;
-                        case 28:
-                            roadHaTinh.Add(new RoadName(road));
-                            break;
-                        case 29:
-                            roadQuangBinh.Add(new RoadName(road));
-                            break;
-                        case 30:
-                            roadQuangTri.Add(new RoadName(road));
-                            break;
-                        case 31:
-                            roadThuaThienHue.Add(new RoadName(road));
-                            break;
-                        case 32:
-                            roadDaNang.Add(new RoadName(road));
-                            break;
-                        case 33:
-                            roadQuangNam.Add(new RoadName(road));
-                            break;
-                        case 34:
-                            roadKonTum.Add(new RoadName(road));
-                            break;
-                        case 35:
-                            roadQuangNgai.Add(new RoadName(road));
-                            break;
-                        case 36:
-                            roadGiaLai.Add(new RoadName(road));
-                            break;
-                        case 37:
-                            roadBinhDinh.Add(new RoadName(road));
-                            break;
-                        case 38:
-                            roadPhuYen.Add(new RoadName(road));
-                            break;
-                        case 39:
-                            roadDaklak.Add(new RoadName(road));
-                            break;
-                        case 40:
-                            roadKhanhHoa.Add(new RoadName(road));
-                            break;
-
-                        case 41:
-                            roadDakNong.Add(new RoadName(road));
-                            break;
-                        case 42:
-                            roadBinhPhuoc.Add(new RoadName(road));
-                            break;
-                        case 43:
-                            roadLamDong.Add(new RoadName(road));
-                            break;
-                        case 44:
-                            roadNinhThuan.Add(new RoadName(road));
-                            break;
-                        case 45:
-                            roadTayNinh.Add(new RoadName(road));
-                            break;
-                        case 46:
-                            roadBinhDuong.Add(new RoadName(road));
-                            break;
-                        case 47:
-                            roadDongNai.Add(new RoadName(road));
-                            break;
-                        case 48:
-                            roadBinhThuan.Add(new RoadName(road));
-                            break;
-                        case 49:
-                            roadLongAn.Add(new RoadName(road));
-                            break;
-                        case 50:
-                            roadHoChiMinh.Add(new RoadName(road));
-                            break;
-
-                        case 51:
-                            roadVungTau.Add(new RoadName(road));
-                            break;
-                        case 52:
-                            roadAnGiang.Add(new RoadName(road));
-                            break;
-                        case 53:
-                            roadDongThap.Add(new RoadName(road));
-                            break;
-                        case 54:
-                            roadTienGiang.Add(new RoadName(road));
-                            break;
-                        case 55:
-                            roadKienGiang.Add(new RoadName(road));
-                            break;
-                        case 56:
-                            roadCanTho.Add(new RoadName(road));
-                            break;
-                        case 57:
-                            roadVinhLong.Add(new RoadName(road));
-                            break;
-                        case 58:
-                            roadBenTre.Add(new RoadName(road));
-                            break;
-                        case 59:
-                            roadHauGiang.Add(new RoadName(road));
-                            break;
-                        case 60:
-                            roadSocTrang.Add(new RoadName(road));
-                            break;
-
-                        case 61:
-                            roadTraVinh.Add(new RoadName(road));
-                            break;
-                        case 62:
-                            roadBacLieu.Add(new RoadName(road));
-                            break;
-                        case 63:
-                            roadCaMau.Add(new RoadName(road));
-                            break;
-                    }
-                }
-
-                // Bulk insert dữ liệu từng tỉnh
-                if (roadHaGiang.Any())//1
-                    await BulkAsyncByProvince(roadHaGiang, "hagiang");
-
-                if (roadCaoBang.Any())
-                    await BulkAsyncByProvince(roadCaoBang, "caobang");
-
-                if (roadLaiChau.Any())
-                    await BulkAsyncByProvince(roadLaiChau, "laichau");
-
-                if (roadLaoCai.Any())
-                    await BulkAsyncByProvince(roadLaoCai, "laocai");
-
-                if (roadTuyenQuang.Any())
-                    await BulkAsyncByProvince(roadTuyenQuang, "tuyenquang");
-
-                if (roadBacKan.Any())
-                    await BulkAsyncByProvince(roadBacKan, "backan");
-
-                if (roadLangSon.Any())
-                    await BulkAsyncByProvince(roadLangSon, "langson");
-
-                if (roadDienBien.Any())
-                    await BulkAsyncByProvince(roadDienBien, "dienbien");
-
-                if (roadYenBai.Any())
-                    await BulkAsyncByProvince(roadYenBai, "yenbai");
-
-                if (roadThaiNguyen.Any())//10
-                    await BulkAsyncByProvince(roadThaiNguyen, "thainguyen");
-
-                if (roadSonLa.Any())//11
-                    await BulkAsyncByProvince(roadSonLa, "sonla");
-
-                if (roadPhuTho.Any())
-                    await BulkAsyncByProvince(roadPhuTho, "phutho");
-
-                if (roadVinhPhuc.Any())
-                    await BulkAsyncByProvince(roadVinhPhuc, "vinhphuc");
-
-                if (roadBacGiang.Any())
-                    await BulkAsyncByProvince(roadBacGiang, "bacgiang");
-
-                if (roadQuangNinh.Any())
-                    await BulkAsyncByProvince(roadQuangNinh, "quangninh");
-
-                if (roadHaNoi.Any())
-                    await BulkAsyncByProvince(roadHaNoi, "hanoi");
-
-                if (roadBacNinh.Any())
-                    await BulkAsyncByProvince(roadBacNinh, "bacninh");
-
-                if (roadHungYen.Any())
-                    await BulkAsyncByProvince(roadHungYen, "hungyen");
-
-                if (roadHaiDuong.Any())
-                    await BulkAsyncByProvince(roadHaiDuong, "haiduong");
-
-                if (roadHaiPhong.Any())
-                    await BulkAsyncByProvince(roadHaiPhong, "haiphong");//20
-
-
-
-                return "Success";
-            }
-            catch (Exception ex) { return ex.ToString(); }
         }
 
         public async Task<string> BulkAsync(List<RoadNamePush> roadPushs)
@@ -520,8 +170,9 @@ namespace Elastic02.Services.Test
                 //Tìm kiếm theo tọa độ
                 if (string.IsNullOrEmpty(keyword))
                 {
-                    int provinceid = await GetProvinceId(lat, lng, null);
-                    res = await GetDataByLocation(lat, lng, distance, size, provinceid);
+                    //int provinceid = await GetProvinceId(lat, lng, null);
+                    //res = await GetDataByLocation(lat, lng, distance, size, provinceid);
+                    res = await GetDataByLocation(lat, lng, distance, size);
                 }
                 // Tìm kiếm theo từ khóa
                 else if (lat == 0 && lng == 0)
@@ -531,8 +182,8 @@ namespace Elastic02.Services.Test
                 // Tìm kiếm theo tọa độ và từ khóa
                 else
                 {
-                    int provinceid = await GetProvinceId(lat, lng, null);
-                    res = await GetDataByLocationKeyWord(lat, lng, distance, size, keyword, provinceid);
+                    //int provinceid = await GetProvinceId(lat, lng, null);
+                    res = await GetDataByLocationKeyWord(lat, lng, distance, size, keyword);
                 }
 
                 if (res.Any())
@@ -555,15 +206,10 @@ namespace Elastic02.Services.Test
                 List<RoadName> res = new List<RoadName>();
                 List<RoadNamePush> result = new List<RoadNamePush>();
 
-                int provinceid = 16;
-
-                if (lat != 0 && lng != 0)
-                    provinceid = await GetProvinceId(lat, lng, null);
-
                 // Tìm kiếm theo tọa độ
                 if (string.IsNullOrEmpty(keyword))
                 {
-                    res = await GetDataByLocation(lat, lng, distance, size, provinceid);
+                    res = await GetDataByLocation(lat, lng, distance, size);
                 }
                 // Tìm kiếm theo từ khóa
                 else if (lat == 0 && lng == 0)
@@ -573,7 +219,7 @@ namespace Elastic02.Services.Test
                 // Tìm kiếm theo tọa độ và từ khóa
                 else
                 {
-                    res = await GetDataByLocationKeyWord(lat, lng, distance, size, keyword, provinceid);
+                    res = await GetDataByLocationKeyWord(lat, lng, distance, size, keyword);
                 }
 
                 if (res.Any())
@@ -590,11 +236,55 @@ namespace Elastic02.Services.Test
             }
         }
 
-        // Tìm kiếm theo tọa độ
-        private async Task<List<RoadName>> GetDataByLocation(double lat, double lng, string distance, int size)
+        public async Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, string distance, int size, string keyword, int type)
         {
             try
             {
+                //_logService.WriteLog($"GetDataSuggestion Start - keyword: {keyword}", LogLevel.Info);
+
+                List<RoadName> res = new List<RoadName>();
+                List<RoadNamePush> result = new List<RoadNamePush>();
+
+                // Tìm kiếm theo tọa độ
+                if (string.IsNullOrEmpty(keyword))
+                {
+                    res = await GetDataByLocation(lat, lng, distance, size, type);
+                }
+                // Tìm kiếm theo từ khóa
+                else if (lat == 0 && lng == 0)
+                {
+                    res = await GetDataByKeyWord(size, keyword, type);
+                }
+                // Tìm kiếm theo tọa độ và từ khóa
+                else
+                {
+                    res = await GetDataByLocationKeyWord(lat, lng, distance, size, keyword, type);
+                }
+
+                if (res.Any())
+                    res.ForEach(item => result.Add(new RoadName(item)));
+
+                //_logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                _logService.WriteLog($"GetDataSuggestion - keyword: {keyword} Err - {ex}", LogLevel.Error);
+                return new List<RoadNamePush>();
+            }
+        }
+
+        // Tìm kiếm theo tọa độ
+        private async Task<List<RoadName>> GetDataByLocationOld(double lat, double lng, string distance, int size)
+        {
+            try
+            {
+                int provinceid = 16;
+
+                if (lat != 0 && lng != 0)
+                    provinceid = await GetProvinceId(lat, lng, null);
+
                 var geo = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
                    .Size(size)
                    .Sort(s => s
@@ -635,11 +325,72 @@ namespace Elastic02.Services.Test
             }
         }
 
-        private async Task<List<RoadName>> GetDataByLocation(double lat, double lng, string distance, int size, int provinceID)
+        private async Task<List<RoadName>> GetDataByLocation(double lat, double lng, string distance, int size, int type)
         {
             try
             {
-                var geo = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
+                int provinceID = 16;
+
+                if (lat != 0 && lng != 0)
+                    provinceID = await GetProvinceId(lat, lng, null);
+
+                List<RoadName> result = new List<RoadName>();
+
+                if (type == -1)
+                {
+                    var result1 = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
+                       .Size(size)
+                       .Query(q => q.Bool(
+                           b => b.Must(mu => mu.Match(ma =>
+                                ma.Field(f => f.ProvinceID).Query(provinceID.ToString())
+                           )
+                        ))
+                       )
+                       .PostFilter(q => q.GeoDistance(
+                            g => g
+                            .Distance(distance)
+                            .DistanceType(GeoDistanceType.Arc)
+                            .Location(lat, lng)
+                            .ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                            .IgnoreUnmapped()
+                            .Boost(1.1)
+                            .Name("named_query")
+                            .Field(p => p.Location)
+                        ))
+                       .Sort(s => s.Descending(SortSpecialField.Score).Ascending(f => f.NameExt)
+                                .GeoDistance(
+                                            d => d
+                                            .Field(f => f.Location)
+                                            .Order(SortOrder.Ascending).Points(new GeoLocation(lat, lng))
+                                            .Unit(DistanceUnit.Meters).Mode(SortMode.Min)
+                                            )
+                       )
+                       .MinScore(5.0)
+                       .Scroll(1)
+                       );
+
+                    result = result1.Documents.ToList().OrderBy(x => x.Priority).ToList();
+                    return result;
+                }
+
+                return await GetDataByLocation(lat, lng, distance, size);
+            }
+            catch
+            {
+                return new List<RoadName>();
+            }
+        }
+
+        private async Task<List<RoadName>> GetDataByLocation(double lat, double lng, string distance, int size)
+        {
+            try
+            {
+                int provinceID = 16;
+
+                if (lat != 0 && lng != 0)
+                    provinceID = await GetProvinceId(lat, lng, null);
+
+                var result = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
                    .Size(size)
                    .Query(q => q.Bool(
                        b => b.Must(mu => mu.Match(ma =>
@@ -670,7 +421,7 @@ namespace Elastic02.Services.Test
                    .Scroll(1)
                    );
 
-                return geo.Documents.ToList();
+                return result.Documents.ToList();
             }
             catch
             {
@@ -692,7 +443,9 @@ namespace Elastic02.Services.Test
             }
             return u;
         }
-        private async Task<List<RoadName>> GetDataByKeyWord(int size, string keyword)
+
+        // Tìm kiếm theo từ khóa
+        private async Task<List<RoadName>> GetDataByKeyWord2(int size, string keyword)
         {
             try
             {
@@ -705,7 +458,7 @@ namespace Elastic02.Services.Test
                 List<Job> lst = new List<Job>();
 
                 var searchRequest = new SearchRequest<RoadName>(_indexName);
-               
+
 
                 List<QueryContainer> must = new List<QueryContainer>();
 
@@ -758,7 +511,7 @@ namespace Elastic02.Services.Test
                     Query = keywordAscii,
                     Fuzziness = Fuzziness.EditDistance(1),
                     Analyzer = "vn_analyzer"
-                    
+
                 };
 
                 var matchQuery3 = new MatchQuery
@@ -783,14 +536,13 @@ namespace Elastic02.Services.Test
                     new FieldSort { Field = "_score", Order = SortOrder.Descending }
                 };
 
-                var boolQuery = new BoolQuery {
+                var boolQuery = new BoolQuery
+                {
                     IsStrict = true,
                     Must = queryContainerList,
                     Boost = 1.1
                 };
 
-
-                //var bo = new BoolQueryDescriptor<RoadName>() { };
 
                 searchRequest.Sort = sort;
                 searchRequest.From = 0;
@@ -798,11 +550,11 @@ namespace Elastic02.Services.Test
                 searchRequest.TrackTotalHits = true;
                 searchRequest.Query = boolQuery;
 
-               var searchResponse = await _client.SearchAsync<RoadName>(searchRequest);
+                var searchResponse = await _client.SearchAsync<RoadName>(searchRequest);
                 if (searchResponse.IsValid)
                     return searchResponse.Documents.ToList();
 
-                
+
 
                 return new List<RoadName>();
             }
@@ -810,9 +562,78 @@ namespace Elastic02.Services.Test
             { return new List<RoadName>(); }
         }
 
+        private async Task<List<RoadName>> GetDataByKeyWord(int size, string keyword, int type)
+        {
+            try
+            {
+                string keywordAscii = string.Empty;
 
-        // Tìm kiếm theo từ khóa
-        private async Task<List<RoadName>> GetDataByKeyWord2(int size, string keyword)
+                if (!string.IsNullOrEmpty(keyword))
+                    keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
+
+                if (type == -1)
+                    return await GetDataByKeyWordNoNameExt(size, keyword);
+
+                return await GetDataByKeyWord(size, keyword);
+            }
+            catch
+            {
+                return new List<RoadName>();
+            }
+        }
+
+        private async Task<List<RoadName>> GetDataByKeyWordNoNameExt(int size, string keyword)
+        {
+            try
+            {
+                string keywordAscii = string.Empty;
+
+                if (!string.IsNullOrEmpty(keyword))
+                    keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
+
+                var result = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
+                    .Size(size)
+                    .Query(q => q.Bool(
+                        b => b.Must(mu =>
+                        mu.Match(ma =>
+                        ma.Field(f => f.KeywordsAsciiNoExt).Name("named_query").Analyzer("vn_analyzer3").Query(keywordAscii).Fuzziness(Fuzziness.Auto)
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
+                        &&
+                        mu.Match(ma =>
+                        ma.Field(f => f.KeywordsAscii).Name("named_query").Analyzer("vn_analyzer").Query(keywordAscii).Fuzziness(Fuzziness.EditDistance(0))
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
+                        && mu.Match(ma =>
+                        ma.Field(f => f.Keywords).Name("named_query").Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.EditDistance(1))
+                        .AutoGenerateSynonymsPhraseQuery()
+                        )
+
+                        //&& mu.Match(ma =>
+                        //ma.Field(f => f.KeywordsNoExt).Name("named_query").Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.Auto)
+                        //.AutoGenerateSynonymsPhraseQuery()
+                        //)
+                        //&& mu.Match(ma =>
+                        //ma.Field(f => f.RoadName).Name("named_query").Analyzer("vn_analyzer").Query(keyword)
+                        //.AutoGenerateSynonymsPhraseQuery()
+                        //)
+                        )
+
+                     )
+                    )
+                   .MinScore(5.0)
+                   .Sort(s => s.Descending(SortSpecialField.Score))
+                   .Scroll(1));
+                List<RoadName> res = result.Documents.ToList();
+                return res.OrderBy(x => x.Priority).ToList();
+            }
+            catch
+            {
+                return new List<RoadName>();
+            }
+        }
+
+        private async Task<List<RoadName>> GetDataByKeyWord(int size, string keyword)
         {
             try
             {
@@ -867,11 +688,26 @@ namespace Elastic02.Services.Test
         }
 
         // Tìm kiếm theo tọa độ và từ khóa
+        private async Task<List<RoadName>> GetDataByLocationKeyWord(double lat, double lng, string distance, int size, string keyword, int type)
+        {
+            try
+            {
+                if (type == -1)
+                    return await GetDataByLocationKeyWordType(lat, lng, distance, size, keyword);
+
+                return await GetDataByLocationKeyWord(lat, lng, distance, size, keyword);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         private async Task<List<RoadName>> GetDataByLocationKeyWord(double lat, double lng, string distance, int size, string keyword)
         {
             try
             {
-                var geo = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
+                var result = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
                    .Size(size)
                    .Query(q => q.Bool(
                         b => b.Must(mu => mu.Match(ma =>
@@ -892,7 +728,7 @@ namespace Elastic02.Services.Test
                    .Scroll(1)
                    );
 
-                return geo.Documents.ToList();
+                return result.Documents.ToList();
             }
             catch
             {
@@ -900,7 +736,7 @@ namespace Elastic02.Services.Test
             }
         }
 
-        private async Task<List<RoadName>> GetDataByLocationKeyWord(double lat, double lng, string distance, int size, string keyword, int provinceID)
+        private async Task<List<RoadName>> GetDataByLocationKeyWordType(double lat, double lng, string distance, int size, string keyword)
         {
             try
             {
@@ -909,38 +745,49 @@ namespace Elastic02.Services.Test
                 if (!string.IsNullOrEmpty(keyword))
                     keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
 
-                var geo = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
-                   .Size(size)
-                   .Query(q => q.Bool(
-                        b => b.Must(mu => mu.Match(ma =>
-                        ma.Field(f => f.KeywordsAscii).Name("named_query").Query(keywordAscii).Analyzer("vn_analyzer").Fuzziness(Fuzziness.Auto)
-                        .AutoGenerateSynonymsPhraseQuery())
-                        //&& mu.Match(ma =>
-                        //ma.Field(f => f.RoadName).Query(keyword)
-                        //.AutoGenerateSynonymsPhraseQuery()
-                        //)
-                        && mu.Match(ma =>
-                        ma.Field(f => f.ProvinceID).Query(provinceID.ToString()))
+                int provinceID = 16;
 
-                    )))
-                   .PostFilter(q => q.GeoDistance(
-                        g => g.Boost(1.1).Name("named_query")
-                        .Field(p => p.Location)
-                        .DistanceType(GeoDistanceType.Arc).Location(lat, lng)
-                        .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
-                    ))
-                   .MinScore(5.0)
-                   .Sort(s => s.Descending(SortSpecialField.Score))
-                   //.Scroll(1)
-                   );
+                if (lat != 0 && lng != 0)
+                {
+                    provinceID = await GetProvinceId(lat, lng, null);
+                }
 
-                return geo.Documents.ToList();
+                List<RoadName> res = new List<RoadName>();
+
+                var result = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
+                                       .Size(size)
+                                       .Query(q => q.Bool(
+                                            b => b.Must(mu => mu.Match(ma =>
+                                            ma.Field(f => f.KeywordsAscii).Name("named_query").Query(keywordAscii).Analyzer("vn_analyzer").Fuzziness(Fuzziness.Auto)
+                                            .AutoGenerateSynonymsPhraseQuery())
+                                            //&& mu.Match(ma =>
+                                            //ma.Field(f => f.RoadName).Query(keyword)
+                                            //.AutoGenerateSynonymsPhraseQuery()
+                                            //)
+                                            && mu.Match(ma =>
+                                            ma.Field(f => f.ProvinceID).Query(provinceID.ToString()))
+
+                                        )))
+                                       .PostFilter(q => q.GeoDistance(
+                                            g => g.Boost(1.1).Name("named_query")
+                                            .Field(p => p.Location)
+                                            .DistanceType(GeoDistanceType.Arc).Location(lat, lng)
+                                            .Distance(distance).ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                                        ))
+                                       .MinScore(5.0)
+                                       .Sort(s => s.Descending(SortSpecialField.Score))
+                                       //.Scroll(1)
+                                       );
+                res = result.Documents.ToList();
+
+                return res.OrderBy(x => x.Priority).ToList();
             }
             catch
             {
                 return null;
             }
         }
+
 
         public async Task<string> CreateIndex(string indexName)
         {
@@ -986,6 +833,12 @@ namespace Elastic02.Services.Test
                                     "tphcm,tp.hcm,tp hồ chí minh,sài gòn, saigon"
                                }
                            })
+                           .Stop("stop_filter", st => new StopTokenFilter
+                           {
+                               StopWords = new List<string>()
+                               { "H.","h.","Q.","q.","TP.","tp.","TX.","tx."
+                               }
+                           })
                        )
                        .Analyzers(an => an
                            .Custom("keyword_analyzer", ca => ca
@@ -996,6 +849,11 @@ namespace Elastic02.Services.Test
                                .CharFilters("html_strip")
                                .Tokenizer("vi_tokenizer")
                                .Filters("lowercase", "stop", "ascii_folding")
+                           )
+                           .Custom("vn_analyzer3", ca => ca
+                               .CharFilters("html_strip")
+                               .Tokenizer("vi_tokenizer")
+                               .Filters("lowercase", "ascii_folding", "stop_filter")
                            )
                            .Custom("vi_analyzer2", ca => ca
                                 .CharFilters("province_name")
@@ -1160,5 +1018,7 @@ namespace Elastic02.Services.Test
                 return new List<RoadName>();
             }    
         }
+
+        
     }
 }

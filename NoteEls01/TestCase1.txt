@@ -1,0 +1,98 @@
+Text tìm kiếm sẽ là tổ hợp của RoadName, NameExt, [Address] (Tên tỉnh)
+
+http://localhost:56054/swagger/index.html
+
+curl -X POST "https://localhost:5001/api/v1/RouteSpeedProvider/Push" -H  "accept: */*" -H  "Content-Type: application/json" -d "{\"data\":[{\"lat\":1,\"lng\":1,\"minSpeed\":1,\"maxSpeed\":1,\"providerType\":1,\"pointError\":true,\"segmentID\":0,\"direction\":0}]}"
+
+ access-control-allow-origin: * 
+ api-supported-versions: 1 
+ content-length: 0 
+ date: Thu06 Apr 2023 09:27:32 GMT 
+ server: Kestrel 
+ 
+  if (response.IsSuccessStatusCode)
+                    {
+                        var readTask = response.Content.ReadAsAsync<GeocodeBulkResponse>();
+                        readTask.Wait();
+
+                        var insertedStudent = readTask.Result;
+
+                    }
+					
+					D:\Project\VTGH\HN_NgheAnConvert.xlsx
+					
+					/****** Script for SelectTopNRows command from SSMS  ******/
+SELECT  
+ [STT]
+      ,[SpeedGPS]
+      ,[SpeedPQA]
+      ,[Address]
+      ,[FileName],
+	[Lat]
+      ,[Lng]
+      ,[ProviderType]
+	   ,[SpeedDetect]
+      ,[Position]
+      ,[MinSpeed]
+      ,[MaxSpeed]
+      ,[PointError]
+      ,[SegmentID]
+      ,[IsUpdateSpeed]
+      ,[Direction]
+     
+      ,[RouteType]
+      ,[IsUpdSpeedPQA]
+      ,[CreatedDate]
+      ,[UpdatedDate]
+      ,[CreatedBy]
+      ,[UpdatedBy]
+      ,[DeleteFlag]
+      ,[UpdateCount]
+  FROM [SpeedPQA].[dbo].[SpeedLimitPQA] where RouteType = '2'  order by STT
+
+  --truncate table [SpeedPQA].[dbo].[SpeedLimitPQA]
+  
+  
+  // using System.Xml.Serialization;
+// XmlSerializer serializer = new XmlSerializer(typeof(Envelope));
+// using (StringReader reader = new StringReader(xml))
+// {
+//    var test = (Envelope)serializer.Deserialize(reader);
+// }
+
+GetDataByKeyWordNoNameExt
+Q. Bình Tân
+TX. Buôn Hồ
++====1=======
+ngo thi nham nam dinh
+ngo thi nham ha noi
+ngo thi nham ha nam
+ngo thi nham lao cai
+ngo thi nham dong nai
+ngo thi nham quang nam
+
++====2=======
+hai ba trung ha noi
+hai ba trung soc trang
+hai ba trung binh duong
+hai ba trung hai duong
+hai ba trung binh dinh
+hai ba trung ninh binh
+hai ba trung thai binh
+hai ba trung binh phuoc
+
++====3=======
+pham van dong ha noi
+pham van dong ho chi minh
+pham van dong hai duong
+pham van dong an giang
+pham van dong da nang
+pham van dong quang binh
+
++====4=======
+vo nguyen giap ha noi
+vo nguyen giap can tho
+vo nguyen giap lao cai
+vo nguyen giap quang binh
+vo nguyen giap quang ninh
+vo nguyen giap binh thuan

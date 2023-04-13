@@ -1,7 +1,5 @@
 ﻿using Elastic02.Utility;
 using Nest;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.IO;
 using System.ComponentModel;
 
 namespace Elastic02.Models.Test
@@ -30,7 +28,7 @@ namespace Elastic02.Models.Test
         public decimal Lat { get; set; } = 0;
     }
 
-    [ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-location"),]
+    [ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-ext"),]
     public class RoadName : RoadNamePush
     {
         [GeoPoint]
@@ -45,6 +43,15 @@ namespace Elastic02.Models.Test
         [Text(Index = true, Fielddata = true)]
         public string? KeywordsAscii { get; set; } = string.Empty;
 
+        [Text(Index = true, Fielddata = true)]
+        public string? KeywordsNoExt { get; set; } = string.Empty;
+
+        [Text(Index = true, Fielddata = true)]
+        public string? KeywordsAsciiNoExt { get; set; } = string.Empty;
+
+        public int Priority { get; set; } = 99;
+
+
         public RoadName(RoadNamePush other)
         {
             RoadID = other.RoadID;
@@ -55,6 +62,27 @@ namespace Elastic02.Models.Test
             AddressLower = other?.Address?.ToLower();
             Lng = other?.Lng ?? 0;
             Lat = other?.Lat ?? 0;
+            KeywordsNoExt = other?.RoadName;
+
+            if (other?.ProvinceID == 16)
+            {
+                Priority = 0;
+            }else if(other?.ProvinceID == 50)
+            {
+                Priority = 1;
+            }
+            else if (other?.ProvinceID == 32)
+            {
+                Priority = 2;
+            }
+            else if (other?.ProvinceID == 20)
+            {
+                Priority = 3;
+            }
+            else if (other?.ProvinceID == 56)
+            {
+                Priority = 4;
+            }
 
             //Location = other.Lat.ToString() + ", " + other.Lng.ToString();
             Location = new GeoLocation((double)Lat, (double)Lng);
@@ -71,7 +99,9 @@ namespace Elastic02.Models.Test
             if (!string.IsNullOrEmpty(other?.Address))
             {
                 Keywords += " , " + other?.Address?.ToString().ToLower();
-            }else
+                KeywordsNoExt += " , " + other?.Address?.ToString().ToLower();
+            }
+            else
             {
                 Keywords += " , ";
             }
@@ -81,6 +111,7 @@ namespace Elastic02.Models.Test
             //}
 
             KeywordsAscii = LatinToAscii.Latin2Ascii(Keywords);
+            KeywordsAsciiNoExt = LatinToAscii.Latin2Ascii(KeywordsNoExt??"");
         }
 
     }
