@@ -1,3 +1,9 @@
+publish code trên ubuntu:
+> Vào folder chưa project
+> sudo chmod -R 755 *
+> ls -all
+> dotnet teenproject.dll
+
 Install .net on Ubuntu
 
 sudo apt-get update && sudo apt-get upgrade

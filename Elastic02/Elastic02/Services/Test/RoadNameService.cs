@@ -3,6 +3,8 @@ using Elastic02.Utility;
 using Nest;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 namespace Elastic02.Services.Test
 {
@@ -236,7 +238,7 @@ namespace Elastic02.Services.Test
             }
         }
 
-        public async Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, string distance, int size, string keyword, int type)
+        private async Task<List<RoadNamePush>> GetDataSuggestion2(double lat, double lng, string distance, int size, string keyword, int type)
         {
             try
             {
@@ -429,137 +431,118 @@ namespace Elastic02.Services.Test
             }
         }
 
-        private Job ConvertDoc(IHit<Job> hit)
+        private MatchQuery MatchQuerySuggestion(string query, Field field, Fuzziness fuzziness, string analyzer = "vn_analyzer3")
         {
-            Job u = new Job();
+            return
+                new MatchQuery
+                {
+                    Boost = 2.0,
+                    //Operator = Operator.And,
+                    //Fuzziness = Fuzziness.Auto,
+                    //PrefixLength = 3,
+                    //MinimumShouldMatch = 1,
+                    //Lenient = true,
+                    ZeroTermsQuery = ZeroTermsQuery.None,
+                    //AutoGenerateSynonymsPhraseQuery = true,
+                    //Name = "world_query",
+                    //Boosting = 1.0,
+                    //AutoGeneratePhraseQueries = true,
+                    //CutoffFrequency = 0.001,
 
-            try
+                    AutoGenerateSynonymsPhraseQuery = true,
+                    Name = "named_query",
+                    //Field = Infer.Field<RoadName>(f => f.KeywordsAsciiNoExt),
+                    Field = field,
+                    Query = query,
+                    Fuzziness = fuzziness,
+                    Analyzer = "vn_analyzer3"
+                };
+        }
+        private GeoDistanceQuery GeoDistanceQuerySuggestion(string field, double lat, double lng, string distance)
+        {
+            return new GeoDistanceQuery
             {
-                u = hit.Source;
-                u.JobId = hit.Id;
-            }
-            catch
-            {
-            }
-            return u;
+                Boost = 2.0,
+                Name = "named_query",
+                DistanceType = GeoDistanceType.Arc,
+                Field = field,
+                Location = new GeoLocation(lat, lng),
+                Distance = distance,
+                ValidationMethod = GeoValidationMethod.IgnoreMalformed
+            };
         }
 
         // Tìm kiếm theo từ khóa
-        private async Task<List<RoadName>> GetDataByKeyWord2(int size, string keyword)
+        public async Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, string distance, int size, string keyword, int type)
         {
             try
             {
-                string? keywordAscii = string.Empty;
-                keyword = keyword.ToLower();
+                List<QueryContainer> must = new List<QueryContainer>();
+                List<QueryContainer> filter = new List<QueryContainer>();
+                var queryContainerList = new List<QueryContainer>();
+                var boolQuery = new BoolQuery();
 
                 if (!string.IsNullOrEmpty(keyword))
+                {
+                    string? keywordAscii = string.Empty;
+                    keyword = keyword.ToLower();
+
                     keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
 
-                List<Job> lst = new List<Job>();
+                    queryContainerList.Add(
+                        MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAsciiNoExt), Fuzziness.Auto, "vn_analyzer3"));
 
-                var searchRequest = new SearchRequest<RoadName>(_indexName);
+                    queryContainerList.Add(
+                       MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAscii), Fuzziness.EditDistance(0), "vn_analyzer"));
 
+                    queryContainerList.Add(
+                      MatchQuerySuggestion(keyword, Infer.Field<RoadName>(f => f.KeywordsAscii), Fuzziness.EditDistance(1), "vn_analyzer"));
+                }
 
-                List<QueryContainer> must = new List<QueryContainer>();
-
-                var queryContainerList = new List<QueryContainer>();
-
-                var matchQuery1 = new MatchQuery
+                if(lat > 0 && lng > 0)
                 {
-                    Boost = 2.0,
-                    //Operator = Operator.And,
-                    //Fuzziness = Fuzziness.Auto,
-                    //PrefixLength = 3,
-                    //MinimumShouldMatch = 1,
-                    //Lenient = true,
-                    ZeroTermsQuery = ZeroTermsQuery.None,
-                    //AutoGenerateSynonymsPhraseQuery = true,
-                    //Name = "world_query",
-                    //Boosting = 1.0,
-                    //Analyzer = "standard",
-                    //AutoGeneratePhraseQueries = true,
-                    //CutoffFrequency = 0.001,
+                    int provinceID = 16;
+                    provinceID = await GetProvinceId(lat, lng, null);
 
+                    queryContainerList.Add( new MatchQuery()
+                        {
+                            Field = "provinceID",
+                            Query = provinceID.ToString()
+                        }
+                     );
 
-                    AutoGenerateSynonymsPhraseQuery = true,
-                    Name = "named_query",
-                    Field = Infer.Field<RoadName>(f => f.Keywords),
-                    Query = keyword,
-                    Fuzziness = Fuzziness.EditDistance(0),
-                    Analyzer = "vn_analyzer"
-                };
+                    filter.Add(GeoDistanceQuerySuggestion("location", lat, lng, distance));
+                }
 
-                var matchQuery2 = new MatchQuery
-                {
-                    Boost = 2.0,
-                    //Operator = Operator.And,
-                    //Fuzziness = Fuzziness.Auto,
-                    //PrefixLength = 3,
-                    //MinimumShouldMatch = 1,
-                    //Lenient = true,
-                    ZeroTermsQuery = ZeroTermsQuery.None,
-                    //AutoGenerateSynonymsPhraseQuery = true,
-                    //Name = "world_query",
-                    //Boosting = 1.0,
-                    //Analyzer = "standard",
-                    //AutoGeneratePhraseQueries = true,
-                    //CutoffFrequency = 0.001,
+                boolQuery.IsStrict = true;
+                boolQuery.Boost = 1.1;
+                boolQuery.Must = queryContainerList;
+                boolQuery.Filter = filter;
 
-                    AutoGenerateSynonymsPhraseQuery = true,
-                    Name = "named_query",
-                    Field = Infer.Field<RoadName>(f => f.KeywordsAscii),
-                    Query = keywordAscii,
-                    Fuzziness = Fuzziness.EditDistance(1),
-                    Analyzer = "vn_analyzer"
-
-                };
-
-                var matchQuery3 = new MatchQuery
-                {
-                    AutoGenerateSynonymsPhraseQuery = true,
-                    Name = "named_query",
-                    Field = Infer.Field<RoadName>(f => f.KeywordsAscii),
-                    Query = keywordAscii,
-                    Fuzziness = Fuzziness.EditDistance(1),
-                    Analyzer = "vn_analyzer"
-
-                };
-
-                queryContainerList.Add(
-                    matchQuery1
-                    &&
-                    matchQuery2
+                var searchResponse = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
+                    .Size(size)
+                    .MinScore(5.0)
+                    .Scroll(1)
+                    .Sort(s => s.Descending(SortSpecialField.Score))
+                    .Query(q => q
+                        .Bool(b => b
+                            .Must(boolQuery)
+                        )
+                    ) 
                 );
 
-                var sort = new List<ISort>
-                {
-                    new FieldSort { Field = "_score", Order = SortOrder.Descending }
-                };
-
-                var boolQuery = new BoolQuery
-                {
-                    IsStrict = true,
-                    Must = queryContainerList,
-                    Boost = 1.1
-                };
-
-
-                searchRequest.Sort = sort;
-                searchRequest.From = 0;
-                searchRequest.Size = size;
-                searchRequest.TrackTotalHits = true;
-                searchRequest.Query = boolQuery;
-
-                var searchResponse = await _client.SearchAsync<RoadName>(searchRequest);
+                List<RoadNamePush> result = new List<RoadNamePush>();
                 if (searchResponse.IsValid)
-                    return searchResponse.Documents.ToList();
+                {
+                    searchResponse.Documents.OrderBy(x => x.Priority).ToList().ForEach(item => result.Add(new RoadName(item)));
+                    //_logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
+                    return result;
+                }
 
-
-
-                return new List<RoadName>();
+                return new List<RoadNamePush>();
             }
             catch
-            { return new List<RoadName>(); }
+            { return new List<RoadNamePush>(); }
         }
 
         private async Task<List<RoadName>> GetDataByKeyWord(int size, string keyword, int type)
