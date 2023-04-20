@@ -14,6 +14,7 @@ namespace Elastic02
             services.AddScoped(typeof(IHaNoiShapeService), typeof(HaNoiShapeService));
             services.AddScoped(typeof(IVietNamShapeService), typeof(VietNameShapeService));
             services.AddScoped(typeof(IRoadNameService), typeof(RoadNameService));
+            services.AddScoped(typeof(IProvinceService), typeof(ProvinceService));
             services.AddScoped(typeof(ILogService), typeof(LogService));
 
             //uilder.Services.AddScoped(typeof(IElasticRepository<>), typeof(ElasticRepository<>));

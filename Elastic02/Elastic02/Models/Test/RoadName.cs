@@ -1,6 +1,7 @@
 ﻿using Elastic02.Utility;
 using Nest;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Elastic02.Models.Test
 {
@@ -28,7 +29,7 @@ namespace Elastic02.Models.Test
         public decimal Lat { get; set; } = 0;
     }
 
-    [ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-ext"),]
+    [ElasticsearchType(IdProperty = nameof(Id)), Description("roadname-ext")]
     public class RoadName : RoadNamePush
     {
         [GeoPoint]
@@ -51,6 +52,8 @@ namespace Elastic02.Models.Test
 
         public int Priority { get; set; } = 99;
 
+        [NotMapped]
+        public double Similar { get; set; } = 0;
 
         public RoadName(RoadNamePush other)
         {
@@ -62,7 +65,7 @@ namespace Elastic02.Models.Test
             AddressLower = other?.Address?.ToLower();
             Lng = other?.Lng ?? 0;
             Lat = other?.Lat ?? 0;
-            KeywordsNoExt = other?.RoadName;
+            KeywordsNoExt = other?.RoadName?.ToLower();
 
             if (other?.ProvinceID == 16)
             {

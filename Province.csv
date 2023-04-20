@@ -1,0 +1,64 @@
+﻿ProvinceID,Code,VName,EName,Abbreviate
+1,HG,Hà Giang,Ha Giang,HaGiang
+2,CB,Cao Bằng,Cao Bang,CaoBang
+3,LC,Lai Châu,Lai Chau,LaiChau
+4,LCa,Lào Cai,Lao Cai,LaoCai
+5,TQ,Tuyên Quang,Tuyen Quang,TuyenQuang
+6,BK,Bắc Kạn,Bac Kan,BacKan
+7,LS,Lạng Sơn,Lang Son,LangSon
+8,ĐB,Điện Biên,Dien Bien,DienBien
+9,YB,Yên Bái,Yen Bai,YenBai
+10,TNg,Thái Nguyên,Thai Nguyen,ThaiNguyen
+11,SL,Sơn La,Son La,SonLa
+12,PT,Phú Thọ,Phu Tho,PhuTho
+13,VP,Vĩnh Phúc,Vinh Phuc,VinhPhuc
+14,BG,Bắc Giang,Bac Giang,BacGiang
+15,QN,Quảng Ninh,Quang Ninh,QuangNinh
+16,HAN,TP. Hà Nội,TP. Ha Noi,HaNoi
+17,BN,Bắc Ninh,Bac Ninh,BacNinh
+18,HY,Hưng Yên,Hung Yen,HungYen
+19,HD,Hải Dương,Hai Duong,HaiDuong
+20,HP,TP. Hải Phòng,TP. Hai Phong,HaiPhong
+21,HB,Hòa Bình,Hoa Binh,HoaBinh
+22,HNA,Hà Nam,Ha Nam,HaNam
+23,TB,Thái Bình,Thai Binh,ThaiBinh
+24,NB,Ninh Bình,Ninh Binh,NinhBinh
+25,NĐ,Nam Định,Nam Dinh,NamDinh
+26,TH,Thanh Hóa,Thanh Hoa,ThanhHoa
+27,NA,Nghệ An,Nghe An,NgheAn
+28,HT,Hà Tĩnh,Ha Tinh,HaTinh
+29,QB,Quảng Bình,Quang Binh,QuangBinh
+30,QT,Quảng Trị,Quang Tri,QuangTri
+31,TTH,Thừa Thiên Huế,Thua Thien Hue,ThuaThienHue
+32,ĐNa,TP. Đà Nẵng,TP. Da Nang,DaNang
+33,QNa,Quảng Nam,Quang Nam,QuangNam
+34,KT,Kon Tum,Kon Tum,KonTum
+35,QNg,Quảng Ngãi,Quang Ngai,QuangNgai
+36,GL,Gia Lai,Gia Lai,GiaLai
+37,BĐ,Bình Định,Binh Dinh,BinhDinh
+38,PY,Phú Yên,Phu Yen,PhuYen
+39,ĐL,Đắk Lắk,Dak Lak,DakLak
+40,KH,Khánh Hòa,Khanh Hoa,KhanhHoa
+41,ĐNo,Đắk Nông,Dak Nong,DakNong
+42,BP,Bình Phước,Binh Phuoc,BinhPhuoc
+43,LĐ,Lâm Đồng,Lam Dong,LamDong
+44,NT,Ninh Thuận,Ninh Thuan,NinhThuan
+45,TN,Tây Ninh,Tay Ninh,TayNinh
+46,BD,Bình Dương,Binh Duong,BinhDuong
+47,ĐN,Đồng Nai,Dong Nai,DongNai
+48,BTh,Bình Thuận,Binh Thuan,BinhThuan
+49,LA,Long An,Long An,LongAn
+50,SG,TP. Hồ Chí Minh,TP. Ho Chi Minh,HoChiMinh
+51,BV,Bà Rịa Vũng  Tàu,Ba Ria Vung  Tau,BaRiaVungTau
+52,AG,An Giang,An Giang,AnGiang
+53,ĐT,Đồng Tháp,Dong Thap,DongThap
+54,TG,Tiền Giang,Tien Giang,TienGiang
+55,KG,Kiên Giang,Kien Giang,KienGiang
+56,CT,Cần Thơ,Can Tho,CanTho
+57,VL,Vĩnh Long,Vinh Long,VinhLong
+58,BT,Bến Tre,Ben Tre,BenTre
+59,HGi,Hậu Giang,Hau Giang,HauGiang
+60,ST,Sóc Trăng,Soc Trang,SocTrang
+61,TV,Trà Vinh,Tra Vinh,TraVinh
+62,BL,Bạc Liêu,Bac Lieu,BacLieu
+63,CM,Cà Mau,Ca Mau,CaMau

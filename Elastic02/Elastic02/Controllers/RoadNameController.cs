@@ -52,18 +52,5 @@ namespace Elastic02.Controllers
             //return Ok(await _roadNameService.GetDataSuggestion(lat, lng, distance, size, keyword));
             return Ok(await _roadNameService.GetDataSuggestion(lat, lng, distance, size, keyword, type));
         }
-
-        [HttpGet]
-        [Route("GetRouting")]
-        public async Task<IActionResult> GetRouting(double latStart = 0, double lngStart = 0, double latEnd = 0, double lngEnd = 0, int size = 10)
-        {
-            //poingStart = new GeoLocation(20.97263381, 105.77930601);
-            //pointEnd = new GeoLocation(20.99874272, 105.81312923);
-
-            GeoLocation poingStart = new GeoLocation(latStart, lngStart);
-            GeoLocation pointEnd = new GeoLocation(latEnd, lngEnd);
-
-            return Ok(await _roadNameService.GetRouting(poingStart, pointEnd, size));
-        }
     }
 }

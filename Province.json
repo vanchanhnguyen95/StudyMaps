@@ -1,0 +1,443 @@
+[
+  {
+    "ProvinceID": 1,
+    "Code": "HG",
+    "VName": "Hà Giang",
+    "EName": "Ha Giang",
+    "Abbreviate": "HaGiang"
+  },
+  {
+    "ProvinceID": 2,
+    "Code": "CB",
+    "VName": "Cao Bằng",
+    "EName": "Cao Bang",
+    "Abbreviate": "CaoBang"
+  },
+  {
+    "ProvinceID": 3,
+    "Code": "LC",
+    "VName": "Lai Châu",
+    "EName": "Lai Chau",
+    "Abbreviate": "LaiChau"
+  },
+  {
+    "ProvinceID": 4,
+    "Code": "LCa",
+    "VName": "Lào Cai",
+    "EName": "Lao Cai",
+    "Abbreviate": "LaoCai"
+  },
+  {
+    "ProvinceID": 5,
+    "Code": "TQ",
+    "VName": "Tuyên Quang",
+    "EName": "Tuyen Quang",
+    "Abbreviate": "TuyenQuang"
+  },
+  {
+    "ProvinceID": 6,
+    "Code": "BK",
+    "VName": "Bắc Kạn",
+    "EName": "Bac Kan",
+    "Abbreviate": "BacKan"
+  },
+  {
+    "ProvinceID": 7,
+    "Code": "LS",
+    "VName": "Lạng Sơn",
+    "EName": "Lang Son",
+    "Abbreviate": "LangSon"
+  },
+  {
+    "ProvinceID": 8,
+    "Code": "ĐB",
+    "VName": "Điện Biên",
+    "EName": "Dien Bien",
+    "Abbreviate": "DienBien"
+  },
+  {
+    "ProvinceID": 9,
+    "Code": "YB",
+    "VName": "Yên Bái",
+    "EName": "Yen Bai",
+    "Abbreviate": "YenBai"
+  },
+  {
+    "ProvinceID": 10,
+    "Code": "TNg",
+    "VName": "Thái Nguyên",
+    "EName": "Thai Nguyen",
+    "Abbreviate": "ThaiNguyen"
+  },
+  {
+    "ProvinceID": 11,
+    "Code": "SL",
+    "VName": "Sơn La",
+    "EName": "Son La",
+    "Abbreviate": "SonLa"
+  },
+  {
+    "ProvinceID": 12,
+    "Code": "PT",
+    "VName": "Phú Thọ",
+    "EName": "Phu Tho",
+    "Abbreviate": "PhuTho"
+  },
+  {
+    "ProvinceID": 13,
+    "Code": "VP",
+    "VName": "Vĩnh Phúc",
+    "EName": "Vinh Phuc",
+    "Abbreviate": "VinhPhuc"
+  },
+  {
+    "ProvinceID": 14,
+    "Code": "BG",
+    "VName": "Bắc Giang",
+    "EName": "Bac Giang",
+    "Abbreviate": "BacGiang"
+  },
+  {
+    "ProvinceID": 15,
+    "Code": "QN",
+    "VName": "Quảng Ninh",
+    "EName": "Quang Ninh",
+    "Abbreviate": "QuangNinh"
+  },
+  {
+    "ProvinceID": 16,
+    "Code": "HAN",
+    "VName": "TP. Hà Nội",
+    "EName": "TP. Ha Noi",
+    "Abbreviate": "HaNoi"
+  },
+  {
+    "ProvinceID": 17,
+    "Code": "BN",
+    "VName": "Bắc Ninh",
+    "EName": "Bac Ninh",
+    "Abbreviate": "BacNinh"
+  },
+  {
+    "ProvinceID": 18,
+    "Code": "HY",
+    "VName": "Hưng Yên",
+    "EName": "Hung Yen",
+    "Abbreviate": "HungYen"
+  },
+  {
+    "ProvinceID": 19,
+    "Code": "HD",
+    "VName": "Hải Dương",
+    "EName": "Hai Duong",
+    "Abbreviate": "HaiDuong"
+  },
+  {
+    "ProvinceID": 20,
+    "Code": "HP",
+    "VName": "TP. Hải Phòng",
+    "EName": "TP. Hai Phong",
+    "Abbreviate": "HaiPhong"
+  },
+  {
+    "ProvinceID": 21,
+    "Code": "HB",
+    "VName": "Hòa Bình",
+    "EName": "Hoa Binh",
+    "Abbreviate": "HoaBinh"
+  },
+  {
+    "ProvinceID": 22,
+    "Code": "HNA",
+    "VName": "Hà Nam",
+    "EName": "Ha Nam",
+    "Abbreviate": "HaNam"
+  },
+  {
+    "ProvinceID": 23,
+    "Code": "TB",
+    "VName": "Thái Bình",
+    "EName": "Thai Binh",
+    "Abbreviate": "ThaiBinh"
+  },
+  {
+    "ProvinceID": 24,
+    "Code": "NB",
+    "VName": "Ninh Bình",
+    "EName": "Ninh Binh",
+    "Abbreviate": "NinhBinh"
+  },
+  {
+    "ProvinceID": 25,
+    "Code": "NĐ",
+    "VName": "Nam Định",
+    "EName": "Nam Dinh",
+    "Abbreviate": "NamDinh"
+  },
+  {
+    "ProvinceID": 26,
+    "Code": "TH",
+    "VName": "Thanh Hóa",
+    "EName": "Thanh Hoa",
+    "Abbreviate": "ThanhHoa"
+  },
+  {
+    "ProvinceID": 27,
+    "Code": "NA",
+    "VName": "Nghệ An",
+    "EName": "Nghe An",
+    "Abbreviate": "NgheAn"
+  },
+  {
+    "ProvinceID": 28,
+    "Code": "HT",
+    "VName": "Hà Tĩnh",
+    "EName": "Ha Tinh",
+    "Abbreviate": "HaTinh"
+  },
+  {
+    "ProvinceID": 29,
+    "Code": "QB",
+    "VName": "Quảng Bình",
+    "EName": "Quang Binh",
+    "Abbreviate": "QuangBinh"
+  },
+  {
+    "ProvinceID": 30,
+    "Code": "QT",
+    "VName": "Quảng Trị",
+    "EName": "Quang Tri",
+    "Abbreviate": "QuangTri"
+  },
+  {
+    "ProvinceID": 31,
+    "Code": "TTH",
+    "VName": "Thừa Thiên Huế",
+    "EName": "Thua Thien Hue",
+    "Abbreviate": "ThuaThienHue"
+  },
+  {
+    "ProvinceID": 32,
+    "Code": "ĐNa",
+    "VName": "TP. Đà Nẵng",
+    "EName": "TP. Da Nang",
+    "Abbreviate": "DaNang"
+  },
+  {
+    "ProvinceID": 33,
+    "Code": "QNa",
+    "VName": "Quảng Nam",
+    "EName": "Quang Nam",
+    "Abbreviate": "QuangNam"
+  },
+  {
+    "ProvinceID": 34,
+    "Code": "KT",
+    "VName": "Kon Tum",
+    "EName": "Kon Tum",
+    "Abbreviate": "KonTum"
+  },
+  {
+    "ProvinceID": 35,
+    "Code": "QNg",
+    "VName": "Quảng Ngãi",
+    "EName": "Quang Ngai",
+    "Abbreviate": "QuangNgai"
+  },
+  {
+    "ProvinceID": 36,
+    "Code": "GL",
+    "VName": "Gia Lai",
+    "EName": "Gia Lai",
+    "Abbreviate": "GiaLai"
+  },
+  {
+    "ProvinceID": 37,
+    "Code": "BĐ",
+    "VName": "Bình Định",
+    "EName": "Binh Dinh",
+    "Abbreviate": "BinhDinh"
+  },
+  {
+    "ProvinceID": 38,
+    "Code": "PY",
+    "VName": "Phú Yên",
+    "EName": "Phu Yen",
+    "Abbreviate": "PhuYen"
+  },
+  {
+    "ProvinceID": 39,
+    "Code": "ĐL",
+    "VName": "Đắk Lắk",
+    "EName": "Dak Lak",
+    "Abbreviate": "DakLak"
+  },
+  {
+    "ProvinceID": 40,
+    "Code": "KH",
+    "VName": "Khánh Hòa",
+    "EName": "Khanh Hoa",
+    "Abbreviate": "KhanhHoa"
+  },
+  {
+    "ProvinceID": 41,
+    "Code": "ĐNo",
+    "VName": "Đắk Nông",
+    "EName": "Dak Nong",
+    "Abbreviate": "DakNong"
+  },
+  {
+    "ProvinceID": 42,
+    "Code": "BP",
+    "VName": "Bình Phước",
+    "EName": "Binh Phuoc",
+    "Abbreviate": "BinhPhuoc"
+  },
+  {
+    "ProvinceID": 43,
+    "Code": "LĐ",
+    "VName": "Lâm Đồng",
+    "EName": "Lam Dong",
+    "Abbreviate": "LamDong"
+  },
+  {
+    "ProvinceID": 44,
+    "Code": "NT",
+    "VName": "Ninh Thuận",
+    "EName": "Ninh Thuan",
+    "Abbreviate": "NinhThuan"
+  },
+  {
+    "ProvinceID": 45,
+    "Code": "TN",
+    "VName": "Tây Ninh",
+    "EName": "Tay Ninh",
+    "Abbreviate": "TayNinh"
+  },
+  {
+    "ProvinceID": 46,
+    "Code": "BD",
+    "VName": "Bình Dương",
+    "EName": "Binh Duong",
+    "Abbreviate": "BinhDuong"
+  },
+  {
+    "ProvinceID": 47,
+    "Code": "ĐN",
+    "VName": "Đồng Nai",
+    "EName": "Dong Nai",
+    "Abbreviate": "DongNai"
+  },
+  {
+    "ProvinceID": 48,
+    "Code": "BTh",
+    "VName": "Bình Thuận",
+    "EName": "Binh Thuan",
+    "Abbreviate": "BinhThuan"
+  },
+  {
+    "ProvinceID": 49,
+    "Code": "LA",
+    "VName": "Long An",
+    "EName": "Long An",
+    "Abbreviate": "LongAn"
+  },
+  {
+    "ProvinceID": 50,
+    "Code": "SG",
+    "VName": "TP. Hồ Chí Minh",
+    "EName": "TP. Ho Chi Minh",
+    "Abbreviate": "HoChiMinh"
+  },
+  {
+    "ProvinceID": 51,
+    "Code": "BV",
+    "VName": "Bà Rịa Vũng  Tàu",
+    "EName": "Ba Ria Vung  Tau",
+    "Abbreviate": "BaRiaVungTau"
+  },
+  {
+    "ProvinceID": 52,
+    "Code": "AG",
+    "VName": "An Giang",
+    "EName": "An Giang",
+    "Abbreviate": "AnGiang"
+  },
+  {
+    "ProvinceID": 53,
+    "Code": "ĐT",
+    "VName": "Đồng Tháp",
+    "EName": "Dong Thap",
+    "Abbreviate": "DongThap"
+  },
+  {
+    "ProvinceID": 54,
+    "Code": "TG",
+    "VName": "Tiền Giang",
+    "EName": "Tien Giang",
+    "Abbreviate": "TienGiang"
+  },
+  {
+    "ProvinceID": 55,
+    "Code": "KG",
+    "VName": "Kiên Giang",
+    "EName": "Kien Giang",
+    "Abbreviate": "KienGiang"
+  },
+  {
+    "ProvinceID": 56,
+    "Code": "CT",
+    "VName": "Cần Thơ",
+    "EName": "Can Tho",
+    "Abbreviate": "CanTho"
+  },
+  {
+    "ProvinceID": 57,
+    "Code": "VL",
+    "VName": "Vĩnh Long",
+    "EName": "Vinh Long",
+    "Abbreviate": "VinhLong"
+  },
+  {
+    "ProvinceID": 58,
+    "Code": "BT",
+    "VName": "Bến Tre",
+    "EName": "Ben Tre",
+    "Abbreviate": "BenTre"
+  },
+  {
+    "ProvinceID": 59,
+    "Code": "HGi",
+    "VName": "Hậu Giang",
+    "EName": "Hau Giang",
+    "Abbreviate": "HauGiang"
+  },
+  {
+    "ProvinceID": 60,
+    "Code": "ST",
+    "VName": "Sóc Trăng",
+    "EName": "Soc Trang",
+    "Abbreviate": "SocTrang"
+  },
+  {
+    "ProvinceID": 61,
+    "Code": "TV",
+    "VName": "Trà Vinh",
+    "EName": "Tra Vinh",
+    "Abbreviate": "TraVinh"
+  },
+  {
+    "ProvinceID": 62,
+    "Code": "BL",
+    "VName": "Bạc Liêu",
+    "EName": "Bac Lieu",
+    "Abbreviate": "BacLieu"
+  },
+  {
+    "ProvinceID": 63,
+    "Code": "CM",
+    "VName": "Cà Mau",
+    "EName": "Ca Mau",
+    "Abbreviate": "CaMau"
+  }
+]

@@ -96,3 +96,17 @@ vo nguyen giap lao cai
 vo nguyen giap quang binh
 vo nguyen giap quang ninh
 vo nguyen giap binh thuan
+
+- Nhập (Tên đường): Chu Văn An
+- Nhập (Tên đường, Tên Tỉnh): Hoàng Thị Loan, Đà Nẵng
+- Nhập (Số nhà, Tên Đường, Tên Tỉnh): 120, Trần Phú, Quảng Ninh
+- Nhập (Tên đường, Tên Quận/huyện, Tên Tỉnh): Lê Thanh Nghị, Cẩm Phả, Quảng Ninh
+- Nhập (Số nhà, Tên đường, tên Quận/huyện, Tên Tỉnh): 79, Tô Hiệu, Lê Chân, Hải Phòng
+
+ Ngõ 251 Trần Hưng Đạo, TP. HÒA BÌNH
+ 
+ 212,TRẦN HƯNG ĐẠO, TP.HÒA BÌNH
+ 
+ 212 tran hung dao hoa binh
+ 
+ GetProvinceId

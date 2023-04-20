@@ -1,5 +1,6 @@
 ﻿using Elastic02.Models.Test;
 using Elastic02.Utility;
+using F23.StringSimilarity;
 using Nest;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,8 @@ namespace Elastic02.Services.Test
         private readonly string _indexName;
         private readonly IConfiguration _configuration;
         private readonly IVietNamShapeService _vnShapeService;
+        private readonly IProvinceService _provinceService;
+
         private readonly ILogService _logService;
 
         private string GetIndexName()
@@ -31,12 +34,13 @@ namespace Elastic02.Services.Test
             throw new Exception($"{nameof(RoadName)} description attribute is missing.");
         }
 
-        public RoadNameService(ElasticClient client, IConfiguration configuration, IVietNamShapeService vnShapeService, ILogService logService)
+        public RoadNameService(ElasticClient client, IConfiguration configuration, IVietNamShapeService vnShapeService, IProvinceService provinceService, ILogService logService)
         {
             _client = client;
             _indexName = GetIndexName();
             _configuration = configuration;
             _vnShapeService = vnShapeService;
+            _provinceService = provinceService;
             _logService = logService;
         }
 
@@ -482,9 +486,11 @@ namespace Elastic02.Services.Test
                 var queryContainerList = new List<QueryContainer>();
                 var boolQuery = new BoolQuery();
 
+                string? keywordAscii = string.Empty;
+
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    string? keywordAscii = string.Empty;
+                   
                     keyword = keyword.ToLower();
 
                     keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
@@ -497,22 +503,42 @@ namespace Elastic02.Services.Test
 
                     queryContainerList.Add(
                       MatchQuerySuggestion(keyword, Infer.Field<RoadName>(f => f.KeywordsAscii), Fuzziness.EditDistance(1), "vn_analyzer"));
+
+                    queryContainerList.Add(
+                      MatchQuerySuggestion(keyword, Infer.Field<RoadName>(f => f.Keywords), Fuzziness.Auto, "vn_analyzer"));
+
+                    //queryContainerList.Add(
+                    //  MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.RoadName), Fuzziness.Auto, "vn_analyzer"));
+
+                    //&& mu.Match(ma =>
+                    //    ma.Field(f => f.Keywords).Name("named_query").Analyzer("vn_analyzer").Query(keyword).Fuzziness(Fuzziness.EditDistance(1))
+                    //    .AutoGenerateSynonymsPhraseQuery()
+                    //    )
                 }
 
-                if(lat > 0 && lng > 0)
-                {
-                    int provinceID = 16;
-                    provinceID = await GetProvinceId(lat, lng, null);
+                //if(lat > 0 && lng > 0)
+                //{
+                //    int provinceID = 16;
+                //    provinceID = await GetProvinceId(lat, lng, null);
 
-                    queryContainerList.Add( new MatchQuery()
-                        {
-                            Field = "provinceID",
-                            Query = provinceID.ToString()
-                        }
-                     );
+                //    queryContainerList.Add( new MatchQuery()
+                //        {
+                //            Field = "provinceID",
+                //            Query = provinceID.ToString()
+                //        }
+                //     );
 
-                    filter.Add(GeoDistanceQuerySuggestion("location", lat, lng, distance));
-                }
+                //    filter.Add(GeoDistanceQuerySuggestion("location", lat, lng, distance));
+                //}
+
+                string provinceId = await _provinceService.GetProvinceId(keyword);
+
+                queryContainerList.Add(new MatchQuery()
+                    {
+                        Field = "provinceID",
+                        Query = provinceId
+                    }
+                );
 
                 boolQuery.IsStrict = true;
                 boolQuery.Boost = 1.1;
@@ -532,14 +558,39 @@ namespace Elastic02.Services.Test
                 );
 
                 List<RoadNamePush> result = new List<RoadNamePush>();
-                if (searchResponse.IsValid)
-                {
-                    searchResponse.Documents.OrderBy(x => x.Priority).ToList().ForEach(item => result.Add(new RoadName(item)));
-                    //_logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
+                //if (searchResponse.IsValid)
+                //{
+                //    searchResponse.Documents.OrderBy(x => x.Priority).ToList().ForEach(item => result.Add(new RoadName(item)));
+                //    //_logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
+                //    return result;
+                //}
+
+                if (searchResponse.IsValid == false)
                     return result;
+
+                List<RoadName> lstSimilar = new List<RoadName>();
+
+                foreach (RoadName road in searchResponse.Documents.ToList())
+                {
+                    var ratc = new RatcliffObershelp();
+
+                    //road.Similar = ratc.Similarity(road.KeywordsAscii, keywordAscii) * 100;
+
+                    //if (string.IsNullOrEmpty(road.NameExt))
+                    //    road.Similar = ratc.Similarity(road.KeywordsAsciiNoExt, keywordAscii) * 100;
+
+                    road.Similar = ratc.Similarity(road.KeywordsAsciiNoExt, keywordAscii) * 100;
+
+                    if (!string.IsNullOrEmpty(road.NameExt))
+                        road.Similar = ratc.Similarity(road.KeywordsAscii, keywordAscii) * 100;
+
+                    lstSimilar.Add(road);
                 }
 
-                return new List<RoadNamePush>();
+                lstSimilar.OrderByDescending(x => x.Similar).ToList().ForEach(item => result.Add(new RoadName(item)));
+                //_logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
+
+                return result;
             }
             catch
             { return new List<RoadNamePush>(); }
