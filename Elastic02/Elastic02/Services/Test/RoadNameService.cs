@@ -462,7 +462,7 @@ namespace Elastic02.Services.Test
                     Analyzer = "vn_analyzer3"
                 };
         }
-        private GeoDistanceQuery GeoDistanceQuerySuggestion(string field, double lat, double lng, string distance)
+        private GeoDistanceQuery GeoDistanceQuerySuggestion(Field field, double lat, double lng, string distance)
         {
             return new GeoDistanceQuery
             {
@@ -516,16 +516,19 @@ namespace Elastic02.Services.Test
                     //    )
                 }
 
-                //if(lat > 0 && lng > 0)
+                if (lat > 0 && lng > 0)
+                    filter.Add(GeoDistanceQuerySuggestion(Infer.Field<RoadName>(f => f.Location), lat, lng, distance));
+
+                //if (lat > 0 && lng > 0)
                 //{
                 //    int provinceID = 16;
                 //    provinceID = await GetProvinceId(lat, lng, null);
 
-                //    queryContainerList.Add( new MatchQuery()
-                //        {
-                //            Field = "provinceID",
-                //            Query = provinceID.ToString()
-                //        }
+                //    queryContainerList.Add(new MatchQuery()
+                //    {
+                //        Field = "provinceID",
+                //        Query = provinceID.ToString()
+                //    }
                 //     );
 
                 //    filter.Add(GeoDistanceQuerySuggestion("location", lat, lng, distance));
@@ -547,7 +550,7 @@ namespace Elastic02.Services.Test
 
                 var searchResponse = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
                     .Size(size)
-                    .MinScore(5.0)
+                    //.MinScore(5.0)
                     .Scroll(1)
                     .Sort(s => s.Descending(SortSpecialField.Score))
                     .Query(q => q
@@ -558,12 +561,6 @@ namespace Elastic02.Services.Test
                 );
 
                 List<RoadNamePush> result = new List<RoadNamePush>();
-                //if (searchResponse.IsValid)
-                //{
-                //    searchResponse.Documents.OrderBy(x => x.Priority).ToList().ForEach(item => result.Add(new RoadName(item)));
-                //    //_logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
-                //    return result;
-                //}
 
                 if (searchResponse.IsValid == false)
                     return result;
