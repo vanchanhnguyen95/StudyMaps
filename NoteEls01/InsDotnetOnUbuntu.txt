@@ -107,3 +107,8 @@ DROP DATABASE zap;
 GO
 
 add-migration MyFirstMigration
+
+1. Luyện tập phát âm: âm p
+
+Danh sách Luyện tập phát âm
+https://www.youtube.com/playlist?list=PLtt6EKdplkvPUU-2U0xv8eJMJf7PYJiZ6
