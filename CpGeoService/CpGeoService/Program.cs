@@ -1,7 +1,8 @@
-using CpGeoService;
+using CpGeoService.Register;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.ConfigureOptions<GeoPBDInfoRegister>();
 // Add services to the container.
 
 //builder.Services.AddControllers();

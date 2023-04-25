@@ -7,6 +7,13 @@ namespace CpGeoService.Model
         public double Lat { get; set; }
         public double Lng { get; set; }
         public string Address { get; set; }
+
+        //public  DataPNC (double lng, double lat, int building, string road="", string commune = "", string district = "", string province = "")
+        //{
+        //    Lat = lat;
+        //    Lng = lng;
+        //    Address = 
+        //}
     }
 
     public class ResultGeoByAddressPNC
@@ -38,12 +45,14 @@ namespace CpGeoService.Model
 
     public class DataMerg : DataPNC
     {
-        public string Dep { get; set; }
+        public string? Dep { get; set; }
+        public double? Distance { get; set; } = 0;
     }
 
     public class Datum
     {
         public List<DataMerg> Location { get; set; }
+        //public double Distance { get; set; }
     }
 
     public class ResultGeoByAddressMerge
@@ -52,4 +61,5 @@ namespace CpGeoService.Model
         public int Code { get; set; } = 1;
         public string? Message { get; set; }
     }
+
 }

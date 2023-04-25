@@ -38,7 +38,7 @@ namespace CpGeoService.Repository
                     {
                         Lat = resultConvert?.data.lat??0,
                         Lng = resultConvert? .data.lng ?? 0,
-                        Address = $"{resultConvert?.data.road ??""}, {resultConvert?.data.commune ??""}, {resultConvert?.data.district ??""}," +
+                        Address = $"{resultConvert?.data.building.ToString() ?? ""}, {resultConvert?.data.road ??""}, {resultConvert?.data.commune ??""}, {resultConvert?.data.district ??""}," +
                         $" {resultConvert?.data.province ??null}",
                     };
                 }
