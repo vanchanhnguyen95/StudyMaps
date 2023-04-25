@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CpGeoService.Model;
 
 namespace CpGeoService.Helper
 {
@@ -6,7 +7,8 @@ namespace CpGeoService.Helper
     {
         public MappingProfiles()
         {
-            //CreateMap<Order, OrderDto>();
+            CreateMap<DataMerg, DataPNC>();
+            CreateMap<DataPNC, DataMerg>();
             //CreateMap<OrderDto, Order>();
             //CreateMap<Customer, CustomerDto>();
         }

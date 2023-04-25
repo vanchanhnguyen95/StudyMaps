@@ -36,15 +36,19 @@ namespace CpGeoService.Model
         public string processState { get; set; }
     }
 
-    public class DataMerg
+    public class DataMerg : DataPNC
     {
-        public DataPNC? DataOld { get; set; }
-        public DataPNC? DataNew { get; set; }
+        public string Dep { get; set; }
+    }
+
+    public class Datum
+    {
+        public List<DataMerg> Location { get; set; }
     }
 
     public class ResultGeoByAddressMerge
     {
-        public List<DataMerg>? Data { get; set; }
+        public List<Datum>? Data { get; set; }
         public int Code { get; set; } = 1;
         public string? Message { get; set; }
     }
