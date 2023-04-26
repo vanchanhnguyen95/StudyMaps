@@ -79,22 +79,22 @@ namespace CpGeoService.Repository
                     datum.Location = new List<DataMerg>();
 
 
-                    var dataOld = _mapper.Map<DataMerg>(await _geoPBDVRepository.GeoByAddressAsync(item?.Address ?? ""));
-                    dataOld.Dep = @"Service cũ";
-
                     var dataNew = _mapper.Map<DataMerg>(await _geoPBDV2Repository.GeoByAddressAsync(item?.Address ?? ""));
                     dataNew.Dep = @"Service mới";
-                    dataNew.Distance = CalculateDistance(dataNew.Lat, dataNew.Lng, dataOld.Lat, dataOld.Lng);
+                    
+                    var dataOld = _mapper.Map<DataMerg>(await _geoPBDVRepository.GeoByAddressAsync(item?.Address ?? ""));
+                    dataOld.Dep = @"Service cũ";
+                    dataOld.Distance = CalculateDistance(dataNew.Lat, dataNew.Lng, dataOld.Lat, dataOld.Lng);
 
                     //DataMerg dataMerg = new DataMerg();
-                    //var dataPNC = _mapper.Map<DataMerg>(await _geoPNCRepository.GeoByAddressAsync(item?.Address ?? ""));
-                    //dataPNC.Dep = @"Phòng Nghiên cứu";
-                    //dataPNC.Distance = CalculateDistance(dataPNC.Lat, dataPNC.Lng, dataNew.Lat, dataNew.Lng);
+                    var dataPNC = _mapper.Map<DataMerg>(await _geoPNCRepository.GeoByAddressAsync(item?.Address ?? ""));
+                    dataPNC.Dep = @"Phòng Nghiên cứu";
+                    dataPNC.Distance = CalculateDistance(dataNew.Lat, dataNew.Lng, dataPNC.Lat, dataPNC.Lng);
 
                     //result.Location.
-                    datum.Location.Add(dataOld);
                     datum.Location.Add(dataNew);
-                    //datum.Location.Add(dataPNC);
+                    datum.Location.Add(dataOld);
+                    datum.Location.Add(dataPNC);
                     //datum.Distance = CalculateDistance(dataPNC.Lat,dataPNC.Lng,dataNew.Lat,dataNew.Lng);
 
                     result.Data.Add(datum);
