@@ -27,6 +27,14 @@ var app = builder.Build();
 //    app.UseSwagger();
 //    app.UseSwaggerUI();
 //}
+
+if (app.Environment.IsProduction())
+{
+    app.Urls.Add("http://10.0.10.146:7000");// Ubuntu IP
+}
+
+app.UseStaticFiles();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 

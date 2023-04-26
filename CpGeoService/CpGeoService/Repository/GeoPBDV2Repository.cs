@@ -23,7 +23,7 @@ namespace CpGeoService.Repository
                 using (var client = new HttpClient())
                 {
                     var stringContent = new StringContent(contentJson.ToString(), Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(MyConstants.URL_API_GEOBYADDRESS_PBDV2, content);
+                    var response = await client.PostAsync(MyConstants.URL_API_GEOBYADDRESS_PBD, content);
 
                     if(!response.IsSuccessStatusCode)
                         return new DataPNC();
