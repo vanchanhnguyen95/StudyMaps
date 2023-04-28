@@ -54,7 +54,7 @@ Mở cổng trên firewall của ubuntu
 ví dụ mở cổng 9200 TCP e gõ ntn:
 sudo ufw allow 9200/tcp
 sudo ufw allow 9200/tcp
-sudo ufw reload
+
 
 sudo ufw allow 9200/tcp
 sudo ufw status
@@ -62,3 +62,5 @@ sudo ufw status
 sudo ufw allow 6000/tcp
 
 Text tìm kiếm sẽ là tổ hợp của RoadName, NameExt, [Address] (Tên tỉnh)
+
+sudo ufw allow 7000/tcp

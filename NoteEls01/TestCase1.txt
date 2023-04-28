@@ -110,3 +110,8 @@ vo nguyen giap binh thuan
  212 tran hung dao hoa binh
  
  GetProvinceId
+ 
+ SearchSegmentByNameHaNoi
+ 
+ number_analyzer
+ AnalyzeToken.Type
