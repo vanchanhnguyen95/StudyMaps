@@ -35,7 +35,7 @@ namespace BAGeocoding.Bll
         /// <summary>
         /// Lấy vùng theo tọa độ V2
         /// </summary>
-        public static RPBLAddressResultV2 RegionByGeoV2(RTRectangle rec, BAGPoint pts, EnumBAGLanguage lan)
+        public static RPBLAddressResultV2 RegionByGeoV2(RTRectangle rec, BAGPointV2 pts, EnumBAGLanguage lan)
         {
             try
             {
@@ -124,12 +124,12 @@ namespace BAGeocoding.Bll
         /// <summary>
         /// Lấy vùng theo tọa độ V2
         /// </summary>
-        public static RPBLAddressResultV2 RegionByGeoV2(RTRectangle rec, BAGPoint pts, EnumBAGLanguage lan, ref short pri)
+        public static RPBLAddressResultV2 RegionByGeoV2(RTRectangle rec, BAGPointV2 pts, EnumBAGLanguage lan, ref short pri)
         {
             try
             {
                 // Xác định vùng tìm kiếm
-                BAGTile tile = TileByGeo(rec, pts);
+                BAGTile tile = TileByGeoV2(rec, pts);
                 if (tile == null)
                     return null;
                 // 1. Xác định xã phường
@@ -234,6 +234,70 @@ namespace BAGeocoding.Bll
             }
         }
 
+        public static PBLAddressResult PlaceByGeoV2(RTRectangle rec, BAGPointV2 pts, EnumBAGLanguage lan)
+        {
+            try
+            {
+                // Tiến hành tìm kiếm
+                BAGPlace plotInfo = new BAGPlace();
+                List<BAGPlace> result = RunningParams.PlaceData.RTree.Intersects(rec);
+                if (result == null || result.Count == 0)
+                    return null;
+                else
+                {
+                    for (int i = 0; i < result.Count; i++)
+                    {
+                        if (MapUtilityManager.CheckInsidePolygonV2(result[i].PointList, pts) == true)
+                        {
+                            plotInfo = new BAGPlace(result[i]);
+                            break;
+                        }
+                    }
+                }
+
+                // 1. Xác định ô đất
+                if (plotInfo.PlaceID == 0)
+                    return null;
+                // 2. Xác định lô đất
+                if (RunningParams.PlaceData.Portion.ContainsKey(plotInfo.ParentID) == false)
+                    return null;
+                BAGPlace portionInfo = (BAGPlace)RunningParams.PlaceData.Portion[plotInfo.ParentID];
+                // 3. Xác định khu đô thị
+                if (RunningParams.PlaceData.Urban.ContainsKey(portionInfo.ParentID) == false)
+                    return null;
+                BAGPlace urbanInfo = (BAGPlace)RunningParams.PlaceData.Urban[portionInfo.ParentID];
+
+                // Trả về kết quả
+                PBLAddressResult address = new PBLAddressResult
+                {
+                    Lng = (float)plotInfo.Center.Lng,
+                    Lat = (float)plotInfo.Center.Lat,
+                    Road = string.Empty
+                };
+                if (plotInfo.Name != null && plotInfo.Name.Length > 0)
+                    address.Road = plotInfo.Name;
+                if (portionInfo.Name != null && portionInfo.Name.Length > 0)
+                {
+                    if (address.Road.Length > 0)
+                        address.Road += ", ";
+                    address.Road += portionInfo.Name;
+                }
+                if (urbanInfo.Name != null && urbanInfo.Name.Length > 0)
+                {
+                    if (address.Road.Length > 0)
+                        address.Road += ", ";
+                    address.Road += urbanInfo.Name;
+                }
+
+                return address;
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGEncoding.PlaceByGeo, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
         /// <summary>
         /// Xác định vùng tìm kiếm
         /// </summary>
@@ -251,6 +315,32 @@ namespace BAGeocoding.Bll
                     for (int i = 0; i < result.Count - 1; i++)
                     {
                         if (MapUtilityManager.CheckInsidePolygon(result[i].PointList, pts) == true)
+                            return result[i];
+                    }
+                    return result[result.Count - 1];
+                }
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGEncoding.TileByGeo, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
+        private static BAGTile TileByGeoV2(RTRectangle rec, BAGPointV2 pts)
+        {
+            try
+            {
+                List<BAGTile> result = RunningParams.TileData.RTree.Intersects(rec);
+                if (result == null || result.Count == 0)
+                    return null;
+                else if (result.Count == 1)
+                    return result[0];
+                else
+                {
+                    for (int i = 0; i < result.Count - 1; i++)
+                    {
+                        if (MapUtilityManager.CheckInsidePolygonV2(result[i].PointList, pts) == true)
                             return result[i];
                     }
                     return result[result.Count - 1];
@@ -462,6 +552,47 @@ namespace BAGeocoding.Bll
             }
         }
 
+        public static RPBLAddressResult RoadByGeoV2(KDTree<BAGPointV2> kdt, RTree<BAGSegmentV2> rts, RTRectangle rec, BAGPointV2 pts, double dis, EnumBAGLanguage lan)
+        {
+            try
+            {
+                // Xác định lại khung tìm kiếm
+                BAGPointV2 neighbor = NodeDetectV2(kdt, pts);
+                if (neighbor != null)
+                {
+                    double lng = pts.Lng - neighbor.Lng;
+                    double lat = pts.Lat - neighbor.Lat;
+                    double its = Math.Sqrt(lng * lng + lat * lat) * 1.1d;
+                    rec = new RTRectangle(pts.Lng - its, pts.Lat - its, pts.Lng + its, pts.Lat + its, 0.0f, 0.0f);
+                }
+
+                // Tiến hành tìm kiếm
+                BAGDistanceV2 distance = SegmentByGeoV2(rts, rec, pts, dis);
+                if (distance != null)
+                {
+                    RPBLAddressResult result = new RPBLAddressResult();
+                    if (distance.IsLeft == true)
+                        result.Building = MapUtilityManager.CalBuilding(distance.Segment.IsSerial, distance.Segment.StartLeft, distance.Segment.EndLeft, distance.Percen);
+                    else
+                        result.Building = MapUtilityManager.CalBuilding(distance.Segment.IsSerial, distance.Segment.StartRight, distance.Segment.EndRight, distance.Percen);
+                    result.Road = (lan == EnumBAGLanguage.Vn) ? distance.Segment.VName : distance.Segment.EName;
+                    result.MinSpeed = distance.Segment.MinSpeed;
+                    result.MaxSpeed = distance.Segment.MaxSpeed;
+                    result.DataExt = distance.Segment.DataExt;
+                    return result;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGEncoding.RoadByGeo, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
         /// <summary>
         /// Xác định node gần nhất để xét rect
         /// </summary>
@@ -476,6 +607,27 @@ namespace BAGeocoding.Bll
                 {
                     if (neighborList.Current != null)
                         return new BAGPoint(neighborList.Current);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGEncoding.NodeDetect, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
+        private static BAGPointV2 NodeDetectV2(KDTree<BAGPointV2> kdt, BAGPointV2 pts)
+        {
+            try
+            {
+                NearestNeighbour<BAGPointV2> neighborList = kdt.NearestNeighbors(pts.ToArray(), new SquareEuclideanDistanceFunction(), 1, 1e-5f);
+                if (neighborList == null)
+                    return null;
+                while (neighborList.MoveNext())
+                {
+                    if (neighborList.Current != null)
+                        return new BAGPointV2(neighborList.Current);
                 }
                 return null;
             }
@@ -507,6 +659,50 @@ namespace BAGeocoding.Bll
                     if (tmp.Distance < distance.Distance)
                     {
                         distance = new BAGDistance(tmp.Anchor, tmp.Point, tmp.Distance);
+                        distance.Segment = result[i];
+                        distance.PointIndex = tmp.PointIndex;
+                        if (distance.Distance < Constants.DISTANCE_INTERSECT_EPSILON)
+                            break;
+                    }
+                }
+
+                // Kiểm tra so sánh với khoảng cách chuẩn
+                if (distance.Distance < dis)
+                {
+                    distance.IsLeft = MapUtilityManager.IsLeft(distance.Segment.PointList[distance.PointIndex - 1], distance.Segment.PointList[distance.PointIndex], pts);
+                    distance.Percen = MapUtilityManager.PosPercent(distance.Segment.PointList, pts, distance.Anchor, distance.PointIndex);
+                    return distance;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("BAGEncoding.SegmentByGeo, ex: " + ex.ToString());
+                return null;
+            }
+        }
+
+        private static BAGDistanceV2 SegmentByGeoV2(RTree<BAGSegmentV2> rts, RTRectangle rec, BAGPointV2 pts, double dis)
+        {
+            try
+            {
+                // Lấy danh sách segment trong phạm vi cho phép
+                List<BAGSegmentV2> result = rts.Intersects(rec);
+                if (result == null || result.Count == 0)
+                    return null;
+
+                // Tính toán khoảng cách điểm đến segment
+                BAGDistanceV2 distance = result[0].DistanceFrom(pts);
+                distance.Segment = result[0];
+                for (int i = 1; i < result.Count; i++)
+                {
+                    BAGDistanceV2 tmp = result[i].DistanceFrom(pts);
+                    if (tmp.Distance < distance.Distance)
+                    {
+                        distance = new BAGDistanceV2(tmp.Anchor, tmp.Point, tmp.Distance);
                         distance.Segment = result[i];
                         distance.PointIndex = tmp.PointIndex;
                         if (distance.Distance < Constants.DISTANCE_INTERSECT_EPSILON)

@@ -66,6 +66,8 @@ namespace BAGeocoding.Bll.MapObj
                                         province.PointList.Add(new BAGPoint(BitConverter.ToDouble(reader.ReadBytes(8), 0), BitConverter.ToDouble(reader.ReadBytes(8), 0)));
                                     //Add object
                                     RunningParams.ProvinceData.Objs.Add(province.ProvinceID, province);
+
+                                    RunningParams.ProvinceDataV2.Objs.Add(province.ProvinceID, province);
                                 }
                                 #endregion
                             }

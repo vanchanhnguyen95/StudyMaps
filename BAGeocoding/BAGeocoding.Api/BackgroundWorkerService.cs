@@ -62,7 +62,7 @@ namespace BAGeocoding.Api
 
         private async Task<bool> InitDataAsync()
         {
-            await Task.Delay(1000);
+            //await Task.Delay(1000);
             LoadConfig();
             MainProcessing.InitData();
             return true;

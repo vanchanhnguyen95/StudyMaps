@@ -113,11 +113,10 @@ namespace BAGeocoding.Entity.MapObj
 
     public class BAGPointV2
     {
-        [BsonId]
-        public ObjectId Id { get; set; }
         public const double PIdiv180 = Math.PI / 180.0;
         public const double Radius = 6367000;
-        public const int Digit = 8;
+        //public const int Digit = 8;
+        public const int Digit = 13;
 
         public double Lng { get; set; }
         public double Lat { get; set; }

@@ -31,10 +31,33 @@ namespace BAGeocoding.Bll
             return oddNodes;
         }
 
+        public static bool CheckInsidePolygonV2(List<BAGPoint> pg, BAGPointV2 pp)
+        {
+            int i, j = pg.Count - 1;
+            bool oddNodes = false;
+
+            for (i = 0; i < pg.Count; i++)
+            {
+                if (pg[i].Lat < pp.Lat && pg[j].Lat >= pp.Lat || pg[j].Lat < pp.Lat && pg[i].Lat >= pp.Lat)
+                {
+                    if (pg[i].Lng + (pp.Lat - pg[i].Lat) / (pg[j].Lat - pg[i].Lat) * (pg[j].Lng - pg[i].Lng) < pp.Lng)
+                        oddNodes = !oddNodes;
+                }
+                j = i;
+            }
+
+            return oddNodes;
+        }
+
         /// <summary>
         /// Tính độ dài của đoạn thẳng
         /// </summary>
         public static float Magnitude(BAGPoint p1, BAGPoint p2)
+        {
+            return (float)Math.Sqrt(Math.Pow(p2.Lng - p1.Lng, 2) + Math.Pow(p2.Lat - p1.Lat, 2));
+        }
+
+        public static float Magnitude(BAGPointV2 p1, BAGPointV2 p2)
         {
             return (float)Math.Sqrt(Math.Pow(p2.Lng - p1.Lng, 2) + Math.Pow(p2.Lat - p1.Lat, 2));
         }
@@ -67,10 +90,39 @@ namespace BAGeocoding.Bll
             return ((p2.Lng - p1.Lng) * (p3.Lat - p1.Lat) - (p3.Lng - p1.Lng) * (p2.Lat - p1.Lat)) > 0.0f;
         }
 
+        public static bool IsLeft(BAGPointV2 p1, BAGPointV2 p2, BAGPointV2 p3)
+        {
+            return ((p2.Lng - p1.Lng) * (p3.Lat - p1.Lat) - (p3.Lng - p1.Lng) * (p2.Lat - p1.Lat)) > 0.0f;
+        }
+
         /// <summary>
         /// Tỷ lệ của điểm chia đôi đoạn đường
         /// </summary>
         public static float PosPercent(List<BAGPoint> list, BAGPoint point, EnumBAGAnchor pos, int idx)
+        {
+            try
+            {
+                float d1 = 0.0f;
+                float d2 = 0.0f;
+                if (pos == EnumBAGAnchor.Right)
+                    idx++;
+                for (int i = 0; i < idx - 1; i++)
+                    d1 += Magnitude(list[i], list[i + 1]);
+                if (pos == EnumBAGAnchor.Middle)
+                    d1 += Magnitude(list[idx - 1], point);
+                for (int i = 0; i < list.Count - 1; i++)
+                    d2 += Magnitude(list[i], list[i + 1]);
+
+                return d1 / d2;
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError("PosPercent, ex: " + ex.ToString());
+                return 0.0f;
+            }
+        }
+
+        public static float PosPercent(List<BAGPointV2> list, BAGPointV2 point, EnumBAGAnchor pos, int idx)
         {
             try
             {

@@ -4,11 +4,14 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.1" />
+    <PackageReference Include="NEST" Version="7.17.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
   </ItemGroup>
@@ -21,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\20220901\Temp\" />
     <Folder Include="wwwroot\TEST\BAGeocoding\BAGeocoding.Service\Logs\" />
   </ItemGroup>
 
@@ -34,12 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\20220901\Temp\__sm_638092029309968342.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\20220901\Temp\__sm_638130938258482136.ba">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\20220901\__ky.ba">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

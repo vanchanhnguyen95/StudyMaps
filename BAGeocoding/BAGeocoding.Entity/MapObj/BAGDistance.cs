@@ -24,7 +24,7 @@ namespace BAGeocoding.Entity.MapObj
 
     public class BAGDistanceV2
     {
-        public BAGSegment Segment { get; set; }
+        public BAGSegmentV2 Segment { get; set; }
         public EnumBAGAnchor Anchor { get; set; }
         public BAGPointV2 Point { get; set; }
         public int PointIndex { get; set; }

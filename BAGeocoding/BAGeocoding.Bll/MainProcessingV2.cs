@@ -705,7 +705,7 @@ namespace BAGeocoding.Bll
                 // 2. Tiến hành tìm kiếm vùng
                 // 2.1 Tìm kiếm thông tin vùng
                 RTRectangle rec = new RTRectangle(resultRoad.Lng - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lng + Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
-                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPoint(resultRoad.Lng, resultRoad.Lat), language);
+                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPointV2(resultRoad.Lng, resultRoad.Lat), language);
                 if (resultRegion == null)
                     return null;
                 // 2.2 Bổ sung thông tin và trả về kết quả
@@ -790,7 +790,7 @@ namespace BAGeocoding.Bll
                 // 2. Tiến hành tìm kiếm vùng
                 // 2.1 Tìm kiếm thông tin vùng
                 RTRectangle rec = new RTRectangle(resultRoad.Lng - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lng + Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
-                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPoint(resultRoad.Lng, resultRoad.Lat), language);
+                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPointV2(resultRoad.Lng, resultRoad.Lat), language);
                 if (resultRegion == null)
                     return null;
                 // 2.2 Bổ sung thông tin và trả về kết quả

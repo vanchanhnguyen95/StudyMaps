@@ -452,6 +452,92 @@ namespace BAGeocoding.Bll
             }
         }
 
+        public static List<RPBLAddressResultV2> AddressByGeoV2(string lngStr, string latStr)
+        {
+            try
+            {
+                short provinceID = 0;
+                EnumBAGLanguage language = EnumBAGLanguage.Vn;
+                string[] lngList = lngStr.Split(Constants.DEFAULT_SPLIT_DATA);
+                string[] latList = latStr.Split(Constants.DEFAULT_SPLIT_DATA);
+
+
+                #region ==================== Tiến hành xử lý dịch vụ ====================
+                double its = Constants.DISTANCE_INTERSECT_ROAD;
+                List<RPBLAddressResultV2> resultList = new List<RPBLAddressResultV2>();
+                for (int i = 0; i < lngList.Length; i++)
+                {
+                    //BAGPoint pts = new BAGPoint(lngList[i], latList[i]);
+                    BAGPointV2 pts = new BAGPointV2(lngList[i], latList[i]);
+                    if (pts.IsValid() == false)
+                    {
+                        resultList.Add(new RPBLAddressResultV2 { });
+                        continue;
+                    }
+                    RTRectangle rec = new RTRectangle(pts.Lng - its, pts.Lat - its, pts.Lng + its, pts.Lat + its, 0.0f, 0.0f);
+                    RPBLAddressResultV2 resultItem = BAGEncoding.RegionByGeoV2(rec, pts, language, ref provinceID);
+                    if (resultItem != null)
+                    {
+                        #region ==================== Tìm kiếm theo dữ liệu của BinhAnh ====================
+                        // Ưu tiên tìm khu đô thị
+                        PBLAddressResult placeItem = BAGEncoding.PlaceByGeoV2(rec, pts, language);
+                        if (placeItem != null)
+                            resultItem.Road = placeItem.Road;
+                        // Nếu không tìm theo đường
+                        else if (RunningParams.ProvinceData.Segm.ContainsKey(provinceID) == true)
+                        {
+                            DTSSegmentV2 segmentDT = (DTSSegmentV2)RunningParams.ProvinceDataV2.Segm[provinceID];
+                            RPBLAddressResult temp = BAGEncoding.RoadByGeoV2(segmentDT.KDTree, segmentDT.RTree, rec, pts, its, language);
+                            if (temp != null)
+                            {
+                                resultItem.Building = temp.Building;
+                                resultItem.Road = temp.Road;
+                                resultItem.MinSpeed = temp.MinSpeed;
+                                resultItem.MaxSpeed = temp.MaxSpeed;
+                                resultItem.DataExt = temp.DataExt;
+                            }
+                            else// if (lngList.Length == 1) // ANHPT: Luông tìm kiếm để chính xác nhất
+                            {
+                                for (int step = 2; step < 4; step++)
+                                {
+                                    its = Constants.DISTANCE_INTERSECT_ROAD * step;
+                                    rec = new RTRectangle(pts.Lng - its, pts.Lat - its, pts.Lng + its, pts.Lat + its, 0.0f, 0.0f);
+                                    temp = BAGEncoding.RoadByGeoV2(segmentDT.KDTree, segmentDT.RTree, rec, pts, its, language);
+                                    if (temp != null)
+                                    {
+                                        resultItem.Building = temp.Building;
+                                        resultItem.Road = temp.Road;
+                                        resultItem.MinSpeed = temp.MinSpeed;
+                                        resultItem.MaxSpeed = temp.MaxSpeed;
+                                        resultItem.DataExt = temp.DataExt;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        resultList.Add(resultItem);
+                        #endregion
+                    }
+                    //else
+                    //{
+                    //    #region ==================== Tìm kiếm theo dữ liệu của Google ====================
+                    //    resultItem = GGLEndcoding.AddressByGeo(pts, string.Empty, language);
+                    //    if (resultItem != null)
+                    //        resultList.Add(resultItem);
+                    //    else
+                    //        resultList.Add(new RPBLAddressResultV2 { });
+                    //    #endregion
+                    //}
+                }
+                #endregion
+                return resultList;
+            }
+            catch (Exception ex)
+            {
+                LogFile.WriteError(string.Format("MainProcessing.AddressByGeo({0}, {1}), ex: {2}", lngStr, latStr, ex.ToString()));
+                return null;
+            }
+        }
 
         ///// <summary>
         ///// Tìm kiếm địa chỉ theo tọa độ
@@ -745,7 +831,7 @@ namespace BAGeocoding.Bll
                 // 2. Tiến hành tìm kiếm vùng
                 // 2.1 Tìm kiếm thông tin vùng
                 RTRectangle rec = new RTRectangle(resultRoad.Lng - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lng + Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
-                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPoint(resultRoad.Lng, resultRoad.Lat), language);
+                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPointV2(resultRoad.Lng, resultRoad.Lat), language);
                 if (resultRegion == null)
                     return null;
                 // 2.2 Bổ sung thông tin và trả về kết quả
@@ -779,7 +865,7 @@ namespace BAGeocoding.Bll
                 for (int i =0; i < lstResultRoad.Count(); i++)
                 {
                     RTRectangle recItem = new RTRectangle(lstResultRoad[i].Lng - Constants.DISTANCE_INTERSECT_ROAD, lstResultRoad[i].Lat - Constants.DISTANCE_INTERSECT_ROAD, lstResultRoad[i].Lng + Constants.DISTANCE_INTERSECT_ROAD, lstResultRoad[i].Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
-                    RPBLAddressResultV2 resultRegionItem = BAGEncoding.RegionByGeoV2(recItem, new BAGPoint(lstResultRoad[i].Lng, lstResultRoad[i].Lat), language);
+                    RPBLAddressResultV2 resultRegionItem = BAGEncoding.RegionByGeoV2(recItem, new BAGPointV2(lstResultRoad[i].Lng, lstResultRoad[i].Lat), language);
                     if (resultRegionItem != null && !lstResultRegion.Any(x => x.Lat == lstResultRoad[i].Lat && x.Lng == lstResultRoad[i].Lng))
                     {
                         // 2.2 Bổ sung thông tin và trả về kết quả
@@ -871,7 +957,7 @@ namespace BAGeocoding.Bll
                 // 2. Tiến hành tìm kiếm vùng
                 // 2.1 Tìm kiếm thông tin vùng
                 RTRectangle rec = new RTRectangle(resultRoad.Lng - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat - Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lng + Constants.DISTANCE_INTERSECT_ROAD, resultRoad.Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
-                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPoint(resultRoad.Lng, resultRoad.Lat), language);
+                RPBLAddressResultV2 resultRegion = BAGEncoding.RegionByGeoV2(rec, new BAGPointV2(resultRoad.Lng, resultRoad.Lat), language);
                 if (resultRegion == null)
                     return null;
                 // 2.2 Bổ sung thông tin và trả về kết quả
@@ -913,7 +999,7 @@ namespace BAGeocoding.Bll
                 for (int i = 0; i < lstRoad.Count(); i++)
                 {
                     RTRectangle recItem = new RTRectangle(lstRoad[i].Lng - Constants.DISTANCE_INTERSECT_ROAD, lstRoad[i].Lat - Constants.DISTANCE_INTERSECT_ROAD, lstRoad[i].Lng + Constants.DISTANCE_INTERSECT_ROAD, lstRoad[i].Lat + Constants.DISTANCE_INTERSECT_ROAD, 0.0f, 0.0f);
-                    RPBLAddressResultV2 resultRegionItem = BAGEncoding.RegionByGeoV2(recItem, new BAGPoint(lstRoad[i].Lng, lstRoad[i].Lat), language);
+                    RPBLAddressResultV2 resultRegionItem = BAGEncoding.RegionByGeoV2(recItem, new BAGPointV2(lstRoad[i].Lng, lstRoad[i].Lat), language);
                     var check = lstResultRegion.Any(x => x.Lat == lstRoad[i].Lat && x.Lng == lstRoad[i].Lng);
                     if (resultRegionItem != null && !check)
                     {

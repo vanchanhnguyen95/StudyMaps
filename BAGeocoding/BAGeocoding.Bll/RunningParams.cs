@@ -38,6 +38,8 @@ namespace BAGeocoding.Bll
         public static CacheCatalogData CACHE { get; set; }
         public static CacheParamsData PARAMS { get; set; }
 
+        public static DTSProvince ProvinceDataV2 = new DTSProvince();
+
         public static DTSProvince ProvinceData = new DTSProvince();
         public static DTSDistrict DistrictData = new DTSDistrict();
         public static DTSCommune CommuneData = new DTSCommune();

@@ -34,6 +34,9 @@ namespace BAGeocoding.Bll.MapObj
                             if (i == 0)
                             {
                                 #region ==================== Đọc dữ liệu tìm kiếm tỉnh/thành ====================
+                                RunningParams.ProvinceDataV2.Keys = new Hashtable();
+
+
                                 RunningParams.ProvinceData.Keys = new Hashtable();
                                 for (int j = 0; j < objectCount; j++)
                                 {
@@ -55,6 +58,7 @@ namespace BAGeocoding.Bll.MapObj
                                         });
                                     }
                                     RunningParams.ProvinceData.Keys.Add(province.KeyStr, province);
+                                    RunningParams.ProvinceDataV2.Keys.Add(province.KeyStr, province);
                                 }
                                 #endregion
                             }
@@ -177,8 +181,18 @@ namespace BAGeocoding.Bll.MapObj
                                     //Read ProviceID
                                     short proviceID = BitConverter.ToInt16(reader.ReadBytes(2), 0);
                                     DTSSegment segmentData = new DTSSegment();
+                                    DTSSegmentV2 segmentDataV2 = new DTSSegmentV2();
+                                    //if (RunningParams.ProvinceData.Segm.Contains(proviceID) == true)
+                                    //    segmentData = (DTSSegment)RunningParams.ProvinceData.Segm[proviceID];
+
                                     if (RunningParams.ProvinceData.Segm.Contains(proviceID) == true)
+                                    {
                                         segmentData = (DTSSegment)RunningParams.ProvinceData.Segm[proviceID];
+                                        segmentDataV2 = (DTSSegmentV2)RunningParams.ProvinceDataV2.Segm[proviceID];
+                                    }    
+                                        
+
+
                                     // Số lượng từ khóa
                                     int keyCount = BitConverter.ToInt32(reader.ReadBytes(4), 0);
                                     for (int k = 0; k < keyCount; k++)
@@ -202,12 +216,24 @@ namespace BAGeocoding.Bll.MapObj
                                                 segmentKey.ObjectID.Add(objectID, keyRate);
                                         }
                                         segmentData.Keys.Add(segmentKey.KeyStr, segmentKey);
+                                        segmentDataV2.Keys.Add(segmentKey.KeyStr, segmentKey);
                                     }
 
+                                    //if (RunningParams.ProvinceData.Segm.Contains(proviceID) == true)
+                                    //    RunningParams.ProvinceData.Segm[proviceID] = segmentData;
+                                    //else
+                                    //    RunningParams.ProvinceData.Segm.Add(proviceID, segmentData);
+
                                     if (RunningParams.ProvinceData.Segm.Contains(proviceID) == true)
+                                    {
                                         RunningParams.ProvinceData.Segm[proviceID] = segmentData;
+                                        RunningParams.ProvinceDataV2.Segm[proviceID] = segmentDataV2;
+                                    }    
                                     else
+                                    {
                                         RunningParams.ProvinceData.Segm.Add(proviceID, segmentData);
+                                        RunningParams.ProvinceDataV2.Segm.Add(proviceID, segmentDataV2);
+                                    }    
                                 }
                                 #endregion
                             }

@@ -61,23 +61,38 @@ namespace BAGeocoding.Entity.Public
         public int DistrictID { get; set; }
 
         public RPBLAddressResultV2() { }
-
-        public RPBLAddressResultV2(RPBLAddressResultV2 other)
-        {
-            Lng = other.Lng;
-            Lat = other.Lat;
-            Building = other.Building;
-            Road = other.Road;
-            Commune = other.Commune;
-            District = other.District;
-            Province = other.Province;
-            Accurate = other.Accurate;
-            MinSpeed = other.MinSpeed;
-            MaxSpeed = other.MaxSpeed;
-            DataExt = other.DataExt;
-            ProvinceID = other.ProvinceID;
-            DistrictID = other.DistrictID;
+        public RPBLAddressResultV2(RPBLAddressResultV2 orther) {
+            Lng = orther.Lng;
+            Lat = orther.Lat;
+            Building = orther.Building;
+            Road = orther.Road;
+            Commune = orther.Commune;
+            District = orther.District;
+            Province = orther.Province;
+            Accurate = orther.Accurate;
+            MinSpeed = orther.MinSpeed;
+            MaxSpeed = orther.MaxSpeed;
+            DataExt = orther.DataExt;
+            ProvinceID = orther.ProvinceID;
+            DistrictID = orther.DistrictID;
         }
+
+        //public RPBLAddressResultV2(RPBLAddressResultV2 other)
+        //{
+        //    Lng = other.Lng;
+        //    Lat = other.Lat;
+        //    Building = other.Building;
+        //    Road = other.Road;
+        //    Commune = other.Commune;
+        //    District = other.District;
+        //    Province = other.Province;
+        //    Accurate = other.Accurate;
+        //    MinSpeed = other.MinSpeed;
+        //    MaxSpeed = other.MaxSpeed;
+        //    DataExt = other.DataExt;
+        //    ProvinceID = other.ProvinceID;
+        //    DistrictID = other.DistrictID;
+        //}
 
         public bool DataExtGet(EnumMOBSegmentDataExt dataExt)
         {
