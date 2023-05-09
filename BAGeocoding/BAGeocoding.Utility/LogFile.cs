@@ -346,5 +346,27 @@ namespace BAGeocoding.Utility
             }
             catch { }
         }
+
+        public static void WriteNoDataGeobyAddress(string msg)
+        {
+            try
+            {
+                StreamWriter f = new StreamWriter(Constants.DEFAULT_DIRECTORY_LOGS + "NoDataGeobyaddress.txt", true);
+                f.WriteLine(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + ": " + msg);
+                f.Close();
+            }
+            catch { }
+        }
+
+        public static void WriteNoDataAddressByGeo(string msg)
+        {
+            try
+            {
+                StreamWriter f = new StreamWriter(Constants.DEFAULT_DIRECTORY_LOGS + "NoDataAddressByGeo.txt", true);
+                f.WriteLine(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + ": " + msg);
+                f.Close();
+            }
+            catch { }
+        }
     }
 }

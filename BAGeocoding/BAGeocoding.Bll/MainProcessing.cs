@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-
-using BAGeocoding.Bll.MapObj;
-
+﻿using BAGeocoding.Bll.MapObj;
 using BAGeocoding.Entity.DataService;
 using BAGeocoding.Entity.Enum;
 using BAGeocoding.Entity.MapObj;
 using BAGeocoding.Entity.Public;
 using BAGeocoding.Entity.Router;
-using BAGeocoding.Entity.Utility;
-
 using BAGeocoding.Utility;
-
 using RTree.Engine.Entity;
-using BAGeocoding.Entity.Enum.Route;
+using System.ComponentModel;
 //using BAGeocoding.Dal.MapRoute;
 
 namespace BAGeocoding.Bll

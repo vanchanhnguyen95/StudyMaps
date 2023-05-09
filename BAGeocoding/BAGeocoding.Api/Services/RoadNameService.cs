@@ -3,6 +3,7 @@ using BAGeocoding.Api.Models.RoadName;
 using BAGeocoding.Utility;
 using Nest;
 using System.ComponentModel;
+using static BAGeocoding.Api.Models.RoadName.RoadName;
 
 namespace BAGeocoding.Api.Services
 {
@@ -263,7 +264,7 @@ namespace BAGeocoding.Api.Services
         }
 
         // Tìm kiếm theo từ khóa
-        public async Task<List<RoadNamePush>> GetDataSuggestion(double lat, double lng, string distance, int size, string keyword, int type)
+        public async Task<List<RoadNameOut>> GetDataSuggestion(double lat, double lng, string distance, int size, string keyword, int type)
         {
             try
             {
@@ -321,18 +322,18 @@ namespace BAGeocoding.Api.Services
                     )
                 );
 
-                List<RoadNamePush> result = new List<RoadNamePush>();
+                List<RoadNameOut> result = new List<RoadNameOut>();
                 if (searchResponse.IsValid)
                 {
-                    searchResponse.Documents.OrderBy(x => x.Priority).ToList().ForEach(item => result.Add(new RoadName(item)));
+                    searchResponse.Documents.OrderBy(x => x.Priority).ToList().ForEach(item => result.Add(new RoadNameOut(item)));
                     //_logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
                     return result;
                 }
 
-                return new List<RoadNamePush>();
+                return new List<RoadNameOut>();
             }
             catch
-            { return new List<RoadNamePush>(); }
+            { return new List<RoadNameOut>(); }
         }
     }
 }

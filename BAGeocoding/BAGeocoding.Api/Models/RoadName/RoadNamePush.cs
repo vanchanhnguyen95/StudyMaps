@@ -115,5 +115,27 @@ namespace BAGeocoding.Api.Models.RoadName
             KeywordsAsciiNoExt = LatinToAscii.Latin2Ascii(KeywordsNoExt ?? "");
         }
 
+        public class RoadNameOut
+        {
+            public string? RoadName { get; set; } = string.Empty;
+
+            public string? NameExt { get; set; } = string.Empty;
+
+            public string? Address { get; set; } = string.Empty;
+
+            public decimal Lng { get; set; } = 0;
+            public decimal Lat { get; set; } = 0;
+
+            public RoadNameOut() { }
+
+            public RoadNameOut(RoadName orther) {
+                RoadName = orther.RoadName;
+                NameExt = orther.NameExt;
+                Address = orther.Address;
+                Lng = orther.Lng;
+                Lat = orther.Lat;
+            }
+        }
+
     }
 }

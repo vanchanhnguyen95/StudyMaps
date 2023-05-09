@@ -2,10 +2,11 @@
 using BAGeocoding.Bll;
 using BAGeocoding.Entity.Enum;
 using BAGeocoding.Entity.Public;
-using RTree.Engine.Entity;
+using BAGeocoding.Utility;
 
 namespace BAGeocoding.Api.Services
 {
+
     public interface IGeoService
     {
         // Tìm kiếm địa chỉ theo tọa độ
@@ -22,6 +23,8 @@ namespace BAGeocoding.Api.Services
 
     public class GeoService : IGeoService
     {
+        private const string INIT_DATA_SUCCESS = "1";//Đã khởi tạo dữ liệu
+        private const string INIT_DATA_FAIL = "2";//Chưa khởi tạo xong dữ liệu
         public GeoService() {
             if (RunningParams.ProcessState != EnumProcessState.Success)
                 MainProcessing.InitData();
@@ -43,14 +46,17 @@ namespace BAGeocoding.Api.Services
             if (RunningParams.ProcessState != EnumProcessState.Success)
             {
                 MainProcessing.InitData();
-                return Result<object>.Error("500", "Chưa khởi tạo xong dữ liệu", RunningParams.ProcessState.ToString());
+                return Result<object>.Error(INIT_DATA_FAIL, "Chưa khởi tạo xong dữ liệu", RunningParams.ProcessState.ToString());
             }
 
-            if (ret == null)
-                return Result<object>.Success(new RPBLAddressResultV2(), "200", "Đã khởi tạo xong dữ liệu", RunningParams.ProcessState.ToString());
+            if (!ret.Any())
+            {
+                LogFile.WriteNoDataAddressByGeo($"AddressByGeo, [ lat:{latStr}, lng:{lngStr} ]");
+                return Result<object>.Success(new RPBLAddressResultV2(), INIT_DATA_SUCCESS, "Đã khởi tạo xong dữ liệu", RunningParams.ProcessState.ToString());
+            }
 
             var data = new List<RPBLAddressResultV2>(ret);
-            return Result<object>.Success(data, "200", "Đã khởi tạo dữ liệu", RunningParams.ProcessState.ToString());
+            return Result<object>.Success(data, INIT_DATA_SUCCESS, "Đã khởi tạo dữ liệu", RunningParams.ProcessState.ToString());
             //if (RunningParams.ProcessState != EnumProcessState.Success)
             //{
             //    MainProcessing.InitData();
@@ -76,14 +82,17 @@ namespace BAGeocoding.Api.Services
             if (RunningParams.ProcessState != EnumProcessState.Success)
             {
                 MainProcessing.InitData();
-                return Result<object>.Error("500", "Chưa khởi tạo xong dữ liệu", RunningParams.ProcessState.ToString());
+                return Result<object>.Error(INIT_DATA_FAIL, "Chưa khởi tạo xong dữ liệu", RunningParams.ProcessState.ToString());
             }
 
             if (ret == null)
-                return Result<object>.Success(new PBLAddressResultV2(), "200", "Đã khởi tạo xong dữ liệu", RunningParams.ProcessState.ToString());
+            {
+                LogFile.WriteNoDataGeobyAddress($"GeoByAddress, [ key:{keyStr} ]");
+                return Result<object>.Success(new PBLAddressResultV2(), INIT_DATA_SUCCESS, "Đã khởi tạo dữ liệu", RunningParams.ProcessState.ToString());
+            }     
 
             var data = new PBLAddressResultV2(ret);
-            return Result<object>.Success(data, "200", "Đã khởi tạo dữ liệu", RunningParams.ProcessState.ToString());
+            return Result<object>.Success(data, INIT_DATA_SUCCESS, "Đã khởi tạo dữ liệu", RunningParams.ProcessState.ToString());
         }
     }
 }
