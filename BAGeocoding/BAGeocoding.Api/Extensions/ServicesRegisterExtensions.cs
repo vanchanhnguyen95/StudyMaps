@@ -1,9 +1,9 @@
 ﻿using BAGeocoding.Api.Interfaces;
 using BAGeocoding.Api.Services;
 
-namespace BAGeocoding.Api
+namespace BAGeocoding.Api.Extensions
 {
-    public static class ServicesRegister
+    public static class ServicesRegisterExtensions
     {
         public static void RegisterService(this IServiceCollection services)
         {

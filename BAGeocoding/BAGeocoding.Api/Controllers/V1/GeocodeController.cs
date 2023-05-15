@@ -20,34 +20,34 @@ namespace BAGeocoding.Api.Controllers.V1
             _roadNameService = roadNameService;
         }
 
-        [HttpPost]
-        [MapToApiVersion("1.0")]
-        [Route("AddressByGeoV2")]
-        public async Task<List<PBLAddressResult>> AddressByGeoV2([FromBody] AddressByGeoVm? body)
-        {
-            var result = new List<PBLAddressResult>();
-            //if (RunningParams.ProcessState != EnumProcessState.Success)
-            //{
-            //    return result;
-            //    //MainProcessing.InitData();
-            //}
+        //[HttpPost]
+        //[MapToApiVersion("1.0")]
+        //[Route("AddressByGeoV2")]
+        //public async Task<List<PBLAddressResult>> AddressByGeoV2([FromBody] AddressByGeoVm? body)
+        //{
+        //    var result = new List<PBLAddressResult>();
+        //    //if (RunningParams.ProcessState != EnumProcessState.Success)
+        //    //{
+        //    //    return result;
+        //    //    //MainProcessing.InitData();
+        //    //}
 
-            //var result = new List<PBLAddressResultV2>();
+        //    //var result = new List<PBLAddressResultV2>();
 
-            //var addresses = await _geoService.AddressByGeoAsyncV2(body?.lng, body?.lat);
-            //if(addresses?.Count > 0)
-            //{
-            //    addresses.ForEach(item => result.Add(new PBLAddressResultV2(item)));
-            //}    
+        //    //var addresses = await _geoService.AddressByGeoAsyncV2(body?.lng, body?.lat);
+        //    //if(addresses?.Count > 0)
+        //    //{
+        //    //    addresses.ForEach(item => result.Add(new PBLAddressResultV2(item)));
+        //    //}    
 
-            var addresses = await _geoService.AddressByGeoAsync(body?.lng, body?.lat);
-            if (addresses?.Count > 0)
-            {
-                addresses.ForEach(item => result.Add(new PBLAddressResult(item)));
-            }
+        //    var addresses = await _geoService.AddressByGeoAsync(body?.lng, body?.lat);
+        //    if (addresses?.Count > 0)
+        //    {
+        //        addresses.ForEach(item => result.Add(new PBLAddressResult(item)));
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         [HttpPost]
         [MapToApiVersion("1.0")]
@@ -57,22 +57,22 @@ namespace BAGeocoding.Api.Controllers.V1
             return await  _geoService.AddressByGeoAsyncV2(body?.lng, body?.lat); ;
         }
 
-        [HttpPost]
-        [MapToApiVersion("1.0")]
-        [Route("GeoByAddress2")]
-        public async Task<PBLAddressResult> GeoByAddress2([FromBody] GeoByAddressVm? body)
-        {
-            var result = new PBLAddressResult();
-            //if (RunningParams.ProcessState != EnumProcessState.Success)
-            //{
-            //    return result;
-            //}
-            var geo = await _geoService.GeoByAddressAsync(body?.address, "vn");
-            if (geo == null) return result;
+        //[HttpPost]
+        //[MapToApiVersion("1.0")]
+        //[Route("GeoByAddress2")]
+        //public async Task<PBLAddressResult> GeoByAddress2([FromBody] GeoByAddressVm? body)
+        //{
+        //    var result = new PBLAddressResult();
+        //    //if (RunningParams.ProcessState != EnumProcessState.Success)
+        //    //{
+        //    //    return result;
+        //    //}
+        //    var geo = await _geoService.GeoByAddressAsync(body?.address, "vn");
+        //    if (geo == null) return result;
 
-            var objTest = new PBLAddressResult(geo);
-            return new PBLAddressResult(geo);
-        }
+        //    var objTest = new PBLAddressResult(geo);
+        //    return new PBLAddressResult(geo);
+        //}
 
         [HttpPost]
         [MapToApiVersion("1.0")]
