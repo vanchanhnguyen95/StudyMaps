@@ -61,24 +61,24 @@ namespace BAGeocoding.Api.Services
                    .NumberOfReplicas(NumberOfReplicas)
                    .NumberOfShards(NumberOfShards)
                    .Analysis(a => a
-                       .CharFilters(cf => cf
-                           .Mapping("programming_language", mca => mca
-                               .Mappings(new[]
-                               {
-                                        "c# => csharp",
-                                        "C# => Csharp"
-                               })
-                           )
-                         )
-                       .CharFilters(cf => cf
-                           .Mapping("province_name", mca => mca
-                               .Mappings(new[]
-                               {
-                                    "hà nội => ha noi",
-                                    "Hà Nội => Ha Noi"
-                               })
-                           )
-                         )
+                       //.CharFilters(cf => cf
+                       //    .Mapping("programming_language", mca => mca
+                       //        .Mappings(new[]
+                       //        {
+                       //                 "c# => csharp",
+                       //                 "C# => Csharp"
+                       //        })
+                       //    )
+                       //  )
+                       //.CharFilters(cf => cf
+                       //    .Mapping("province_name", mca => mca
+                       //        .Mappings(new[]
+                       //        {
+                       //             "hà nội => ha noi",
+                       //             "Hà Nội => Ha Noi"
+                       //        })
+                       //    )
+                       //  )
                        .TokenFilters(tf => tf
                            .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
                            {
@@ -109,15 +109,15 @@ namespace BAGeocoding.Api.Services
                                .Filters("lowercase", "stop", "ascii_folding")
                            )
                            .Custom("vn_analyzer3", ca => ca
-                               .CharFilters("html_strip")
+                               //.CharFilters("html_strip")
                                .Tokenizer("vi_tokenizer")
                                .Filters("lowercase", "ascii_folding", "stop_filter")
                            )
-                           .Custom("vi_analyzer2", ca => ca
-                                .CharFilters("province_name")
-                                .Tokenizer("vi_tokenizer")
-                                .Filters("lowercase", "ascii_folding")
-                            )
+                           //.Custom("vi_analyzer2", ca => ca
+                           //     .CharFilters("province_name")
+                           //     .Tokenizer("vi_tokenizer")
+                           //     .Filters("lowercase", "ascii_folding")
+                           // )
                            .Custom("vn_analyzer", ca => ca
                                .CharFilters("html_strip")
                                .Tokenizer("vi_tokenizer")
@@ -154,7 +154,7 @@ namespace BAGeocoding.Api.Services
             return
                 new MatchQuery
                 {
-                    Boost = 2.0,
+                    //Boost = 2.0,
                     //Operator = Operator.And,
                     //Fuzziness = Fuzziness.Auto,
                     //PrefixLength = 3,
@@ -272,10 +272,11 @@ namespace BAGeocoding.Api.Services
                 List<QueryContainer> filter = new List<QueryContainer>();
                 var queryContainerList = new List<QueryContainer>();
                 var boolQuery = new BoolQuery();
+                string? keywordAscii = string.Empty;
 
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    string? keywordAscii = string.Empty;
+                  
                     keyword = keyword.ToLower();
 
                     keywordAscii = LatinToAscii.Latin2Ascii(keyword.ToLower());
@@ -284,7 +285,13 @@ namespace BAGeocoding.Api.Services
                         MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAsciiNoExt), Fuzziness.Auto, "vn_analyzer3"));
 
                     queryContainerList.Add(
+                       MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAsciiNoExt), Fuzziness.Auto, "vn_analyzer"));
+
+                    queryContainerList.Add(
                        MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAscii), Fuzziness.EditDistance(0), "vn_analyzer"));
+
+                    queryContainerList.Add(
+                       MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAscii), Fuzziness.Auto, "vn_analyzer"));
 
                     queryContainerList.Add(
                       MatchQuerySuggestion(keyword, Infer.Field<RoadName>(f => f.KeywordsAscii), Fuzziness.EditDistance(1), "vn_analyzer"));
@@ -296,11 +303,11 @@ namespace BAGeocoding.Api.Services
                     provinceID = await GetProvinceId(lat, lng, null);
 
                     queryContainerList.Add(new MatchQuery()
-                    {
-                        Field = "provinceID",
-                        Query = provinceID.ToString()
-                    }
-                     );
+                        {
+                            Field = "provinceID",
+                            Query = provinceID.ToString()
+                        }
+                    );
 
                     filter.Add(GeoDistanceQuerySuggestion("location", lat, lng, distance));
                 }
@@ -312,7 +319,7 @@ namespace BAGeocoding.Api.Services
 
                 var searchResponse = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
                     .Size(size)
-                    .MinScore(5.0)
+                    //.MinScore(5.0)
                     .Scroll(1)
                     .Sort(s => s.Descending(SortSpecialField.Score))
                     .Query(q => q
@@ -323,14 +330,55 @@ namespace BAGeocoding.Api.Services
                 );
 
                 List<RoadNameOut> result = new List<RoadNameOut>();
-                if (searchResponse.IsValid)
+
+                if (!searchResponse.IsValid)
+                    return result;
+
+                if (searchResponse.Documents.Any())
                 {
                     searchResponse.Documents.OrderBy(x => x.Priority).ToList().ForEach(item => result.Add(new RoadNameOut(item)));
                     //_logService.WriteLog($"GetDataSuggestion End - keyword: {keyword}", LogLevel.Info);
                     return result;
                 }
 
-                return new List<RoadNameOut>();
+                var queryContainerList2 = new List<QueryContainer>();
+
+                queryContainerList2.Add(
+                        MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAsciiNoExt), Fuzziness.Auto, "vn_analyzer3"));
+
+                queryContainerList2.Add(
+                   MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAsciiNoExt), Fuzziness.Auto, "vn_analyzer"));
+
+                queryContainerList2.Add(
+                   MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAscii), Fuzziness.EditDistance(0), "vn_analyzer"));
+
+                queryContainerList2.Add(
+                   MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAscii), Fuzziness.Auto, "vn_analyzer"));
+
+                queryContainerList2.Add(
+                     MatchQuerySuggestion(keywordAscii, Infer.Field<RoadName>(f => f.KeywordsAscii), Fuzziness.EditDistance(1), "vn_analyzer"));
+
+                boolQuery = new BoolQuery();
+
+                boolQuery.Boost = 1.1;
+                boolQuery.Must = queryContainerList2;
+                boolQuery.Filter = filter;
+
+                var responseTwo = await _client.SearchAsync<RoadName>(s => s.Index(_indexName)
+                    .Size(size)
+                    .Scroll(1)
+                    .Sort(s => s.Descending(SortSpecialField.Score))
+                    .Query(q => q
+                        .Bool(b => b
+                            .Must(boolQuery)
+                        )
+                    )
+                );
+
+                if (responseTwo.IsValid)
+                    responseTwo.Documents.OrderBy(x => x.Priority).ToList().ForEach(item => result.Add(new RoadNameOut(item)));
+
+                return result;
             }
             catch
             { return new List<RoadNameOut>(); }

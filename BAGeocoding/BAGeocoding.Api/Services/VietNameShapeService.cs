@@ -33,41 +33,43 @@ namespace BAGeocoding.Api.Services
             {
                 if (string.IsNullOrEmpty(indexName)) indexName = _indexName;
 
+                await _client.Indices.DeleteAsync(Indices.Index(indexName));
+
                 var indexResponse = await _client.Indices.CreateAsync(Indices.Index(indexName), c => c
-               .Map<VietNamShape>(mm => mm.AutoMap())
-               .Settings(s => s
-                   .NumberOfReplicas(NumberOfReplicas)
-                   .NumberOfShards(NumberOfShards)
-                   .Analysis(a => a
-                       .CharFilters(cf => cf
-                           .Mapping("programming_language", mca => mca
-                               .Mappings(new[]
+                   .Map<VietNamShape>(mm => mm.AutoMap())
+                   .Settings(s => s
+                       .NumberOfReplicas(NumberOfReplicas)
+                       .NumberOfShards(NumberOfShards)
+                       .Analysis(a => a
+                           .CharFilters(cf => cf
+                               .Mapping("programming_language", mca => mca
+                                   .Mappings(new[]
+                                   {
+                                        "c# => csharp",
+                                        "C# => Csharp"
+                                   })
+                               )
+                             )
+                           .TokenFilters(tf => tf
+                               .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
                                {
-                                    "c# => csharp",
-                                    "C# => Csharp"
+                                   PreserveOriginal = true
                                })
                            )
-                         )
-                       .TokenFilters(tf => tf
-                           .AsciiFolding("ascii_folding", tk => new AsciiFoldingTokenFilter
-                           {
-                               PreserveOriginal = true
-                           })
-                       )
-                       .Analyzers(an => an
-                           .Custom("keyword_analyzer", ca => ca
-                               .CharFilters("programming_language")
-                               .Tokenizer("keyword")
-                               .Filters("lowercase"))
-                           .Custom("vi_analyzer_road", ca => ca
-                               .CharFilters("programming_language")
-                               .Tokenizer("vi_tokenizer")
-                               .Filters("lowercase", "icu_folding", "ascii_folding")
+                           .Analyzers(an => an
+                               .Custom("keyword_analyzer", ca => ca
+                                   .CharFilters("programming_language")
+                                   .Tokenizer("keyword")
+                                   .Filters("lowercase"))
+                               .Custom("vi_analyzer_road", ca => ca
+                                   .CharFilters("programming_language")
+                                   .Tokenizer("vi_tokenizer")
+                                   .Filters("lowercase", "icu_folding", "ascii_folding")
+                               )
                            )
                        )
-                   )
-                )
-            );
+                    )
+                );
 
                 return indexResponse.ApiCall.HttpStatusCode.ToString() ?? "OK";
             }
@@ -78,9 +80,9 @@ namespace BAGeocoding.Api.Services
         {
             try
             {
-                var existsIndex = await _client.Indices.ExistsAsync(_indexName);
-                if (!existsIndex.Exists)
-                    await CreateIndex(_indexName);
+                //var existsIndex = await _client.Indices.ExistsAsync(_indexName);
+                //if (!existsIndex.Exists)
+                await CreateIndex(_indexName);
 
                 var bulkAllObservable = _client.BulkAll(vietNamShapes, b => b
                         .Index(_indexName)

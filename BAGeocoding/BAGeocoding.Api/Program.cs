@@ -17,7 +17,8 @@ builder.Configuration.GetSection("Elastic").Bind(elasticSettings);
 //builder.Configuration.GetSection("Urls").Bind(urls);
 string uri = elasticSettings.EsEndPoint;
 //var pool = new SingleNodeConnectionPool(new Uri(uri));
-var pool = new SingleNodeConnectionPool(new Uri("http://10.0.10.146:9200"));
+//var pool = new SingleNodeConnectionPool(new Uri("http://10.0.10.146:9200"));
+var pool = new SingleNodeConnectionPool(new Uri("http://10.0.10.133:9200"));
 //var pool = new SingleNodeConnectionPool(new Uri("http://elastic:Mz*k3+jzBMPOgZMFhPPB@localhost:9200/"));
 //var pool = new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
 var settings = new ConnectionSettings(pool);
@@ -39,7 +40,6 @@ builder.Services.AddControllers()
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
 
-
 // Add Core 
 builder.Services.AddCore();
 
@@ -49,7 +49,9 @@ if (app.Environment.IsProduction())
     //app.Urls.Add("http://10.0.20.228:5000");// Windows IP
     //app.Urls.Add("http://172.19.214.232:5000");// WSL IP
     //app.Urls.Add("http://10.0.10.146:5000");// Ubuntu IP
-    app.Urls.Add("http://10.0.10.146:5001");// Ubuntu IP Test
+    //app.Urls.Add("http://10.0.10.146:5001");// Ubuntu IP Test
+    //app.Urls.Add("http://10.0.10.133:5001");// Ubuntu publish
+    app.Urls.Add("http://10.0.10.146:5002");// Ubuntu publish
     //app.Urls.Add("http://localhost:5000");// 127.0.0.1 IP
 }
 
