@@ -1,0 +1,236 @@
+VM146
+IP: 10.0.10.146
+Cổng Remote: 13389
+Cổng SSH: 5522
+Tài khoản: kcn
+Mật khẩu: mqBZh*P@
+Tài khoản: root
+Mật khẩu: b5JrXs4FPJp4ftGK#CRnjv%G
+mqBZh*P@
+mv elasticsearch-7.3.1 /es
+
+****** apache-maven-3.8.8 ********
+Có thể cài maven để tự build source
+Tham khảo để cài bản 3.8.8
+https://www.digitalocean.com/community/tutorials/install-maven-linux-ubuntu
+https://linuxize.com/post/how-to-install-apache-maven-on-ubuntu-18-04/
+https://www.liquidweb.com/kb/how-to-install-and-configure-apache-maven-on-ubuntu-18-04/
+
+https://github.com/duydo/elasticsearch-analysis-vietnamese/issues/111
+**** Download, Install CocCoc *****
+https://github.com/duydo/elasticsearch-analysis-vietnamese/tree/8.7.0
+Step 1: Build C++ tokenizer for Vietnamese library
+git clone https://github.com/duydo/coccoc-tokenizer.git
+cd coccoc-tokenizer && mkdir build && cd build
+cmake -DBUILD_JAVA=1 ..
+make install
+# Link the coccoc shared lib to /usr/lib
+sudo ln -sf /usr/local/lib/libcoccoc_tokenizer_jni.* /usr/lib/
+
+
+**** Download kibana 8.7.0 *****
+curl -O https://artifacts.elastic.co/downloads/kibana/kibana-8.7.0-linux-x86_64.tar.gz
+curl https://artifacts.elastic.co/downloads/kibana/kibana-8.7.0-linux-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
+tar -xzf kibana-8.7.0-linux-x86_64.tar.gz
+http.host: 0.0.0.0
+
+
+**** Download elastic 8.7.0 *****
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512
+shasum -a 512 -c elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512 
+tar -xzf elasticsearch-8.7.0-linux-x86_64.tar.gz
+cd elasticsearch-8.7.0/ 
+
+
+**** Install plugin elasticsearch-analysis-vietnamese-8.7.0 elastic 8.7.0 *****
+/data/elasticsearch-8.7.0/bin/plugins install file://target/releases/elasticsearch-analysis-vietnamese-8.7.0.zip
+
+/data/elasticsearch-8.7.0/bin/elasticsearch-plugin install file://target/releases/elasticsearch-analysis-vietnamese-8.7.0.zip
+
+/data/elasticsearch-8.7.0/bin/elasticsearch-plugin install file:/data/elasticsearch-analysis-vietnamese-8.7.0.zip
+
+**** Install plugin icu elastic 8.7.0 *****
+sudo bin/elasticsearch-plugin install analysis-icu
+
+**** Run elastic 8.7.0 *****
+groupadd -g 999 nqrt && useradd -r -u 999 -g nqrt nqrt
+usermod -aG sudo nqrt
+chown nqrt:nqrt /data/elasticsearch-8.7.0 -R 
+chown nqrt:nqrt /data/elasticsearch-8.7.0 -R
+sysctl -w vm.max_map_count=262144
+su nqrt
+
+export ES_JAVA_OPTS="-Xms2048m -Xmx2048m -Djava.library.path=/usr/local/lib"
+cd /data/elasticsearch-8.7.0
+./bin/elasticsearch -d -p pid
+
+/bin/elasticsearch -d -p pid
+
+wget https://github.com/duydo/elasticsearch-analysis-vietnamese/releases/download/v7.3.1/elasticsearch-analysis-vietnamese-8.7.0.zip
+
+wget https://github.com/duydo/elasticsearch-analysis-vietnamese/releases/download/elasticsearch-analysis-vietnamese-8.7.0.zip
+
+
+
+
++++++++++ elastic 8.7.0
+bD293ebW2CLhadUq+vwQ
+
+
+Liti: https://www.youtube.com/@charminliti/videos
+lemon coder:  https://www.youtube.com/@lemoncoder/videos
+
+
+********** install kibana 7.3.1 on ubuntu20.4 and publish service when  close command line
+
+sudo apt update
+sudo apt install openjdk-11-jdk
+
+wget https://artifacts.elastic.co/downloads/kibana/kibana-7.3.1-linux-x86_64.tar.gz
+
+tar -xzf kibana-7.3.1-linux-x86_64.tar.gz
+
+sudo mv kibana-7.3.1-linux-x86_64 /opt/kibana
+
+sudo nano /opt/kibana/config/kibana.yml
+
+elasticsearch.hosts: ["http://localhost:9200"]
+
+==========================================================
+sudo nano /etc/systemd/system/kibana.service
+
+==========================================================
+[Unit]
+Description=Kibana
+Documentation=https://www.elastic.co/products/kibana
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/data/kibana-8.7.0/bin/kibana
+Restart=always
+WorkingDirectory=/data/kibana-8.7.0
+RestartSec=5
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+
+==========================================================
+
+[Unit]
+Description=Kibana
+After=network.target
+
+[Service]
+ExecStart=/data/kibana-8.7.0/bin/kibana
+Restart=always
+WorkingDirectory=/data/kibana-8.7.0
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+sudo systemctl daemon-reload
+
+sudo systemctl enable kibana
+sudo systemctl start kibana
+sudo systemctl status kibana
+sudo systemctl stop kibana
+sudo systemctl restart kibana
+
+pkill -f kibana
+
+
+nohup ./bin/kibana &
+
+nohup ./bin/kibana --allow-root &
+
+tail -f nohup.out
+tail -f /home/kibana_user/nohup.out
+
+
+********** run kibana 8.7.0 on ubuntu when close command line **********
+==Phải tạo 1 user và chạy bằng user khác, ko chạy bằng tài khoản root được
+sudo adduser kibana_user
+sudo chown -R kibana_user:kibana_user /data/kibana-8.7.0
+su - kibana_user
+
+su - kibana_user
+
+cd /data/kibana-8.7.0
+
+nohup ./bin/kibana --allow-root &
+
+
+
+
+
+cd kibana/kibana 8.7.0
+nohup ./bin/kibana --allow-root &
+
+pkill -f kibana
+Tài khoản: root
+Mật khẩu: b5JrXs4FPJp4ftGK#CRnjv%G
+Tài khoản: kcn
+Mật khẩu: mqBZh*P@
+
+Tài khoản: kibana_user
+Mật khẩu: mqBZh*P@
+
+ps aux | grep kibana
+79273
+
+
+sudo pkill -f kibana
+
+80290
+
+sudo kill -9 88288
+sudo kill -9 13140
+
+sudo pkill -9 kibana
+
+ps -ef -o pid | grep 90892
+ps -ef -o pid | grep 20634
+
+
+thì ngta cũng mất công đào tạo mà
+ví dụ chị học xong khóa tiếng nhật rồi phải làm thêm 6 tháng ở đây
+tính ra nếu học xong r làm tiếp 6 tháng thì chị làm gần 2 năm r
+chưa kể học các chứng chỉ khác nữa
+nếu mà ở đây mình học hẳn lên PO, PM thì còn giữ đến năm rưỡi 2 năm cơ
+
+
++=================
+sudo nano /etc/systemd/system/kibana.service
+
+[Unit]
+Description=Kibana
+Documentation=https://www.elastic.co/products/kibana
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/share/kibana/bin/kibana
+Restart=always
+WorkingDirectory=/usr/share/kibana
+User=kibana
+Group=kibana
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+sudo systemctl enable kibana
+
+sudo systemctl start kibana
+
+sudo systemctl status kibana

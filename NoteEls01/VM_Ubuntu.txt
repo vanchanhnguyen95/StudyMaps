@@ -64,3 +64,9 @@ sudo ufw allow 6000/tcp
 Text tìm kiếm sẽ là tổ hợp của RoadName, NameExt, [Address] (Tên tỉnh)
 
 sudo ufw allow 7000/tcp
+
+có phần mảng răng cưa trong c# có thực hành à bạn.
+
+ví dụ về mảng răng cưa trong c#.
+
+làm bài tập về mảng răng cưa trong c# đi bạn.

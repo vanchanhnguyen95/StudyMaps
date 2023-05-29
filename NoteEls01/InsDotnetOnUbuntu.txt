@@ -105,3 +105,11 @@ DROP DATABASE zap;
 GO
 
 add-migration MyFirstMigration
+
+
+10.0.10.166:15000/api/v1/internal/getdatasuggestion?size={size}&keyWord={keyWord}&lng={ lng}&lat={lat}&distance={distance}?apiKey={apiKey}
+
+10.0.10.166:15000/api/v1/internal/getdatasuggestion?apiKey=BA.2AbzrAVnBKnONdrsef2r6ftd8zfaw&keyword=nguyen trai dong da ha noi&size=5
+
+BA.2AbzrAVnBKnONdrsef2r6ftd8zfaw
+nguyen trai ha dong ha noi

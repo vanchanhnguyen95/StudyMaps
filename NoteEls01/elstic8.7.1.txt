@@ -1,0 +1,200 @@
+# /etc/systemd/system
+[Unit]
+Description=BA Map Geo Service
+
+[Service]
+WorkingDirectory=/data/geothree/20232205
+ExecStart=/root/dotnet/dotnet BAGeocoding.Api.dll
+Restart=always
+# Restart service after 5 seconds if the dotnet service crashes:
+RestartSec=5
+SyslogIdentifier=map-gateway-service
+User=root
+
+Environment=ASPNETCORE_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+sudo nano /etc/systemd/system/geothree.service
+
+
+
+
+
+
+
+
+
+
+
+[Unit] 
+
+Description=Geo ASP .NET 7 Web Application 
+
+[Service] 
+
+WorkingDirectory=/data/geo
+
+ExecStart=/usr/share/dotnet/dotnet /data/geo/BAGeocoding.Api.dll
+
+
+Restart=always 
+
+RestartSec=10 
+
+SyslogIdentifier=netcore-demo 
+
+User=www-data 
+
+Environment=ASPNETCORE_ENVIRONMENT=Production 
+
+[Install] 
+
+WantedBy=multi-user.target 
+
+Cổng Remote: 13389
+Cổng SSH: 5522
+Tài khoản: kcn
+Mật khẩu: mqBZh*P@
+Tài khoản: root
+Mật khẩu: b5JrXs4FPJp4ftGK#CRnjv%G
+
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512
+shasum -a 512 -c elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512 
+tar -xzf elasticsearch-8.7.0-linux-x86_64.tar.gz
+cd elasticsearch-8.7.0/ 
+
+groupadd -g 999 nqrt && useradd -r -u 999 -g nqrt nqrt
+usermod -aG sudo nqrt
+chown nqrt:nqrt /data/elasticsearch-8.7.0/ -R
+sysctl -w vm.max_map_count=262144
+
+su nqrt
+
+** Run
+export ES_JAVA_OPTS="-Xms2048m -Xmx2048m -Djava.library.path=/usr/local/lib"
+cd /data/elasticsearch-8.7.0
+./bin/elasticsearch
+
+
+export PATH=$PATH:/data/elasticsearch-8.7.1/jdk/bin
+export JAVA_HOME=/data/elasticsearch-8.7.1/jdk
+export ES_JAVA_HOME=/data/elasticsearch-8.7.1/jdk
+
+export PATH=$PATH:/data/elasticsearch-8.7.0/jdk/bin
+export JAVA_HOME=/data/elasticsearch-8.7.0/jdk
+export ES_JAVA_HOME=/data/elasticsearch-8.7.0/jdk
+
+
+elastic/ elUM8+dDh2r0YUvMhFnc
+
+curl -O https://artifacts.elastic.co/downloads/kibana/kibana-8.7.1-linux-x86_64.tar.gz
+curl https://artifacts.elastic.co/downloads/kibana/kibana-8.7.1-linux-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
+tar -xzf kibana-8.7.1-linux-x86_64.tar.gz
+cd kibana-8.7.0/ 
+
+
+
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/targz.html
+
+curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-darwin-x86_64.tar.gz
+tar -xzf elasticsearch-8.7.0-darwin-x86_64.tar.gz
+
+cd elasticsearch-8.7.1/
+./bin/elasticsearch
+
+
+export ES_JAVA_OPTS="-Xms2048m -Xmx2048m -Djava.library.path=/usr/local/lib"
+cd /es
+./bin/elasticsearch
+
+
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.1-linux-x86_64.tar.gz
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.1-linux-x86_64.tar.gz.sha512
+shasum -a 512 -c elasticsearch-8.7.1-linux-x86_64.tar.gz.sha512 
+tar -xzf elasticsearch-8.7.1-linux-x86_64.tar.gz
+cd elasticsearch-8.7.1/
+
+chown nqrt:nqrt /data/elasticsearch-8.7.0 -R 
+
+elastic/  r4DeUWC=a8NJ6zOz_1BY
+
+
+curl -O https://artifacts.elastic.co/downloads/kibana/kibana-8.7.0-linux-x86_64.tar.gz
+curl https://artifacts.elastic.co/downloads/kibana/kibana-8.7.0-linux-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
+tar -xzf kibana-8.7.0-linux-x86_64.tar.gz
+cd kibana-8.7.0/ 
+
+eyJ2ZXIiOiI4LjcuMSIsImFkciI6WyIxMC4wLjEwLjE0Njo5MjAwIl0sImZnciI6IjIyZmIwNDYwMDc3YjZlZDdiNzA5YzU3NmEyZmExYmZmZjcxOGVmMTUzNWIwY2RmMDIxYWJjZGUyYjM4NWVmOGEiLCJrZXkiOiJVMVRJVElnQnRZYTgyUlhiSEhjRTptc05LbzlXZVN6NndQTjJ1T1NMVWNnIn0
+
+http://localhost:5601/?code=045757
+http://10.0.10.14
+http://10.0.10.146:5601
+
+http.host: 0.0.0.0
+
+$ wget https://mirrors.estointernet.in/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+$ tar -xvf apache-maven-3.6.3-bin.tar.gz
+$ mv apache-maven-3.6.3 /opt/
+
+sudo wget  https://dlcdn.apache.org/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz
+
+sudo wget https://downloads.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz -P /tmp
+
+tar -xvf apache-maven-3.8.8-bin.tar.gz
+mv apache-maven-3.8.8 /opt/
+
+cd /data
+
+ /data/elasticsearch-analysis-vietnamese/src/main/java/org/elasticsearch/plugin/analysis/vi/AnalysisVietnamesePlugin.java:[20,42] cannot access org.elasticsearch.indices.analysis.AnalysisModule
+  bad class file: /root/.m2/repository/org/elasticsearch/elasticsearch/8.7.1/elasticsearch-8.7.1.jar(/org/elasticsearch/indices/analysis/AnalysisModule.class)
+    class file has wrong version 61.0, should be 55.0
+
+
++++++++++ elastic 8.7.0
+ bD293ebW2CLhadUq+vwQ
+ 
+ kibana
+ 
+ ./bin/kibana --allow-root
+ 
+  Elasticsearch security features have been automatically configured!
+✅ Authentication is enabled and cluster connections are encrypted.
+
+ℹ️  Password for the elastic user (reset with `bin/elasticsearch-reset-password -u elastic`):
+  bD293ebW2CLhadUq+vwQ
+
+ℹ️  HTTP CA certificate SHA-256 fingerprint:
+  e1f456e28b10781260647a164fa84d45d2995a217bfef111c5264e274cd0e23d
+
+ℹ️  Configure Kibana to use this cluster:
+• Run Kibana and click the configuration link in the terminal when Kibana starts.
+• Copy the following enrollment token and paste it into Kibana in your browser (valid for the next 30 minutes):
+  eyJ2ZXIiOiI4LjcuMCIsImFkciI6WyIxMC4wLjEwLjE0Njo5MjAwIl0sImZnciI6ImUxZjQ1NmUyOGIxMDc4MTI2MDY0N2ExNjRmYTg0ZDQ1ZDI5OTVhMjE3YmZlZjExMWM1MjY0ZTI3NGNkMGUyM2QiLCJrZXkiOiJkWWVTVUlnQm42ak96eHNSY1dBSTppWXZyNDJjQ1J0ZXA2dmE1VDBBaVBRIn0=
+
+ℹ️  Configure other nodes to join this cluster:
+• On this node:
+  ⁃ Create an enrollment token with `bin/elasticsearch-create-enrollment-token -s node`.
+  ⁃ Uncomment the transport.host setting at the end of config/elasticsearch.yml.
+  ⁃ Restart Elasticsearch.
+• On other nodes:
+  ⁃ Start Elasticsearch with `bin/elasticsearch --enrollment-token <token>`, using the enrollment token that you generated.
+  
+  Install kibana with Debian package and config folder save
+
+
+Cố gắng mới ra được video lúc 9h, bạn ủng hộ xem mk nhé, mình xem chéo cùng bạn, Cảm ơn bạn
+
+Mk mới ra video mới lúc 9h này, xem chéo ủng hộ like, xong ibox mk chéo nhé
+https://www.youtube.com/watch?v=MwcoDUxMm0w
+
+Nhịp sống tv : https://www.youtube.com/@NhipsongTVLifeTV/featured
+Lemon coder:  https://www.youtube.com/@lemoncoder/videos
+
+https://l.facebook.com/l.php?u=https%3A%2F%2Fwww.youtube.com%2Fplaylist%3Flist%3DPLxfbGQRTJlMG07qltRa1CJlPj1IU_WLqe%26fbclid%3DIwAR0bMu0S5z3IlJBf6BnazP3hAZetGwlTOuW2yBwEAIIqrJdt-Nn-xeOWi-U&h=AT3QZSvXuW3_eA0ycKBgWRYrO1xE6t8kUsxe5M1EmF4psiPCG6TZWhXjrVI5tGTmsI2ZeDfoDJmgtcgq8jPF0qJyAyUsh7EuVczJX2JHM0KG6S47aE2asDMsYQREjRwxx8yDNw
