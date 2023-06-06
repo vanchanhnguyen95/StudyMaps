@@ -189,12 +189,7 @@ cd /data
   Install kibana with Debian package and config folder save
 
 
-Cố gắng mới ra được video lúc 9h, bạn ủng hộ xem mk nhé, mình xem chéo cùng bạn, Cảm ơn bạn
-
-Mk mới ra video mới lúc 9h này, xem chéo ủng hộ like, xong ibox mk chéo nhé
-https://www.youtube.com/watch?v=MwcoDUxMm0w
-
-Nhịp sống tv : https://www.youtube.com/@NhipsongTVLifeTV/featured
-Lemon coder:  https://www.youtube.com/@lemoncoder/videos
-
 https://l.facebook.com/l.php?u=https%3A%2F%2Fwww.youtube.com%2Fplaylist%3Flist%3DPLxfbGQRTJlMG07qltRa1CJlPj1IU_WLqe%26fbclid%3DIwAR0bMu0S5z3IlJBf6BnazP3hAZetGwlTOuW2yBwEAIIqrJdt-Nn-xeOWi-U&h=AT3QZSvXuW3_eA0ycKBgWRYrO1xE6t8kUsxe5M1EmF4psiPCG6TZWhXjrVI5tGTmsI2ZeDfoDJmgtcgq8jPF0qJyAyUsh7EuVczJX2JHM0KG6S47aE2asDMsYQREjRwxx8yDNw
+
+ NodeJS là một nền tảng (platform)
+ 

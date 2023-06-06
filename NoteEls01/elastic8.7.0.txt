@@ -9,6 +9,20 @@ Mật khẩu: b5JrXs4FPJp4ftGK#CRnjv%G
 mqBZh*P@
 mv elasticsearch-7.3.1 /es
 
+elastic / oWuyEjhvN99nc2ntVK09
+
+curl -X GET "http://localhost:9200/"
+curl -X GET 'http://localhost:9300/'
+
+curl -X GET "http://10.0.10.133:9200/"
+
+sudo pkill -F <chanhnv> elasticsearch
+
+curl -X GET "http://10.0.10.133:5601/"
+
+curl — cacert $ES_HOME/config/certs/http_ca.crt -u elastic "https://localhost:9300"
+
+
 ****** apache-maven-3.8.8 ********
 Có thể cài maven để tự build source
 Tham khảo để cài bản 3.8.8
@@ -29,36 +43,38 @@ sudo ln -sf /usr/local/lib/libcoccoc_tokenizer_jni.* /usr/lib/
 
 
 **** Download kibana 8.7.0 *****
-curl -O https://artifacts.elastic.co/downloads/kibana/kibana-8.7.0-linux-x86_64.tar.gz
-curl https://artifacts.elastic.co/downloads/kibana/kibana-8.7.0-linux-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
-tar -xzf kibana-8.7.0-linux-x86_64.tar.gz
+sudo curl -O https://artifacts.elastic.co/downloads/kibana/kibana-8.7.0-linux-x86_64.tar.gz
+sudo curl https://artifacts.elastic.co/downloads/kibana/kibana-8.7.0-linux-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
+sudo tar -xzf kibana-8.7.0-linux-x86_64.tar.gz
 http.host: 0.0.0.0
 
 
 **** Download elastic 8.7.0 *****
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512
-shasum -a 512 -c elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512 
-tar -xzf elasticsearch-8.7.0-linux-x86_64.tar.gz
+sudo wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz
+sudo wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512
+sudo shasum -a 512 -c elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512 
+sudo tar -xzf elasticsearch-8.7.0-linux-x86_64.tar.gz
 cd elasticsearch-8.7.0/ 
+export PATH=$PATH:/data/elasticsearch-8.7.0/jdk/bin
+export JAVA_HOME=/data/elasticsearch-8.7.0/jdk
+export ES_JAVA_HOME=/data/elasticsearch-8.7.0/jdk
 
 
 **** Install plugin elasticsearch-analysis-vietnamese-8.7.0 elastic 8.7.0 *****
 /data/elasticsearch-8.7.0/bin/plugins install file://target/releases/elasticsearch-analysis-vietnamese-8.7.0.zip
 
-/data/elasticsearch-8.7.0/bin/elasticsearch-plugin install file://target/releases/elasticsearch-analysis-vietnamese-8.7.0.zip
+sudo /data/elasticsearch-8.7.0/bin/elasticsearch-plugin install file://target/releases/elasticsearch-analysis-vietnamese-8.7.0.zip
 
-/data/elasticsearch-8.7.0/bin/elasticsearch-plugin install file:/data/elasticsearch-analysis-vietnamese-8.7.0.zip
+sudo /data/elasticsearch-8.7.0/bin/elasticsearch-plugin install file:/data/elasticsearch-analysis-vietnamese-8.7.0.zip
 
 **** Install plugin icu elastic 8.7.0 *****
 sudo bin/elasticsearch-plugin install analysis-icu
 
 **** Run elastic 8.7.0 *****
 groupadd -g 999 nqrt && useradd -r -u 999 -g nqrt nqrt
-usermod -aG sudo nqrt
-chown nqrt:nqrt /data/elasticsearch-8.7.0 -R 
-chown nqrt:nqrt /data/elasticsearch-8.7.0 -R
-sysctl -w vm.max_map_count=262144
+sudo usermod -aG sudo nqrt
+sudo chown nqrt:nqrt /data/elasticsearch-8.7.0 -R
+sudo sysctl -w vm.max_map_count=262144
 su nqrt
 
 export ES_JAVA_OPTS="-Xms2048m -Xmx2048m -Djava.library.path=/usr/local/lib"
@@ -122,18 +138,6 @@ WantedBy=multi-user.target
 
 ==========================================================
 
-[Unit]
-Description=Kibana
-After=network.target
-
-[Service]
-ExecStart=/data/kibana-8.7.0/bin/kibana
-Restart=always
-WorkingDirectory=/data/kibana-8.7.0
-
-[Install]
-WantedBy=multi-user.target
-
 
 
 sudo systemctl daemon-reload
@@ -144,15 +148,7 @@ sudo systemctl status kibana
 sudo systemctl stop kibana
 sudo systemctl restart kibana
 
-pkill -f kibana
 
-
-nohup ./bin/kibana &
-
-nohup ./bin/kibana --allow-root &
-
-tail -f nohup.out
-tail -f /home/kibana_user/nohup.out
 
 
 ********** run kibana 8.7.0 on ubuntu when close command line **********
@@ -165,7 +161,7 @@ su - kibana_user
 
 cd /data/kibana-8.7.0
 
-nohup ./bin/kibana --allow-root &
+./bin/kibana --allow-root
 
 
 
@@ -187,24 +183,6 @@ ps aux | grep kibana
 79273
 
 
-sudo pkill -f kibana
-
-80290
-
-sudo kill -9 88288
-sudo kill -9 13140
-
-sudo pkill -9 kibana
-
-ps -ef -o pid | grep 90892
-ps -ef -o pid | grep 20634
-
-
-thì ngta cũng mất công đào tạo mà
-ví dụ chị học xong khóa tiếng nhật rồi phải làm thêm 6 tháng ở đây
-tính ra nếu học xong r làm tiếp 6 tháng thì chị làm gần 2 năm r
-chưa kể học các chứng chỉ khác nữa
-nếu mà ở đây mình học hẳn lên PO, PM thì còn giữ đến năm rưỡi 2 năm cơ
 
 
 +=================
@@ -234,3 +212,117 @@ sudo systemctl enable kibana
 sudo systemctl start kibana
 
 sudo systemctl status kibana
+
+
+
+sudo ufw reload
+
+sudo ufw allow 9201/tcp
+sudo ufw allow 9301/tcp
+
+sudo ufw status
+
+chown chanhnv:chanhnv /data/elasticsearch-8.7.0 -R
+
+groupadd -g 1999 chanhnv && useradd -r -u 1999 -g chanhnv chanhnv
+usermod -aG sudo chanhnv
+chown chanhnv:chanhnv /data/elasticsearch-8.7.0 -R
+sysctl -w vm.max_map_count=262144
+
+su chanhnv
+
+** Run
+export ES_JAVA_OPTS="-Xms2048m -Xmx2048m -Djava.library.path=/usr/local/lib"
+cd /data/elasticsearch-8.7.0
+./bin/elasticsearch
+
+
+./bin/elasticsearch -d -p pid
+
+**** Muốn kill thì thực hiện theo các bước lúc run nhưng đổi lệnh cuối
+
+pkill -F pid
+
+
+*** Tải ElasticSearch 8.7.0
+sudo wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz
+sudo wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512
+sudo shasum -a 512 -c elasticsearch-8.7.0-linux-x86_64.tar.gz.sha512 
+sudo tar -xzf elasticsearch-8.7.0-linux-x86_64.tar.gz
+
+export PATH=$PATH:/data/elasticsearch-8.7.0/jdk/bin
+export JAVA_HOME=/data/elasticsearch-8.7.0/jdk
+export ES_JAVA_HOME=/data/elasticsearch-8.7.0/jdk
+
+** Tải ES Analysis Vietnam
+sudo /data/elasticsearch-8.7.0/bin/elasticsearch-plugin install file:/data/elasticsearch-analysis-vietnamese-8.7.0.zip
+
+**** Install plugin icu elastic 8.7.0 *****
+sudo /data/elasticsearch-8.7.0/bin/elasticsearch-plugin install analysis-icu
+
+** Tải C++ Tokenizer
+git clone https://github.com/coccoc/coccoc-tokenizer.git
+cd coccoc-tokenizer
+mkdir build
+cd build
+cmake -DBUILD_JAVA=1 ..
+make install
+
+ Elasticsearch security features have been automatically configured!
+✅ Authentication is enabled and cluster connections are encrypted.
+
+ℹ️  Password for the elastic user (reset with `bin/elasticsearch-reset-password -u elastic`):
+  d8O-ThrXzVxughbB6XHA
+
+ℹ️  HTTP CA certificate SHA-256 fingerprint:
+  1b91e2c7ff7ee8467297e8eb88713b42b38bb67d6eb4f5e23e5de0bfd74af0e6
+
+ℹ️  Configure Kibana to use this cluster:
+• Run Kibana and click the configuration link in the terminal when Kibana starts.
+• Copy the following enrollment token and paste it into Kibana in your browser (valid for the next 30 minutes):
+  eyJ2ZXIiOiI4LjcuMCIsImFkciI6WyIxMC4wLjEwLjE0Njo5MjAwIl0sImZnciI6IjFiOTFlMmM3ZmY3ZWU4NDY3Mjk3ZThlYjg4NzEzYjQyYjM4YmI2N2Q2ZWI0ZjVlMjNlNWRlMGJmZDc0YWYwZTYiLCJrZXkiOiIwMWdTZFlnQllEYVNBSmRKaWU1UDppU1J4UGZpRFN2aUwtX0NsdzJwVkt3In0=
+
+ℹ️  Configure other nodes to join this cluster:
+• On this node:
+  ⁃ Create an enrollment token with `bin/elasticsearch-create-enrollment-token -s node`.
+  ⁃ Uncomment the transport.host setting at the end of config/elasticsearch.yml.
+  ⁃ Restart Elasticsearch.
+• On other nodes:
+  ⁃ Start Elasticsearch with `bin/elasticsearch --enrollment-token <token>`, using the enrollment token that you generated.
+
+
+./bin/kibana --allow-root
+
+
+*** Set up service kibanatwo
+sudo nano /etc/systemd/system/kibanatwo.service
+
+[Unit]
+Description=Kibana
+After=network.target
+
+[Service]
+ExecStart=/data/kibana-8.7.0/bin/kibana
+WorkingDirectory=/data/kibana-8.7.0
+User=chanhnv
+Group=chanhnv
+Restart=always
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+
+groupadd -g 1999 chanhnv && useradd -r -u 1999 -g chanhnv chanhnv
+
+
+sudo useradd --system --no-create-home --user-group kibana
+
+sudo chown -R chanhnv:chanhnv /path/to/kibana-7.3.1
+
+sudo chown -R chanhnv:chanhnv /data/kibana-8.7.0
+
+sudo systemctl daemon-reload
+
+sudo systemctl enable kibanatwo
+sudo systemctl start kibanatwo
