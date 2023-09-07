@@ -149,8 +149,6 @@ sudo systemctl stop kibana
 sudo systemctl restart kibana
 
 
-
-
 ********** run kibana 8.7.0 on ubuntu when close command line **********
 ==Phải tạo 1 user và chạy bằng user khác, ko chạy bằng tài khoản root được
 sudo adduser kibana_user

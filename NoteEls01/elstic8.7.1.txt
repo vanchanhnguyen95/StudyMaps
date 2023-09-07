@@ -26,11 +26,6 @@ sudo nano /etc/systemd/system/geothree.service
 
 
 
-
-
-
-
-
 [Unit] 
 
 Description=Geo ASP .NET 7 Web Application 
