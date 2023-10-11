@@ -138,8 +138,6 @@ WantedBy=multi-user.target
 
 ==========================================================
 
-
-
 sudo systemctl daemon-reload
 
 sudo systemctl enable kibana
@@ -163,8 +161,6 @@ cd /data/kibana-8.7.0
 
 
 
-
-
 cd kibana/kibana 8.7.0
 nohup ./bin/kibana --allow-root &
 
@@ -179,8 +175,6 @@ Mật khẩu: mqBZh*P@
 
 ps aux | grep kibana
 79273
-
-
 
 
 +=================
