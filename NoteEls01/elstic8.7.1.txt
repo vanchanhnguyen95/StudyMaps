@@ -17,11 +17,7 @@ Environment=ASPNETCORE_ENVIRONMENT=Production
 WantedBy=multi-user.target
 
 
-
-
 sudo nano /etc/systemd/system/geothree.service
-
-
 
 
 

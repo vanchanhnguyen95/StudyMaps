@@ -88,8 +88,6 @@ wget https://github.com/duydo/elasticsearch-analysis-vietnamese/releases/downloa
 wget https://github.com/duydo/elasticsearch-analysis-vietnamese/releases/download/elasticsearch-analysis-vietnamese-8.7.0.zip
 
 
-
-
 +++++++++ elastic 8.7.0
 bD293ebW2CLhadUq+vwQ
 
